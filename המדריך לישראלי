@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zoot – זכויות לכולם</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --blue: #1a56db;
+      --blue-light: #e8f0fe;
+      --blue-dark: #0f3a8a;
+      --white: #ffffff;
+      --gray: #f4f6fb;
+      --gray2: #e2e8f0;
+      --text: #1a202c;
+      --text-soft: #64748b;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --purple: #8b5cf6;
+    }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: var(--gray);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      background: var(--white);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ========== STATUS BAR ========== */
+    .status-bar {
+      background: var(--blue-dark);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* ========== SCREENS ========== */
+    .screen { display: none; flex-direction: column; flex: 1; }
+    .screen.active { display: flex; }
+
+    /* ========== HOME SCREEN ========== */
+    .home-header {
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%);
+      padding: 20px 20px 32px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .home-header::before {
+      content: '';
+      position: absolute;
+      top: -30px; left: -30px;
+      width: 180px; height: 180px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+    .home-header::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; right: -20px;
+      width: 140px; height: 140px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+    .home-header .logo {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      position: relative;
+      z-index: 1;
+    }
+    .home-header .logo span { color: #93c5fd; }
+    .home-header .tagline {
+      font-size: 14px;
+      opacity: 0.85;
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .search-box {
+      background: white;
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    }
+    .search-box input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-family: 'Heebo', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: transparent;
+    }
+    .search-box input::placeholder { color: var(--text-soft); }
+    .search-icon { color: var(--text-soft); font-size: 18px; }
+
+    .quiz-banner {
+      margin: 16px;
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(26,86,219,0.3);
+    }
+    .quiz-banner:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,86,219,0.4); }
+    .quiz-banner:active { transform: scale(0.98); }
+    .quiz-banner-text .title { color: white; font-weight: 700; font-size: 16px; }
+    .quiz-banner-text .sub { color: rgba(255,255,255,0.8); font-size: 13px; margin-top: 4px; }
+    .quiz-banner-arrow {
+      background: rgba(255,255,255,0.2);
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      padding: 0 16px;
+      margin-bottom: 12px;
+    }
+
+    .topics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 0 16px;
+      margin-bottom: 16px;
+    }
+    .topic-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1.5px solid var(--gray2);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .topic-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    .topic-card:active { transform: scale(0.97); }
+    .topic-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .topic-card h3 { font-size: 14px; font-weight: 700; color: var(--text); }
+    .topic-card p { font-size: 12px; color: var(--text-soft); line-height: 1.4; }
+
+    .home-content { overflow-y: auto; padding-bottom: 80px; padding-top: 16px; }
+
+    /* ========== BOTTOM NAV ========== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 430px;
+      background: var(--white);
+      border-top: 1px solid var(--gray2);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0 14px;
+      z-index: 100;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 500;
+      transition: color 0.2s;
+      padding: 4px 16px;
+    }
+    .nav-item.active { color: var(--blue); }
+    .nav-item .nav-icon { font-size: 22px; }
+
+    /* ========== QUIZ SCREEN ========== */
+    .quiz-header {
+      background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+      padding: 20px 20px 24px;
+      color: white;
+    }
+    .quiz-header .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .back-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .back-btn:hover { background: rgba(255,255,255,0.25); }
+    .quiz-step-label { font-size: 13px; opacity: 0.8; }
+    .progress-bar-wrap {
+      background: rgba(255,255,255,0.25);
+      border-radius: 99px;
+      height: 6px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: white;
+      height: 100%;
+      border-radius: 99px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .quiz-question {
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: 14px;
+      line-height: 1.4;
+    }
+    .quiz-sub {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-top: 6px;
+    }
+
+    .quiz-body { padding: 20px 16px; overflow-y: auto; padding-bottom: 100px; }
+
+    .options-grid { display: flex; flex-direction: column; gap: 10px; }
+    .options-grid.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .option-btn {
+      background: var(--white);
+      border: 2px solid var(--gray2);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: right;
+      font-family: 'Heebo', sans-serif;
+    }
+    .option-btn:hover { border-color: var(--blue); background: var(--blue-light); }
+    .option-btn.selected {
+      border-color: var(--blue);
+      background: var(--blue-light);
+      box-shadow: 0 0 0 3px rgba(26,86,219,0.12);
+    }
+    .option-btn .opt-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .option-btn .opt-text { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+    .option-btn .opt-desc { font-size: 12px; color: var(--text-soft); margin-top: 2px; }
+    .option-btn.two-col-item {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 18px 12px;
+    }
+
+    .name-input-wrap {
+      position: relative;
+    }
+    .name-input {
+      width: 100%;
+      border: 2px solid var(--gray2);
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 18px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+      background: white;
+    }
+    .name-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,86,219,0.1); }
+
+    .interests-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .interest-btn {
+      background: white;
+      border: 2px solid var(--gray2);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Heebo', sans-serif;
+    }
+    .interest-btn:hover { border-color: var(--blue); background: var(--blue-light); }
+    .interest-btn.selected {
+      border-color: var(--blue);
+      background: var(--blue-light);
+      box-shadow: 0 0 0 3px rgba(26,86,219,0.12);
+    }
+    .interest-btn .i-icon { font-size: 28px; }
+    .interest-btn .i-text { font-size: 13px; font-weight: 600; color: var(--text); }
+
+    .next-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(26,86,219,0.3);
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,86,219,0.4); }
+    .next-btn:active { transform: scale(0.98); }
+    .next-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* ========== RESULTS SCREEN ========== */
+    .results-header {
+      background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+      padding: 30px 20px;
+      color: white;
+      text-align: center;
+    }
+    .results-emoji { font-size: 56px; margin-bottom: 12px; }
+    .results-title { font-size: 24px; font-weight: 900; }
+    .results-subtitle { font-size: 14px; opacity: 0.85; margin-top: 6px; }
+
+    .results-body { padding: 20px 16px; overflow-y: auto; padding-bottom: 100px; }
+
+    .result-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1.5px solid var(--gray2);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .result-card-icon {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .result-card-text h3 { font-size: 15px; font-weight: 700; color: var(--text); }
+    .result-card-text p { font-size: 13px; color: var(--text-soft); margin-top: 4px; line-height: 1.5; }
+    .result-badge {
+      display: inline-block;
+      background: var(--blue-light);
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 99px;
+      margin-top: 8px;
+    }
+
+    .restart-btn {
+      width: 100%;
+      background: white;
+      color: var(--blue);
+      border: 2px solid var(--blue);
+      border-radius: 14px;
+      padding: 14px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+    }
+    .restart-btn:hover { background: var(--blue-light); }
+
+    /* ========== ABOUT / PROFILE SCREEN ========== */
+    .about-header {
+      background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+      padding: 30px 20px;
+      color: white;
+      text-align: center;
+    }
+    .about-avatar {
+      width: 80px; height: 80px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px;
+    }
+    .about-name { font-size: 22px; font-weight: 800; }
+    .about-sub { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+
+    .about-body { padding: 20px 16px; }
+    .about-section {
+      background: white;
+      border-radius: 16px;
+      border: 1.5px solid var(--gray2);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .about-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--gray2);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .about-row:last-child { border-bottom: none; }
+    .about-row:hover { background: var(--gray); }
+    .about-row-icon { font-size: 22px; width: 32px; text-align: center; }
+    .about-row-text { flex: 1; }
+    .about-row-text .row-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .about-row-text .row-sub { font-size: 12px; color: var(--text-soft); margin-top: 2px; }
+    .about-row-arrow { color: var(--text-soft); font-size: 16px; }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .screen.active { animation: fadeInUp 0.3s ease; }
+  </style>
+</head>
+<body>
+<div class="phone">
+  <div class="status-bar">
+    <span>9:41</span>
+    <span>⚡ Zoot</span>
+    <span>📶 🔋</span>
+  </div>
+
+  <!-- ===== HOME SCREEN ===== -->
+  <div class="screen active" id="screen-home">
+    <div class="home-header">
+      <div class="logo">zoot<span>.</span></div>
+      <div class="tagline">הזכויות שלך, בלחיצת אצבע</div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="חפש זכות, הטבה, תמיכה..."/>
+      </div>
+    </div>
+
+    <div class="home-content">
+      <div class="quiz-banner" onclick="startQuiz()">
+        <div class="quiz-banner-text">
+          <div class="title">🎯 גלה את הזכויות שלך</div>
+          <div class="sub">שאלון קצר – תוצאות מותאמות אישית</div>
+        </div>
+        <div class="quiz-banner-arrow">←</div>
+      </div>
+
+      <div class="section-title">קטגוריות פופולריות</div>
+      <div class="topics-grid">
+        <div class="topic-card">
+          <div class="topic-icon" style="background:#e0f2fe;">💼</div>
+          <h3>תעסוקה</h3>
+          <p>זכויות עובדים, דמי אבטלה, פיצויים</p>
+        </div>
+        <div class="topic-card">
+          <div class="topic-icon" style="background:#fef3c7;">🏥</div>
+          <h3>בריאות</h3>
+          <p>קופת חולים, נכות, ביטוח לאומי</p>
+        </div>
+        <div class="topic-card">
+          <div class="topic-icon" style="background:#f0fdf4;">👪</div>
+          <h3>משפחה</h3>
+          <p>ילדים, הורות, קצבת ילדים</p>
+        </div>
+        <div class="topic-card">
+          <div class="topic-icon" style="background:#fdf4ff;">🎓</div>
+          <h3>חינוך</h3>
+          <p>מלגות, סיוע, זכויות סטודנטים</p>
+        </div>
+        <div class="topic-card">
+          <div class="topic-icon" style="background:#fff1f2;">🏠</div>
+          <h3>דיור</h3>
+          <p>שכירות, סיוע בשכר דירה, זכאות</p>
+        </div>
+        <div class="topic-card">
+          <div class="topic-icon" style="background:#f0f9ff;">👴</div>
+          <h3>קשישים</h3>
+          <p>פנסיה, קצבת זקנה, הטבות</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="showScreen('home')">
+        <span class="nav-icon">🏠</span>
+        <span>בית</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('quiz-start')">
+        <span class="nav-icon">🎯</span>
+        <span>שאלון</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('about')">
+        <span class="nav-icon">👤</span>
+        <span>פרופיל</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== QUIZ SCREEN ===== -->
+  <div class="screen" id="screen-quiz">
+    <div class="quiz-header">
+      <div class="top-row">
+        <button class="back-btn" onclick="goBack()">→</button>
+        <span class="quiz-step-label" id="step-label">שאלה 1 מתוך 5</span>
+        <div style="width:36px"></div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-fill" style="width:20%"></div>
+      </div>
+      <div class="quiz-question" id="quiz-question"></div>
+      <div class="quiz-sub" id="quiz-sub"></div>
+    </div>
+
+    <div class="quiz-body" id="quiz-body"></div>
+
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="showScreen('home')">
+        <span class="nav-icon">🏠</span><span>בית</span>
+      </div>
+      <div class="nav-item active">
+        <span class="nav-icon">🎯</span><span>שאלון</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('about')">
+        <span class="nav-icon">👤</span><span>פרופיל</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RESULTS SCREEN ===== -->
+  <div class="screen" id="screen-results">
+    <div class="results-header">
+      <div class="results-emoji">🎉</div>
+      <div class="results-title" id="results-title">הזכויות שלך מוכנות!</div>
+      <div class="results-subtitle" id="results-subtitle">מצאנו זכויות שמתאימות לך</div>
+    </div>
+    <div class="results-body" id="results-body"></div>
+
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="showScreen('home')">
+        <span class="nav-icon">🏠</span><span>בית</span>
+      </div>
+      <div class="nav-item active">
+        <span class="nav-icon">🎯</span><span>שאלון</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('about')">
+        <span class="nav-icon">👤</span><span>פרופיל</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ABOUT/PROFILE SCREEN ===== -->
+  <div class="screen" id="screen-about">
+    <div class="about-header">
+      <div class="about-avatar">👤</div>
+      <div class="about-name" id="profile-name">שלום!</div>
+      <div class="about-sub">הפרופיל שלי ב-Zoot</div>
+    </div>
+    <div class="about-body">
+      <div class="about-section">
+        <div class="about-row">
+          <div class="about-row-icon">🎯</div>
+          <div class="about-row-text">
+            <div class="row-title">הזכויות שלי</div>
+            <div class="row-sub">צפה בתוצאות השאלון שלך</div>
+          </div>
+          <div class="about-row-arrow">←</div>
+        </div>
+        <div class="about-row">
+          <div class="about-row-icon">🔔</div>
+          <div class="about-row-text">
+            <div class="row-title">התראות</div>
+            <div class="row-sub">קבל עדכונים על זכויות חדשות</div>
+          </div>
+          <div class="about-row-arrow">←</div>
+        </div>
+        <div class="about-row">
+          <div class="about-row-icon">📤</div>
+          <div class="about-row-text">
+            <div class="row-title">שתף עם חבר</div>
+            <div class="row-sub">כי כולם מגיע להם לדעת</div>
+          </div>
+          <div class="about-row-arrow">←</div>
+        </div>
+      </div>
+      <div class="about-section">
+        <div class="about-row" onclick="startQuiz()">
+          <div class="about-row-icon">🔄</div>
+          <div class="about-row-text">
+            <div class="row-title">מלא שאלון מחדש</div>
+            <div class="row-sub">עדכן את הפרופיל שלך</div>
+          </div>
+          <div class="about-row-arrow">←</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="showScreen('home')">
+        <span class="nav-icon">🏠</span><span>בית</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('quiz-start')">
+        <span class="nav-icon">🎯</span><span>שאלון</span>
+      </div>
+      <div class="nav-item active">
+        <span class="nav-icon">👤</span><span>פרופיל</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ===== DATA =====
+  const questions = [
+    {
+      id: 'name',
+      question: 'איך קוראים לך?',
+      sub: 'נשתמש בשמך כדי לפנות אליך',
+      type: 'text',
+      placeholder: 'הכנס את שמך...'
+    },
+    {
+      id: 'who',
+      question: 'מי אתה?',
+      sub: 'בחר את המצב הקרוב אליך',
+      type: 'single',
+      options: [
+        { icon: '💼', text: 'עובד שכיר', desc: 'מועסק אצל מעסיק' },
+        { icon: '🏢', text: 'עצמאי', desc: 'עסק עצמאי' },
+        { icon: '📚', text: 'סטודנט', desc: 'לומד באקדמיה' },
+        { icon: '🔍', text: 'מחפש עבודה', desc: 'לא מועסק כרגע' },
+        { icon: '👶', text: 'הורה', desc: 'עם ילדים קטנים' },
+        { icon: '👴', text: 'קשיש', desc: 'מעל גיל 65' }
+      ]
+    },
+    {
+      id: 'age',
+      question: 'באיזה טווח גיל אתה?',
+      sub: 'הגיל עשוי להשפיע על הזכויות שלך',
+      type: 'single',
+      twoCol: true,
+      options: [
+        { icon: '🧒', text: 'מתחת ל-25' },
+        { icon: '🧑', text: '25–40' },
+        { icon: '🧔', text: '40–60' },
+        { icon: '👴', text: 'מעל 60' }
+      ]
+    },
+    {
+      id: 'location',
+      question: 'איפה אתה גר?',
+      sub: 'חלק מהזכויות משתנות לפי מיקום',
+      type: 'single',
+      options: [
+        { icon: '🏙️', text: 'מרכז', desc: 'תל אביב, גוש דן' },
+        { icon: '🏔️', text: 'צפון', desc: 'חיפה והצפון' },
+        { icon: '🌅', text: 'דרום', desc: 'באר שבע והנגב' },
+        { icon: '🕌', text: 'ירושלים', desc: 'ירושלים והסביבה' }
+      ]
+    },
+    {
+      id: 'interests',
+      question: 'אילו נושאים מעניינים אותך?',
+      sub: 'ניתן לבחור מספר תחומים',
+      type: 'multi',
+      options: [
+        { icon: '💼', text: 'תעסוקה' },
+        { icon: '🏥', text: 'בריאות' },
+        { icon: '👪', text: 'משפחה' },
+        { icon: '🎓', text: 'חינוך' },
+        { icon: '🏠', text: 'דיור' },
+        { icon: '💰', text: 'כספים' }
+      ]
+    }
+  ];
+
+  const rightsDB = {
+    עובד_שכיר: [
+      { icon: '💰', color: '#fef3c7', title: 'פיצויי פיטורים', desc: 'זכאי לפיצויי פיטורים לאחר שנת עבודה', badge: 'זכאי' },
+      { icon: '🏖️', color: '#e0f2fe', title: 'ימי חופשה', desc: '16 ימי חופשה בשנה לפחות', badge: 'זכאי' },
+      { icon: '🤒', color: '#f0fdf4', title: 'ימי מחלה', desc: '18 ימי מחלה צבורים בשנה', badge: 'זכאי' }
+    ],
+    עצמאי: [
+      { icon: '📋', color: '#fdf4ff', title: 'ביטוח לאומי מופחת', desc: 'תשלומי ביטוח לאומי מותאמים לעצמאים', badge: 'לבדוק' },
+      { icon: '💳', text: 'הטבות מס', color: '#fef9c3', title: 'הטבות מס לעצמאים', desc: 'ניכויים מיוחדים על הוצאות עסקיות', badge: 'זכאי' }
+    ],
+    סטודנט: [
+      { icon: '🎓', color: '#e0f2fe', title: 'מלגת נצרכות', desc: 'סיוע כלכלי לסטודנטים זכאים', badge: 'זכאי' },
+      { icon: '🚌', color: '#f0fdf4', title: 'הנחה בתחבורה', desc: '33% הנחה בתחבורה ציבורית', badge: 'זכאי' },
+      { icon: '🏠', color: '#fdf4ff', title: 'מעונות סטודנטים', desc: 'דיור מסובסד במוסדות לימוד', badge: 'לבדוק' }
+    ],
+    מחפש_עבודה: [
+      { icon: '💵', color: '#fef3c7', title: 'דמי אבטלה', desc: 'עד 80% מהשכר הקודם למשך 138 ימים', badge: 'זכאי' },
+      { icon: '📚', color: '#e0f2fe', title: 'הכשרה מקצועית', desc: 'קורסים מסובסדים דרך שירות התעסוקה', badge: 'זכאי' }
+    ],
+    הורה: [
+      { icon: '👶', color: '#fdf4ff', title: 'קצבת ילדים', desc: 'תשלום חודשי עבור כל ילד מביטוח לאומי', badge: 'זכאי' },
+      { icon: '🍼', color: '#f0fdf4', title: 'חופשת לידה', desc: 'עד 26 שבועות חופשת לידה בתשלום', badge: 'זכאי' },
+      { icon: '📚', color: '#e0f2fe', title: 'חינוך חינמי', desc: 'חינוך חינמי לילדים מגיל 3', badge: 'זכאי' }
+    ],
+    קשיש: [
+      { icon: '💰', color: '#fef3c7', title: 'קצבת זקנה', desc: 'קצבה חודשית מביטוח לאומי מגיל 67', badge: 'זכאי' },
+      { icon: '🚌', color: '#e0f2fe', title: 'תחבורה חינמית', desc: 'נסיעות חינמיות לגמלאים', badge: 'זכאי' },
+      { icon: '🏥', color: '#f0fdf4', title: 'השתתפות בתרופות', desc: 'הנחה בתשלום עבור תרופות', badge: 'זכאי' }
+    ]
+  };
+
+  // ===== STATE =====
+  let currentStep = 0;
+  let answers = {};
+  let multiSelected = [];
+  let currentAnswer = null;
+
+  // ===== NAVIGATION =====
+  function showScreen(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + name).classList.add('active');
+  }
+
+  function startQuiz() {
+    currentStep = 0;
+    answers = {};
+    multiSelected = [];
+    currentAnswer = null;
+    showScreen('quiz');
+    renderQuestion();
+  }
+
+  function goBack() {
+    if (currentStep > 0) {
+      currentStep--;
+      renderQuestion();
+    } else {
+      showScreen('home');
+    }
+  }
+
+  // ===== QUIZ LOGIC =====
+  function renderQuestion() {
+    const q = questions[currentStep];
+    const total = questions.length;
+    const pct = ((currentStep + 1) / total) * 100;
+
+    document.getElementById('step-label').textContent = `שאלה ${currentStep + 1} מתוך ${total}`;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('quiz-question').textContent = q.question;
+    document.getElementById('quiz-sub').textContent = q.sub;
+
+    const body = document.getElementById('quiz-body');
+    currentAnswer = answers[q.id] || null;
+    multiSelected = answers[q.id] || [];
+
+    if (q.type === 'text') {
+      body.innerHTML = `
+        <div class="name-input-wrap">
+          <input class="name-input" type="text" placeholder="${q.placeholder}" 
+            id="name-input" value="${answers[q.id] || ''}" 
+            oninput="currentAnswer = this.value; updateNextBtn()"/>
+        </div>
+        <button class="next-btn" id="next-btn" onclick="nextStep()" ${answers[q.id] ? '' : 'disabled'}>
+          המשך ←
+        </button>`;
+      setTimeout(() => document.getElementById('name-input')?.focus(), 100);
+    } else if (q.type === 'single') {
+      const grid = q.twoCol ? 'options-grid two-col' : 'options-grid';
+      const itemClass = q.twoCol ? 'option-btn two-col-item' : 'option-btn';
+      body.innerHTML = `
+        <div class="${grid}">
+          ${q.options.map(opt => `
+            <button class="${itemClass} ${currentAnswer === opt.text ? 'selected' : ''}" 
+              onclick="selectSingle(this, '${opt.text}')">
+              <span class="opt-icon">${opt.icon}</span>
+              <div>
+                <div class="opt-text">${opt.text}</div>
+                ${opt.desc ? `<div class="opt-desc">${opt.desc}</div>` : ''}
+              </div>
+            </button>`).join('')}
+        </div>
+        <button class="next-btn" id="next-btn" onclick="nextStep()" ${currentAnswer ? '' : 'disabled'}>
+          המשך ←
+        </button>`;
+    } else if (q.type === 'multi') {
+      body.innerHTML = `
+        <div class="interests-grid">
+          ${q.options.map(opt => `
+            <button class="interest-btn ${multiSelected.includes(opt.text) ? 'selected' : ''}"
+              onclick="toggleMulti(this, '${opt.text}')">
+              <span class="i-icon">${opt.icon}</span>
+              <span class="i-text">${opt.text}</span>
+            </button>`).join('')}
+        </div>
+        <button class="next-btn" id="next-btn" onclick="nextStep()" ${multiSelected.length > 0 ? '' : 'disabled'}>
+          סיום וקבלת תוצאות 🎉
+        </button>`;
+    }
+  }
+
+  function selectSingle(btn, val) {
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    currentAnswer = val;
+    updateNextBtn();
+  }
+
+  function toggleMulti(btn, val) {
+    if (multiSelected.includes(val)) {
+      multiSelected = multiSelected.filter(v => v !== val);
+      btn.classList.remove('selected');
+    } else {
+      multiSelected.push(val);
+      btn.classList.add('selected');
+    }
+    updateNextBtn();
+  }
+
+  function updateNextBtn() {
+    const btn = document.getElementById('next-btn');
+    if (!btn) return;
+    const q = questions[currentStep];
+    if (q.type === 'text') btn.disabled = !currentAnswer || currentAnswer.trim() === '';
+    else if (q.type === 'single') btn.disabled = !currentAnswer;
+    else if (q.type === 'multi') btn.disabled = multiSelected.length === 0;
+  }
+
+  function nextStep() {
+    const q = questions[currentStep];
+    if (q.type === 'text') answers[q.id] = currentAnswer;
+    else if (q.type === 'single') answers[q.id] = currentAnswer;
+    else if (q.type === 'multi') answers[q.id] = [...multiSelected];
+
+    currentStep++;
+    if (currentStep >= questions.length) {
+      showResults();
+    } else {
+      currentAnswer = null;
+      multiSelected = [];
+      renderQuestion();
+    }
+  }
+
+  // ===== RESULTS =====
+  function showResults() {
+    const name = answers['name'] || 'משתמש יקר';
+    const who = answers['who'] || '';
+    const key = who.replace(' ', '_');
+
+    document.getElementById('results-title').textContent = `${name}, הנה הזכויות שלך! 🎉`;
+    document.getElementById('results-subtitle').textContent = `מצאנו ${(rightsDB[key] || []).length + 2} זכויות רלוונטיות עבורך`;
+    document.getElementById('profile-name').textContent = `שלום, ${name}!`;
+
+    const rights = rightsDB[key] || rightsDB['עובד_שכיר'];
+    const body = document.getElementById('results-body');
+    body.innerHTML = rights.map(r => `
+      <div class="result-card">
+        <div class="result-card-icon" style="background:${r.color}">${r.icon}</div>
+        <div class="result-card-text">
+          <h3>${r.title}</h3>
+          <p>${r.desc}</p>
+          <span class="result-badge">${r.badge}</span>
+        </div>
+      </div>`).join('') +
+      `<button class="restart-btn" onclick="startQuiz()">🔄 מלא שאלון מחדש</button>
+       <button class="next-btn" style="margin-top:10px" onclick="showScreen('home')">🏠 חזור לדף הבית</button>`;
+
+    showScreen('results');
+  }
+</script>
+</body>
+</html>
+Chatly can make mistakes. Check important info.
