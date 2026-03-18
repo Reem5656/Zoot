@@ -1,1377 +1,1127 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>המדריך לישראלי</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Frank+Ruhl+Libre:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --bg: #0a0e1a;
-    --bg2: #0f1628;
-    --card: #141c35;
-    --card2: #1a2340;
-    --border: rgba(99,120,210,0.18);
-    --accent: #4f7cff;
-    --accent2: #7c5cfc;
-    --gold: #f5c842;
-    --text: #e8eaf6;
-    --text2: #8b96c8;
-    --text3: #4a5580;
-    --success: #2dd4bf;
-    --radius: 16px;
-    --radius-sm: 10px;
-    --shadow: 0 8px 32px rgba(0,0,0,0.4);
-    --glow: 0 0 40px rgba(79,124,255,0.15);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'Heebo', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-  }
-
-  /* ─── Background ─── */
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background:
-      radial-gradient(ellipse 80% 50% at 20% 20%, rgba(79,124,255,0.07) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124,92,252,0.07) 0%, transparent 60%);
-    pointer-events: none; z-index: 0;
-  }
-
-  .noise {
-    position: fixed; inset: 0;
-    opacity: 0.025;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 0;
-  }
-
-  /* ─── Nav ─── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 40px;
-    height: 68px;
-    background: rgba(10,14,26,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .nav-logo {
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: -0.02em;
-  }
-
-  .nav-logo span { color: var(--accent); }
-
-  .nav-links {
-    display: flex; gap: 32px;
-    list-style: none;
-  }
-
-  .nav-links a {
-    color: var(--text2);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: color 0.2s;
-  }
-
-  .nav-links a:hover { color: var(--text); }
-
-  .nav-cta {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 9px 22px;
-    border-radius: 8px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    font-family: 'Heebo', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .nav-cta:hover {
-    background: #6b90ff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(79,124,255,0.4);
-  }
-
-  /* ─── Hero ─── */
-  .hero {
-    position: relative; z-index: 1;
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center;
-    padding: 100px 24px 60px;
-  }
-
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(79,124,255,0.12);
-    border: 1px solid rgba(79,124,255,0.3);
-    color: #849dff;
-    font-size: 0.82rem;
-    font-weight: 600;
-    padding: 6px 16px;
-    border-radius: 100px;
-    margin-bottom: 28px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    animation: fadeUp 0.6s ease both;
-  }
-
-  .hero-badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-  }
-
-  .hero-title {
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: clamp(2.8rem, 7vw, 5rem);
-    font-weight: 900;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    color: var(--text);
-    animation: fadeUp 0.6s 0.1s ease both;
-    max-width: 800px;
-  }
-
-  .hero-title .highlight {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero-sub {
-    margin-top: 20px;
-    font-size: 1.15rem;
-    color: var(--text2);
-    font-weight: 400;
-    line-height: 1.7;
-    max-width: 520px;
-    animation: fadeUp 0.6s 0.2s ease both;
-  }
-
-  .hero-actions {
-    display: flex; gap: 16px;
-    margin-top: 40px;
-    flex-wrap: wrap; justify-content: center;
-    animation: fadeUp 0.6s 0.3s ease both;
-  }
-
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #fff;
-    padding: 15px 32px;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 700;
-    font-family: 'Heebo', sans-serif;
-    cursor: pointer;
-    border: none;
-    transition: all 0.25s;
-    box-shadow: 0 8px 24px rgba(79,124,255,0.35);
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 36px rgba(79,124,255,0.5);
-  }
-
-  .btn-secondary {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--card);
-    color: var(--text);
-    padding: 15px 28px;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    font-family: 'Heebo', sans-serif;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    transition: all 0.25s;
-  }
-
-  .btn-secondary:hover {
-    background: var(--card2);
-    border-color: rgba(99,120,210,0.4);
-    transform: translateY(-2px);
-  }
-
-  .hero-stats {
-    display: flex; gap: 48px;
-    margin-top: 64px;
-    padding-top: 40px;
-    border-top: 1px solid var(--border);
-    animation: fadeUp 0.6s 0.4s ease both;
-  }
-
-  .stat-item { text-align: center; }
-
-  .stat-num {
-    display: block;
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1;
-  }
-
-  .stat-num .accent { color: var(--accent); }
-
-  .stat-label {
-    display: block;
-    font-size: 0.82rem;
-    color: var(--text3);
-    font-weight: 500;
-    margin-top: 6px;
-    letter-spacing: 0.03em;
-  }
-
-  /* ─── Features ─── */
-  .features {
-    position: relative; z-index: 1;
-    padding: 100px 24px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .section-label {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--accent);
-    margin-bottom: 12px;
-  }
-
-  .section-title {
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--text);
-    letter-spacing: -0.02em;
-    margin-bottom: 16px;
-  }
-
-  .section-sub {
-    font-size: 1rem;
-    color: var(--text2);
-    line-height: 1.7;
-    max-width: 500px;
-    margin-bottom: 60px;
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-  }
-
-  .feature-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 32px;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .feature-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .feature-card:hover {
-    border-color: rgba(79,124,255,0.3);
-    transform: translateY(-4px);
-    box-shadow: var(--glow);
-  }
-
-  .feature-card:hover::before { opacity: 1; }
-
-  .feature-icon {
-    width: 48px; height: 48px;
-    background: rgba(79,124,255,0.12);
-    border: 1px solid rgba(79,124,255,0.2);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem;
-    margin-bottom: 20px;
-  }
-
-  .feature-name {
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 10px;
-  }
-
-  .feature-desc {
-    font-size: 0.9rem;
-    color: var(--text2);
-    line-height: 1.7;
-  }
-
-  /* ─── Quiz Section ─── */
-  #quiz-section {
-    position: relative; z-index: 1;
-    padding: 100px 24px;
-    max-width: 700px;
-    margin: 0 auto;
-  }
-
-  .quiz-container {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 48px;
-    box-shadow: var(--shadow), var(--glow);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .quiz-container::after {
-    content: '';
-    position: absolute; top: 0; right: 0; bottom: 0; left: 0;
-    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(79,124,255,0.05) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  /* Progress */
-  .progress-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 32px;
-  }
-
-  .progress-info {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--text3);
-    letter-spacing: 0.05em;
-  }
-
-  .progress-num { color: var(--accent); }
-
-  .progress-track {
-    flex: 1;
-    height: 4px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 4px;
-    margin: 0 16px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 4px;
-    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
-  }
-
-  /* Question */
-  .question-block { display: none; }
-  .question-block.active { display: block; animation: fadeUp 0.4s ease both; }
-
-  .question-tag {
-    display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    background: rgba(79,124,255,0.1);
-    padding: 4px 12px;
-    border-radius: 100px;
-    margin-bottom: 16px;
-  }
-
-  .question-text {
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: 1.45rem;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.4;
-    margin-bottom: 8px;
-    letter-spacing: -0.01em;
-  }
-
-  .question-hint {
-    font-size: 0.88rem;
-    color: var(--text3);
-    margin-bottom: 28px;
-    line-height: 1.5;
-  }
-
-  /* Options */
-  .options-grid {
-    display: grid;
-    gap: 10px;
-  }
-
-  .options-grid.cols-2 { grid-template-columns: 1fr 1fr; }
-
-  .option-btn {
-    display: flex; align-items: center; gap: 14px;
-    background: rgba(255,255,255,0.03);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 14px 18px;
-    color: var(--text2);
-    font-family: 'Heebo', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: right;
-  }
-
-  .option-btn:hover {
-    background: rgba(79,124,255,0.08);
-    border-color: rgba(79,124,255,0.4);
-    color: var(--text);
-    transform: translateX(-2px);
-  }
-
-  .option-btn.selected {
-    background: rgba(79,124,255,0.12);
-    border-color: var(--accent);
-    color: var(--text);
-  }
-
-  .option-icon {
-    font-size: 1.2rem;
-    flex-shrink: 0;
-  }
-
-  /* Slider */
-  .slider-wrap {
-    padding: 8px 0;
-  }
-
-  .range-slider {
-    width: 100%;
-    -webkit-appearance: none;
-    height: 6px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 6px;
-    outline: none;
-    margin: 16px 0;
-    position: relative;
-  }
-
-  .range-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    cursor: pointer;
-    box-shadow: 0 0 0 4px rgba(79,124,255,0.2);
-    transition: box-shadow 0.2s;
-  }
-
-  .range-slider::-webkit-slider-thumb:hover {
-    box-shadow: 0 0 0 7px rgba(79,124,255,0.25);
-  }
-
-  .slider-labels {
-    display: flex; justify-content: space-between;
-    font-size: 0.8rem;
-    color: var(--text3);
-  }
-
-  .slider-val {
-    text-align: center;
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--accent);
-    margin: 8px 0;
-  }
-
-  /* Checkbox tags */
-  .tags-wrap {
-    display: flex; flex-wrap: wrap; gap: 10px;
-  }
-
-  .tag-btn {
-    display: inline-flex; align-items: center; gap: 7px;
-    background: rgba(255,255,255,0.04);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 16px;
-    color: var(--text2);
-    font-family: 'Heebo', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .tag-btn:hover {
-    background: rgba(79,124,255,0.08);
-    border-color: rgba(79,124,255,0.4);
-    color: var(--text);
-  }
-
-  .tag-btn.selected {
-    background: rgba(79,124,255,0.15);
-    border-color: var(--accent);
-    color: var(--text);
-  }
-
-  /* Navigation buttons */
-  .quiz-nav {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-top: 36px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-  }
-
-  .btn-back {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: transparent;
-    border: 1.5px solid var(--border);
-    color: var(--text2);
-    padding: 11px 22px;
-    border-radius: 10px;
-    font-family: 'Heebo', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-back:hover { border-color: rgba(99,120,210,0.5); color: var(--text); }
-
-  .btn-next {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #fff;
-    padding: 13px 28px;
-    border-radius: 10px;
-    font-family: 'Heebo', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    transition: all 0.25s;
-    box-shadow: 0 4px 16px rgba(79,124,255,0.35);
-  }
-
-  .btn-next:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(79,124,255,0.5);
-  }
-
-  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-  /* ─── Results ─── */
-  #results-section {
-    display: none;
-    position: relative; z-index: 1;
-    padding: 100px 24px;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  #results-section.visible { display: block; animation: fadeUp 0.5s ease both; }
-
-  .result-hero {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 48px;
-    margin-bottom: 24px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .result-hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(79,124,255,0.1) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .result-emoji {
-    font-size: 3.5rem;
-    margin-bottom: 16px;
-    display: block;
-    animation: pop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
-  }
-
-  .result-title {
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--text);
-    letter-spacing: -0.02em;
-    margin-bottom: 10px;
-  }
-
-  .result-sub {
-    font-size: 1rem;
-    color: var(--text2);
-    line-height: 1.7;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  .profile-badge {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: rgba(79,124,255,0.12);
-    border: 1px solid rgba(79,124,255,0.3);
-    border-radius: 100px;
-    padding: 8px 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #849dff;
-    margin-bottom: 24px;
-  }
-
-  .results-grid {
-    display: grid;
-    gap: 16px;
-  }
-
-  .result-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 28px 32px;
-    transition: all 0.25s;
-    animation: fadeUp 0.4s ease both;
-  }
-
-  .result-card:hover {
-    border-color: rgba(79,124,255,0.3);
-    transform: translateX(-4px);
-  }
-
-  .result-card-header {
-    display: flex; align-items: center; gap: 16px;
-    margin-bottom: 12px;
-  }
-
-  .result-card-icon {
-    width: 44px; height: 44px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.3rem;
-    flex-shrink: 0;
-  }
-
-  .icon-blue { background: rgba(79,124,255,0.15); }
-  .icon-purple { background: rgba(124,92,252,0.15); }
-  .icon-gold { background: rgba(245,200,66,0.15); }
-  .icon-teal { background: rgba(45,212,191,0.15); }
-
-  .result-card-title {
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .result-card-category {
-    font-size: 0.78rem;
-    color: var(--text3);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: 2px;
-  }
-
-  .result-items {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    margin-top: 4px;
-  }
-
-  .result-item {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 5px 12px;
-    font-size: 0.83rem;
-    color: var(--text2);
-    font-weight: 500;
-  }
-
-  .result-restart {
-    text-align: center;
-    margin-top: 40px;
-  }
-
-  /* ─── Footer ─── */
-  footer {
-    position: relative; z-index: 1;
-    border-top: 1px solid var(--border);
-    padding: 40px 24px;
-    text-align: center;
-    color: var(--text3);
-    font-size: 0.85rem;
-    line-height: 1.8;
-  }
-
-  footer a { color: var(--accent); text-decoration: none; }
-
-  /* ─── Animations ─── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
-  }
-
-  @keyframes pop {
-    from { opacity: 0; transform: scale(0.6); }
-    to { opacity: 1; transform: scale(1); }
-  }
-
-  /* ─── Responsive ─── */
-  @media (max-width: 640px) {
-    nav { padding: 0 20px; }
-    .nav-links { display: none; }
-    .hero-stats { gap: 28px; flex-wrap: wrap; justify-content: center; }
-    .quiz-container { padding: 28px 22px; }
-    .options-grid.cols-2 { grid-template-columns: 1fr; }
-    .result-hero { padding: 32px 22px; }
-    .result-card { padding: 22px 20px; }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>זכויותAI – המדריך האישי שלך</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(100,200,255,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #64c8ff, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span { font-weight: 300; }
+
+    nav a {
+      color: #9ca3af;
+      text-decoration: none;
+      margin-right: 24px;
+      font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+
+    nav a:hover { color: #64c8ff; }
+
+    /* ===== HERO ===== */
+    .hero {
+      text-align: center;
+      padding: 80px 20px 60px;
+      background: radial-gradient(ellipse at top, #1a2a4a 0%, transparent 70%);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(100,200,255,0.1);
+      border: 1px solid rgba(100,200,255,0.3);
+      color: #64c8ff;
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 0%, #a0c4ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: #9ca3af;
+      max-width: 560px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white;
+      border: none;
+      padding: 16px 40px;
+      border-radius: 50px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 24px rgba(59,130,246,0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(59,130,246,0.5);
+    }
+
+    /* ===== QUIZ SECTION ===== */
+    #quiz-section {
+      display: none;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .progress-container {
+      margin-bottom: 32px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .question-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .question-number {
+      font-size: 0.8rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+    }
+
+    .question-card h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #f3f4f6;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .question-card .subtitle {
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .options-grid.single-col {
+      grid-template-columns: 1fr;
+    }
+
+    .option-btn {
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid rgba(255,255,255,0.1);
+      color: #d1d5db;
+      padding: 16px 20px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      text-align: right;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .option-btn:hover {
+      background: rgba(59,130,246,0.1);
+      border-color: #3b82f6;
+      color: #fff;
+      transform: translateX(-3px);
+    }
+
+    .option-btn.selected {
+      background: rgba(59,130,246,0.15);
+      border-color: #3b82f6;
+      color: #60a5fa;
+    }
+
+    .option-icon { font-size: 1.3rem; }
+
+    .slider-container {
+      padding: 10px 0;
+    }
+
+    .slider-value {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #60a5fa;
+      margin-bottom: 16px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 8px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.1);
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(59,130,246,0.5);
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 8px;
+    }
+
+    .income-input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1.5px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 16px 20px;
+      font-size: 1.1rem;
+      color: #f3f4f6;
+      outline: none;
+      transition: border-color 0.3s;
+      direction: ltr;
+      text-align: center;
+    }
+
+    .income-input:focus { border-color: #3b82f6; }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-back {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #9ca3af;
+      padding: 14px 28px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.25s;
+    }
+
+    .btn-back:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .btn-next {
+      flex: 1;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border: none;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+    }
+
+    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(59,130,246,0.4); }
+
+    /* ===== RESULTS ===== */
+    #results-section {
+      display: none;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .results-header .score-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: #4ade80;
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    .results-header h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #f3f4f6;
+      margin-bottom: 10px;
+    }
+
+    .results-header p {
+      color: #6b7280;
+      font-size: 1rem;
+    }
+
+    /* ===== RIGHT CARD ===== */
+    .rights-grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .right-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .right-card:hover {
+      border-color: rgba(100,200,255,0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .right-card-header {
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.02);
+      transition: background 0.3s;
+    }
+
+    .right-card-header:hover { background: rgba(255,255,255,0.04); }
+
+    .right-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .right-card-title { flex: 1; }
+
+    .right-card-title h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f3f4f6;
+      margin-bottom: 4px;
+    }
+
+    .right-card-title p {
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .expand-icon {
+      color: #6b7280;
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+
+    .right-card.expanded .expand-icon { transform: rotate(180deg); }
+
+    .right-card-body {
+      display: none;
+      padding: 0 28px 28px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .right-card.expanded .right-card-body { display: block; }
+
+    .right-description {
+      color: #9ca3af;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      margin: 20px 0;
+    }
+
+    /* Tabs inside card */
+    .card-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .card-tab {
+      padding: 8px 18px;
+      border-radius: 50px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: #6b7280;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .card-tab.active {
+      background: rgba(59,130,246,0.15);
+      border-color: #3b82f6;
+      color: #60a5fa;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Links */
+    .links-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .links-list li a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.25s;
+    }
+
+    .links-list li a:hover {
+      background: rgba(59,130,246,0.08);
+      border-color: rgba(59,130,246,0.3);
+      transform: translateX(-3px);
+    }
+
+    .link-icon { font-size: 1.1rem; }
+
+    /* Action Plan */
+    .action-steps {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .action-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-text {
+      color: #d1d5db;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .step-text strong { color: #f3f4f6; }
+
+    /* Restart */
+    .restart-section {
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    .btn-restart {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      color: #9ca3af;
+      padding: 12px 32px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+
+    .btn-restart:hover {
+      border-color: rgba(255,255,255,0.3);
+      color: #fff;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-in { animation: fadeInUp 0.5s ease forwards; }
+
+    @media (max-width: 600px) {
+      .options-grid { grid-template-columns: 1fr; }
+      .question-card { padding: 28px 20px; }
+      header { padding: 16px 20px; }
+      nav { display: none; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="noise"></div>
+<!-- HEADER -->
+<header>
+  <div class="logo">זכויות<span>AI</span></div>
+  <nav>
+    <a href="#">ראשי</a>
+    <a href="#">זכויות</a>
+    <a href="#">מסלולים</a>
+    <a href="#">צור קשר</a>
+  </nav>
+</header>
 
-<!-- ─── Nav ─── -->
-<nav>
-  <div class="nav-logo">המדריך <span>לישראלי</span></div>
-  <ul class="nav-links">
-    <li><a href="#features">מה תמצאו כאן</a></li>
-    <li><a href="#quiz-section">השאלון</a></li>
-  </ul>
-  <button class="nav-cta" onclick="scrollToQuiz()">התחל עכשיו →</button>
-</nav>
-
-<!-- ─── Hero ─── -->
-<section class="hero">
-  <div class="hero-badge">גרסה 2.0 — חדש ומשופר</div>
-  <h1 class="hero-title">
-    גלה את הזכויות<br />
-    <span class="highlight">שמגיעות לך</span>
-  </h1>
-  <p class="hero-sub">
-    שאלון חכם ומותאם אישית שמנתח את המצב שלך ומציג את כל הזכויות, ההטבות והמסלולים הרלוונטיים בדיוק עבורך.
-  </p>
-  <div class="hero-actions">
-    <button class="btn-primary" onclick="scrollToQuiz()">
-      <span>▶</span>
-      <span>התחל את השאלון</span>
-    </button>
-    <button class="btn-secondary" onclick="scrollToFeatures()">
-      <span>מה תמצאו כאן</span>
-      <span>↓</span>
-    </button>
-  </div>
-  <div class="hero-stats">
-    <div class="stat-item">
-      <span class="stat-num">50<span class="accent">+</span></span>
-      <span class="stat-label">זכויות במאגר</span>
-    </div>
-    <div class="stat-item">
-      <span class="stat-num">8</span>
-      <span class="stat-label">קטגוריות</span>
-    </div>
-    <div class="stat-item">
-      <span class="stat-num">3<span class="accent">′</span></span>
-      <span class="stat-label">זמן מילוי</span>
-    </div>
-  </div>
+<!-- HERO -->
+<section class="hero" id="hero-section">
+  <div class="hero-badge">✨ AI-Powered · עברית · חינמי לחלוטין</div>
+  <h1>גלה את הזכויות<br/>שמגיעות לך</h1>
+  <p>שאלון חכם של 2 דקות שמנתח את המצב שלך ומביא לך המלצות מדויקות עם תוכנית פעולה ברורה.</p>
+  <button class="btn-primary" onclick="startQuiz()">🚀 התחל את השאלון</button>
 </section>
 
-<!-- ─── Features ─── -->
-<section class="features" id="features">
-  <div class="section-label">למה דווקא אנחנו</div>
-  <h2 class="section-title">מותאם לך,<br />לא לכולם</h2>
-  <p class="section-sub">
-    האפליקציה מזהה את השלב בחיים שלך ומציגה רק את המידע שרלוונטי עבורך.
-  </p>
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">🎯</div>
-      <div class="feature-name">שאלון מסתגל</div>
-      <p class="feature-desc">השאלות משתנות בהתאם לתשובות שלך — לא תראה שאלות שלא רלוונטיות לך.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">⚡</div>
-      <div class="feature-name">תוצאות מיידיות</div>
-      <p class="feature-desc">בסיום השאלון תקבל רשימה מלאה של זכויות, הטבות ומסלולים — מיד, ללא המתנה.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔒</div>
-      <div class="feature-name">פרטיות מלאה</div>
-      <p class="feature-desc">המידע שלך נשאר אצלך — אנחנו לא אוספים, מאחסנים או מעבירים שום מידע אישי.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔄</div>
-      <div class="feature-name">מעברי חיים</div>
-      <p class="feature-desc">גיוס? מעבר לאוניברסיטה? עצמאי חדש? מזהים את נקודת המעבר ומכינים אותך.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">📊</div>
-      <div class="feature-name">לפי הכנסה</div>
-      <p class="feature-desc">מחשבים בדיוק אילו הטבות מגיעות לך לפי רמת ההכנסה שלך.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🌟</div>
-      <div class="feature-name">הכל במקום אחד</div>
-      <p class="feature-desc">ביטוח לאומי, מלגות, הטבות מס, שירותי תעסוקה — הכל מרוכז בתוצאה אחת.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ─── Quiz ─── -->
+<!-- QUIZ -->
 <section id="quiz-section">
-  <div style="text-align:center;margin-bottom:40px;">
-    <div class="section-label">השאלון האישי</div>
-    <h2 class="section-title">גלה מה מגיע לך</h2>
-    <p class="section-sub" style="margin:0 auto;">ענה על מספר שאלות ונציג לך תמונה מלאה של הזכויות שלך.</p>
-  </div>
-
-  <div class="quiz-container">
-
-    <!-- Progress -->
-    <div class="progress-header">
-      <span class="progress-info">שאלה <span class="progress-num" id="q-current">1</span></span>
-      <div class="progress-track">
-        <div class="progress-fill" id="progress-bar" style="width:10%"></div>
-      </div>
-      <span class="progress-info"><span class="progress-num" id="q-total">8</span> שאלות</span>
+  <div class="progress-container">
+    <div class="progress-info">
+      <span id="progress-label">שאלה 1 מתוך 6</span>
+      <span id="progress-percent">0%</span>
     </div>
-
-    <!-- Q1: Age -->
-    <div class="question-block active" data-q="1">
-      <span class="question-tag">פרטים אישיים</span>
-      <h3 class="question-text">כמה שנים יש לך?</h3>
-      <p class="question-hint">הגיל שלך קובע איזה זכויות ומסלולים רלוונטיים עבורך.</p>
-      <div class="slider-wrap">
-        <div class="slider-val" id="age-val">18</div>
-        <input type="range" class="range-slider" id="age-slider" min="14" max="70" value="18"
-          oninput="document.getElementById('age-val').textContent=this.value; answers.age=parseInt(this.value); updateAgeCategory();" />
-        <div class="slider-labels">
-          <span>14</span>
-          <span>70+</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Q2: Status -->
-    <div class="question-block" data-q="2">
-      <span class="question-tag">מצב עכשווי</span>
-      <h3 class="question-text">מה המצב שלך כרגע?</h3>
-      <p class="question-hint">בחר את האפשרות שמתאימה לך ביותר.</p>
-      <div class="options-grid">
-        <button class="option-btn" onclick="selectOption(this,'status','student')">
-          <span class="option-icon">🎒</span><span>תלמיד בחינוך</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'status','army')">
-          <span class="option-icon">🪖</span><span>משרת / עתיד להתגייס</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'status','student_higher')">
-          <span class="option-icon">🎓</span><span>סטודנט באקדמיה</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'status','employed')">
-          <span class="option-icon">💼</span><span>עובד שכיר</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'status','self_employed')">
-          <span class="option-icon">🚀</span><span>עצמאי / פרילנסר</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'status','unemployed')">
-          <span class="option-icon">🔍</span><span>מחפש עבודה</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Q3: Transition -->
-    <div class="question-block" data-q="3">
-      <span class="question-tag">מעברי חיים</span>
-      <h3 class="question-text">האם אתה לקראת מעבר?</h3>
-      <p class="question-hint">מעברים מרכזיים בחיים כוללים זכויות וסיוע מיוחד.</p>
-      <div class="options-grid">
-        <button class="option-btn" onclick="selectOption(this,'transition','middle_to_high')">
-          <span class="option-icon">📚</span><span>מחטיבה לתיכון</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'transition','high_to_army')">
-          <span class="option-icon">🪖</span><span>מתיכון לצבא</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'transition','army_to_civilian')">
-          <span class="option-icon">🎓</span><span>שחרור מהצבא</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'transition','new_job')">
-          <span class="option-icon">💼</span><span>מעבר עבודה חדש</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'transition','none')">
-          <span class="option-icon">✅</span><span>לא, אני יציב כרגע</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Q4: Employment type (conditional) -->
-    <div class="question-block" data-q="4">
-      <span class="question-tag">פרטי תעסוקה</span>
-      <h3 class="question-text" id="q4-text">מה סוג ההעסקה שלך?</h3>
-      <p class="question-hint">זה משפיע על הזכויות שמגיעות לך מהמעסיק ומהביטוח הלאומי.</p>
-      <div class="options-grid" id="q4-options">
-        <button class="option-btn" onclick="selectOption(this,'employment_type','full')">
-          <span class="option-icon">⏰</span><span>משרה מלאה</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'employment_type','part')">
-          <span class="option-icon">🕐</span><span>משרה חלקית</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'employment_type','contract')">
-          <span class="option-icon">📄</span><span>חוזה / קבלן</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'employment_type','na')">
-          <span class="option-icon">➖</span><span>לא רלוונטי</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Q5: Income -->
-    <div class="question-block" data-q="5">
-      <span class="question-tag">הכנסה חודשית</span>
-      <h3 class="question-text">מה ההכנסה החודשית שלך (ברוטו)?</h3>
-      <p class="question-hint">הטבות רבות מחושבות לפי רמת ההכנסה. המידע נשאר פרטי לחלוטין.</p>
-      <div class="options-grid cols-2">
-        <button class="option-btn" onclick="selectOption(this,'income','none')">
-          <span class="option-icon">⭕</span><span>אין הכנסה</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'income','low')">
-          <span class="option-icon">📊</span><span>עד ₪5,000</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'income','mid_low')">
-          <span class="option-icon">📈</span><span>₪5,000 – ₪10,000</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'income','mid')">
-          <span class="option-icon">💰</span><span>₪10,000 – ₪20,000</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'income','high')">
-          <span class="option-icon">💎</span><span>₪20,000 – ₪35,000</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'income','very_high')">
-          <span class="option-icon">🏆</span><span>מעל ₪35,000</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Q6: Education -->
-    <div class="question-block" data-q="6">
-      <span class="question-tag">השכלה</span>
-      <h3 class="question-text">מה רמת ההשכלה שלך?</h3>
-      <p class="question-hint">משפיע על המסלולים ומלגות הלימודים שרלוונטיות עבורך.</p>
-      <div class="options-grid">
-        <button class="option-btn" onclick="selectOption(this,'education','middle')">
-          <span class="option-icon">🏫</span><span>חטיבת ביניים</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'education','high')">
-          <span class="option-icon">🏛️</span><span>תיכון (בוגר / לומד)</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'education','bagrut')">
-          <span class="option-icon">📜</span><span>בגרות מלאה</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'education','academic')">
-          <span class="option-icon">🎓</span><span>תואר אקדמי</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'education','post')">
-          <span class="option-icon">🔬</span><span>תואר שני / שלישי</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Q7: Interests -->
-    <div class="question-block" data-q="7">
-      <span class="question-tag">תחומי עניין</span>
-      <h3 class="question-text">מה מעניין אותך? (בחר עד 3)</h3>
-      <p class="question-hint">נתאים לך המלצות על מסלולים, קורסים ותוכניות בתחומים שאוהב.</p>
-      <div class="tags-wrap" id="interests-wrap">
-        <button class="tag-btn" onclick="toggleInterest(this,'tech')">💻 טכנולוגיה</button>
-        <button class="tag-btn" onclick="toggleInterest(this,'art')">🎨 אמנות ועיצוב</button>
-        <button class="tag-btn" onclick="toggleInterest(this,'business')">📈 עסקים ויזמות</button>
-        <button class="tag-btn" onclick="toggleInterest(this,'health')">🏥 בריאות ורפואה</button>
-        <button class="tag-btn" onclick="toggleInterest(this,'law')">⚖️ משפטים וחברה</button>
-        <button class="tag-btn" onclick="toggleInterest(this,'education_field')">📚 חינוך והוראה</button>
-        <button class="tag-btn" onclick="toggleInterest(this,'military')">🛡️ ביטחון ומנהיגות</button>
-        <button class="tag-btn" onclick="toggleInterest(this,'nature')">🌿 טבע וסביבה</button>
-        <button class="tag-btn" onclick="toggleInterest(this,'sports')">⚽ ספורט ופעילות גופנית</button>
-        <button class="tag-btn" onclick="toggleInterest(this,'social')">🤝 עבודה סוציאלית</button>
-        <button class="tag-btn" onclick="toggleInterest(this,'media')">🎬 תקשורת ומדיה</button>
-        <button class="tag-btn" onclick="toggleInterest(this,'science')">🔬 מדע ומחקר</button>
-      </div>
-    </div>
-
-    <!-- Q8: Region -->
-    <div class="question-block" data-q="8">
-      <span class="question-tag">מיקום</span>
-      <h3 class="question-text">באיזה אזור אתה גר?</h3>
-      <p class="question-hint">ישנן הטבות אזוריות ותוכניות מיוחדות לפי מקום מגורים.</p>
-      <div class="options-grid cols-2">
-        <button class="option-btn" onclick="selectOption(this,'region','north')">
-          <span class="option-icon">🌄</span><span>צפון</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'region','center')">
-          <span class="option-icon">🏙️</span><span>מרכז</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'region','jerusalem')">
-          <span class="option-icon">🕌</span><span>ירושלים</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'region','south')">
-          <span class="option-icon">🏜️</span><span>דרום / נגב</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'region','periphery')">
-          <span class="option-icon">🌾</span><span>פריפריה</span>
-        </button>
-        <button class="option-btn" onclick="selectOption(this,'region','abroad')">
-          <span class="option-icon">✈️</span><span>בחו"ל</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Navigation -->
-    <div class="quiz-nav">
-      <button class="btn-back" id="btn-back" onclick="goBack()" style="visibility:hidden">
-        ← חזרה
-      </button>
-      <button class="btn-next" id="btn-next" onclick="goNext()">
-        המשך →
-      </button>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
     </div>
   </div>
+  <div id="question-container"></div>
 </section>
 
-<!-- ─── Results ─── -->
+<!-- RESULTS -->
 <section id="results-section">
-  <div style="text-align:center;margin-bottom:40px;">
-    <div class="section-label">הפרופיל שלך</div>
-    <h2 class="section-title">הנה מה שמגיע לך</h2>
-    <p class="section-sub" style="margin:0 auto;">בהתבסס על התשובות שלך, אספנו את כל הזכויות והמסלולים הרלוונטיים.</p>
+  <div class="results-header animate-in">
+    <div class="score-badge">✅ הניתוח הושלם</div>
+    <h2>הזכויות שמגיעות לך</h2>
+    <p>לחץ על כל כרטיס לפרטים מלאים, קישורים רשמיים ותוכנית פעולה</p>
   </div>
-
-  <div class="result-hero">
-    <span class="result-emoji" id="result-emoji">🎯</span>
-    <div class="profile-badge" id="result-profile">
-      <span>📋</span>
-      <span id="profile-label">טוען...</span>
-    </div>
-    <h2 class="result-title" id="result-title">הפרופיל שלך</h2>
-    <p class="result-sub" id="result-desc">תוכן מותאם אישית</p>
-  </div>
-
-  <div class="results-grid" id="results-cards"></div>
-
-  <div class="result-restart">
-    <button class="btn-secondary" onclick="restartQuiz()">
-      🔄 התחל מחדש
-    </button>
+  <div class="rights-grid" id="rights-grid"></div>
+  <div class="restart-section">
+    <button class="btn-restart" onclick="restart()">🔄 מלא שאלון מחדש</button>
   </div>
 </section>
-
-<!-- ─── Footer ─── -->
-<footer>
-  <p>המדריך לישראלי — כל הזכויות שמגיעות לך, במקום אחד.</p>
-  <p style="margin-top:8px;color:var(--text3);font-size:0.8rem;">
-    המידע באתר הוא כללי בלבד ואינו מהווה ייעוץ משפטי. לייעוץ פרטני פנה לגורם מוסמך.
-  </p>
-</footer>
 
 <script>
-// ─── State ───
-let currentQ = 1;
-const totalQ = 8;
-const answers = { age: 18, interests: [] };
+  // ============================================================
+  // DATA LAYER – כל הזכויות עם תוכן מלא
+  // ============================================================
+  const RIGHTS_DB = {
 
-// ─── Navigation ───
-function scrollToQuiz() {
-  document.getElementById('quiz-section').scrollIntoView({ behavior: 'smooth' });
-}
-function scrollToFeatures() {
-  document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
-}
+    // ── בריאות ──────────────────────────────────────────────
+    health_basic: {
+      icon: "🏥",
+      color: "rgba(59,130,246,0.15)",
+      iconColor: "#3b82f6",
+      title: "סל שירותי הבריאות",
+      tagline: "כיסוי רפואי בסיסי לכל תושב ישראל",
+      description: "כל תושב ישראל זכאי לסל שירותי בריאות הכולל: ביקורי רופא, אשפוז, תרופות, ניתוחים, מעבדה ודימות. הסל מעודכן מדי שנה ומספק מענה לרוב הצרכים הרפואיים. אין צורך בהסכמת חברת ביטוח – זהו זכות חוקית.",
+      links: [
+        { text: "סל שירותי הבריאות – אתר הממשלה", url: "https://www.gov.il/he/departments/general/basket_services", icon: "🏛️" },
+        { text: "מאגר התרופות הכלולות בסל", url: "https://www.health.gov.il/Services/Committee/Pages/default.aspx", icon: "💊" },
+        { text: "בחירת קופת חולים – כל.זכות", url: "https://www.kolzchut.org.il/he/קופות_חולים", icon: "📋" }
+      ],
+      steps: [
+        { title: "בדוק את קופת החולים שלך", text: "ודא שאתה רשום בקופת חולים. אם לא – התרשם בסניף הקרוב." },
+        { title: "הכר את הסל", text: "כנס לאתר <strong>gov.il</strong> וחפש את רשימת השירותים הכלולים בסל שלך." },
+        { title: "בקש הפניות נכון", text: "לרופא מומחה תמיד תבקש הפניה מרופא המשפחה – חוסך תשלום נוסף." },
+        { title: "דאג לפטורים", text: "אם אתה במצב כלכלי קשה, בקש פטור מתשלום השתתפות עצמית בקופה." }
+      ]
+    },
 
-// ─── Quiz Logic ───
-function updateProgress() {
-  const pct = (currentQ / totalQ) * 100;
-  document.getElementById('progress-bar').style.width = pct + '%';
-  document.getElementById('q-current').textContent = currentQ;
-  document.getElementById('btn-back').style.visibility = currentQ > 1 ? 'visible' : 'hidden';
-  document.getElementById('btn-next').textContent = currentQ === totalQ ? 'צפה בתוצאות ✨' : 'המשך →';
-}
+    health_young: {
+      icon: "👶",
+      color: "rgba(167,139,250,0.15)",
+      iconColor: "#a78bfa",
+      title: "שירותי בריאות לנוער",
+      tagline: "זכויות מיוחדות לבני 18-25",
+      description: "בני נוער עד גיל 18 מקבלים שירותי שיניים בחינם. עד גיל 25 קיימת זכאות לפסיכולוג או עו\"ס בשירותי בריאות הנפש ללא עלות. כמו כן, חיסונים שגרתיים ניתנים ללא תשלום.",
+      links: [
+        { text: "שיניים לנוער – ביטוח לאומי", url: "https://www.btl.gov.il/Benefits/Health/Pages/default.aspx", icon: "🦷" },
+        { text: "בריאות הנפש לצעירים – שיחה", url: "https://sahar.org.il", icon: "🧠" },
+        { text: "חיסונים – משרד הבריאות", url: "https://www.health.gov.il/Subjects/Vaccines/Pages/default.aspx", icon: "💉" }
+      ],
+      steps: [
+        { title: "שיניים – פנה לקופה", text: "עד גיל 18 הגש תביעה בקופת החולים שלך לטיפולי שיניים בחינם." },
+        { title: "בריאות הנפש", text: "פנה לרופא המשפחה וקבל הפניה לפסיכולוג קליני תוך 4 שבועות בחינם." },
+        { title: "חיסונים", text: "בדוק ביצוע חיסונים בתיק הבריאות – השלם מה שחסר בחינם." }
+      ]
+    },
 
-function showQuestion(n) {
-  document.querySelectorAll('.question-block').forEach(b => b.classList.remove('active'));
-  const target = document.querySelector(`[data-q="${n}"]`);
-  if (target) target.classList.add('active');
-  updateProgress();
-}
+    // ── כספי ────────────────────────────────────────────────
+    minimum_wage: {
+      icon: "💰",
+      color: "rgba(34,197,94,0.15)",
+      iconColor: "#22c55e",
+      title: "שכר מינימום",
+      tagline: "שכר 5,880₪ לחודש נכון ל-2024",
+      description: "כל עובד שכיר בישראל זכאי לשכר מינימום של 5,880₪ לחודש (47.30₪ לשעה). שכר מינימום חל גם על עובדים זרים, מתמחים ועבודה חלקית (באופן יחסי). מעסיק שמשלם פחות עובר על החוק ועלול להיקנס.",
+      links: [
+        { text: "שכר מינימום – משרד העבודה", url: "https://www.gov.il/he/departments/general/minimumwage", icon: "🏛️" },
+        { text: "תלונה על הפרת שכר מינימום", url: "https://www.gov.il/he/departments/general/complaint_minimum_wage", icon: "📝" },
+        { text: "מחשבון שכר – כל.זכות", url: "https://www.kolzchut.org.il/he/שכר_מינימום", icon: "🧮" }
+      ],
+      steps: [
+        { title: "בדוק את תלוש המשכורת", text: "ודא שהשכר לשעה לא נמוך מ-47.30₪. חשב: שכר חודשי ÷ שעות חודשיות." },
+        { title: "אם מגיע לך יותר", text: "שוחח עם המעסיק. אם לא מגיב, פנה לממונה על שכר מינימום במשרד העבודה." },
+        { title: "תיעוד", text: "שמור את כל התלושים – הם הוכחה חוקית לתשלום." },
+        { title: "תלונה", text: "ניתן להגיש תלונה אנונימית לממונה על שכר – ללא חשש מפיטורים." }
+      ]
+    },
 
-function selectOption(btn, key, val) {
-  const parent = btn.closest('.options-grid');
-  parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  answers[key] = val;
-}
+    income_support: {
+      icon: "🤝",
+      color: "rgba(251,146,60,0.15)",
+      iconColor: "#fb923c",
+      title: "גמלת הבטחת הכנסה",
+      tagline: "רשת ביטחון לאנשים ללא הכנסה מספקת",
+      description: "מי שאין לו מקור הכנסה מספיק (או בכלל), יכול לקבל גמלה מביטוח לאומי. הסכום משתנה לפי גודל המשפחה, ומחייב הוכחת חיפוש עבודה פעיל. רווק מתחת גיל 55 מקבל כ-2,700₪ לחודש.",
+      links: [
+        { text: "הבטחת הכנסה – ביטוח לאומי", url: "https://www.btl.gov.il/Benefits/Habitahon_Hachnasa/Pages/default.aspx", icon: "🏛️" },
+        { text: "מחשבון זכאות", url: "https://www.btl.gov.il/Benefits/Habitahon_Hachnasa/Pages/Calculator.aspx", icon: "🧮" },
+        { text: "הגשת תביעה מקוונת", url: "https://www.btl.gov.il/online_services/Pages/habitahon_hachnasa.aspx", icon: "📤" }
+      ],
+      steps: [
+        { title: "בדוק זכאות", text: "כנס למחשבון הזכאות של ביטוח לאומי ומלא את הפרטים." },
+        { title: "קבל אישור חיפוש עבודה", text: "הירשם בלשכת התעסוקה – זה תנאי לקבלת הגמלה." },
+        { title: "הגש תביעה", text: "הגש תביעה אונליין בביטוח לאומי – הגמלה מאושרת בתוך 30-60 יום." },
+        { title: "עדכן שינויים", text: "כל שינוי בהכנסה חייב לדווח לביטוח לאומי תוך 30 יום." }
+      ]
+    },
 
-function toggleInterest(btn, val) {
-  if (btn.classList.contains('selected')) {
-    btn.classList.remove('selected');
-    answers.interests = answers.interests.filter(i => i !== val);
-  } else {
-    if (answers.interests.length >= 3) return;
-    btn.classList.add('selected');
-    answers.interests.push(val);
-  }
-}
+    // ── עבודה ───────────────────────────────────────────────
+    employment_rights: {
+      icon: "⚖️",
+      color: "rgba(100,200,255,0.15)",
+      iconColor: "#64c8ff",
+      title: "זכויות עובד בסיסיות",
+      tagline: "מה מגיע לך כשכיר – ובכמה",
+      description: "כל עובד שכיר זכאי ל: דמי הבראה (378₪ ליום), חופשה שנתית (10-24 ימים לפי ותק), ימי מחלה (1.5 יום לחודש), פנסיה חובה (17.5% מהשכר), ופיצויים בפיטורים. כל אלה הם זכויות חוק ולא טובות לב.",
+      links: [
+        { text: "זכויות עובד – משרד העבודה", url: "https://www.gov.il/he/departments/topics/employees-rights", icon: "⚖️" },
+        { text: "חישוב דמי הבראה", url: "https://www.kolzchut.org.il/he/דמי_הבראה", icon: "🧮" },
+        { text: "פנסיה חובה – מבטחים", url: "https://www.gov.il/he/departments/general/pension_insurance", icon: "🏦" }
+      ],
+      steps: [
+        { title: "בדוק תלוש מפורט", text: "ודא שמופיעים: פנסיה, קרן השתלמות (אם זכאי), הבראה ומחלה." },
+        { title: "דרוש הסכם עבודה", text: "כל עובד חייב לקבל הסכם עבודה חתום – הגן על עצמך משפטית." },
+        { title: "מעקב אחר ימי חופשה", text: "שמור רישום אישי של ימי החופשה שניצלת מול מה שמגיע לך." },
+        { title: "פיצויים בפיטורים", text: "בפיטורים – מגיעים לך פיצויים מלאים. קבל ייעוץ לפני חתימה על כל מסמך." }
+      ]
+    },
 
-function updateAgeCategory() {
-  const age = answers.age;
-  if (age < 16) answers.ageGroup = 'young';
-  else if (age < 18) answers.ageGroup = 'teen';
-  else if (age < 22) answers.ageGroup = 'young_adult';
-  else if (age < 35) answers.ageGroup = 'adult';
-  else if (age < 55) answers.ageGroup = 'mid';
-  else answers.ageGroup = 'senior';
-}
+    freelance_rights: {
+      icon: "💻",
+      color: "rgba(167,139,250,0.15)",
+      iconColor: "#a78bfa",
+      title: "זכויות עצמאי / פרילנסר",
+      tagline: "ניהול נכון של עסק עצמאי",
+      description: "עצמאי (עוסק פטור/מורשה) חייב בדיווח מס הכנסה ומע\"מ. עוסק פטור (מחזור עד 120,000₪/שנה) פטור ממע\"מ אך חייב בביטוח לאומי. קיימות הוצאות מוכרות שמקטינות את המס: טלפון, נסיעות, ציוד ועוד.",
+      links: [
+        { text: "פתיחת עוסק פטור – רשות המיסים", url: "https://www.gov.il/he/departments/general/open_exempt_dealer", icon: "🏛️" },
+        { text: "הוצאות מוכרות לעצמאי", url: "https://www.kolzchut.org.il/he/הוצאות_מוכרות_לעצמאים", icon: "📋" },
+        { text: "ביטוח לאומי לעצמאים", url: "https://www.btl.gov.il/Benefits/Independent/Pages/default.aspx", icon: "🛡️" }
+      ],
+      steps: [
+        { title: "פתח עוסק (אם טרם עשית)", text: "פתח תיק ברשות המיסים ובביטוח לאומי – ניתן אונליין בתוך 20 דקות." },
+        { title: "עקוב אחר הכנסות", text: "השתמש באפליקציה או גיליון Excel לתיעוד כל הכנסה והוצאה." },
+        { title: "שמור חשבוניות", text: "כל קנייה עסקית – שמור חשבונית. זה יקטין את המס שתשלם." },
+        { title: "הגש דוח שנתי", text: "מגיש דוח עד 30 באפריל. מומלץ רואה חשבון לשנה הראשונה." }
+      ]
+    },
 
-function goNext() {
-  if (currentQ === totalQ) { showResults(); return; }
-  currentQ++;
-  showQuestion(currentQ);
-  document.getElementById('quiz-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+    // ── לימודים ─────────────────────────────────────────────
+    student_rights: {
+      icon: "🎓",
+      color: "rgba(34,197,94,0.15)",
+      iconColor: "#22c55e",
+      title: "מלגות ועזרה כלכלית לסטודנטים",
+      tagline: "אל תממן לבד – יש עזרה שממתינה לך",
+      description: "סטודנטים יכולים לקבל: מלגת עידוד (עד 30,000₪ לשנה), הלוואה בשוק ההון, מלגות ממוסדות, סיוע שכר לימוד ממשרד הרווחה, ומלגות חברות היי-טק. כ-40% מהסטודנטים זכאים לסיוע כלכלי כלשהו.",
+      links: [
+        { text: "מלגות – רשות לסטודנטים", url: "https://students.gov.il/scholarships", icon: "🎓" },
+        { text: "הלוואות לסטודנטים", url: "https://students.gov.il/loans", icon: "🏦" },
+        { text: "מלגות חברות – אתר דן אנד ברדסטריט", url: "https://students.gov.il", icon: "💼" }
+      ],
+      steps: [
+        { title: "בדוק זכאות למלגות", text: "כנס לאתר הרשות הלאומית לסטודנטים ומלא שאלון זכאות." },
+        { title: "פנה למחלקת רווחה", text: "לכל אוניברסיטה יש מחלקת רווחה לסטודנטים – קבל ייעוץ אישי." },
+        { title: "הגש מועמדות למלגות", text: "חפש מלגות ספציפיות לתחום לימודיך – יש מלגות ייעודיות לכל תחום." },
+        { title: "שמור על קשר", text: "הצטרף לרשימות תפוצה של הרשות לסטודנטים – הודעות על מלגות חדשות." }
+      ]
+    },
 
-function goBack() {
-  if (currentQ > 1) {
-    currentQ--;
-    showQuestion(currentQ);
-  }
-}
+    // ── צבא / שירות לאומי ───────────────────────────────────
+    army_rights: {
+      icon: "🪖",
+      color: "rgba(251,146,60,0.15)",
+      iconColor: "#fb923c",
+      title: "זכויות לחיילים ומשתחררים",
+      tagline: "מה מגיע לך בשירות ואחריו",
+      description: "חיילים בשירות חובה זכאים ל: מענק שחרור (שכר חובה מלא לאחר שחרור), מלגות קדם-אקדמאיות, סיוע בדיור (מענק דיור), עדיפות בקבלה למוסדות אקדמאיים, ומענק לרכישת מחשב לאחר שחרור.",
+      links: [
+        { text: "זכויות משתחרר – אגף השיקום", url: "https://www.idf.il/units/rehabilitation-department/", icon: "🪖" },
+        { text: "מלגות לחיילים – רשות לסטודנטים", url: "https://students.gov.il/soldiers", icon: "🎓" },
+        { text: "מענק דיור למשתחררים", url: "https://www.kolzchut.org.il/he/זכויות_חיילים_משתחררים", icon: "🏠" }
+      ],
+      steps: [
+        { title: "לפני השחרור", text: "בקש מהקצין הממונה רשימת זכויות מגיעות – חודש לפני השחרור." },
+        { title: "פתח תיק בדיור", text: "מיד לאחר שחרור, פנה למשרד הבינוי לקבלת מענק דיור." },
+        { title: "מלגות אקדמאיות", text: "הגש מועמדות למלגות ייעודיות לחיילים משתחררים ברשות לסטודנטים." },
+        { title: "קרן השתלמות", text: "בדוק אם צברת כספים בקרן השתלמות בצבא ואיך לממשם." }
+      ]
+    },
 
-// ─── Results Engine ───
-function showResults() {
-  document.getElementById('quiz-section').style.display = 'none';
-  const rs = document.getElementById('results-section');
-  rs.classList.add('visible');
-  rs.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  buildResults();
-}
+    // ── דיור ────────────────────────────────────────────────
+    housing: {
+      icon: "🏠",
+      color: "rgba(100,200,255,0.15)",
+      iconColor: "#64c8ff",
+      title: "סיוע בדיור",
+      tagline: "מה ניתן לקבל לדיור ראשון",
+      description: "משרד הבינוי מציע: מחיר למשתכן (דירה בהנחה), מענק לרכישת דירה ראשונה, סיוע בשכר דירה (מחוסרי דיור), ותוכנית 'שכר דירה בר השגה'. הזכאות תלויה בגיל, מצב משפחתי והכנסה.",
+      links: [
+        { text: "מחיר למשתכן – משרד הבינוי", url: "https://www.moch.gov.il/mechir_lamishtaken/Pages/default.aspx", icon: "🏗️" },
+        { text: "סיוע בשכר דירה", url: "https://www.moch.gov.il/siyua_shchadira/Pages/default.aspx", icon: "🏠" },
+        { text: "מחשבון זכאות דיור", url: "https://www.moch.gov.il", icon: "🧮" }
+      ],
+      steps: [
+        { title: "בדוק זכאות", text: "כנס לאתר משרד הבינוי ובדוק אם אתה עומד בתנאי הזכאות." },
+        { title: "הירשם להגרלות", text: "עקוב אחר פרסומי מחיר למשתכן – ההגרלות מתקיימות כל כמה חודשים." },
+        { title: "קבל ייעוץ משכנתא", text: "לפני רכישה, קבל ייעוץ ממשכנתא בנק – השווה 3 בנקים לפחות." },
+        { title: "סיוע בשכ\"ד", text: "אם אין בית, הגש בקשה לסיוע בשכר דירה ממשרד הבינוי." }
+      ]
+    },
 
-function getProfileLabel() {
-  const s = answers.status;
-  const t = answers.transition;
-  if (s === 'student') return 'תלמיד בחינוך';
-  if (s === 'army' || t === 'high_to_army') return 'משרת צבאי / עתיד להתגייס';
-  if (t === 'army_to_civilian') return 'משוחרר מהצבא';
-  if (s === 'student_higher') return 'סטודנט';
-  if (s === 'self_employed') return 'עצמאי';
-  if (s === 'employed') return 'עובד שכיר';
-  if (s === 'unemployed') return 'מחפש עבודה';
-  return 'ישראלי';
-}
-
-function buildResults() {
-  const { age, status, transition, income, education, interests, region, ageGroup } = answers;
-  const profile = getProfileLabel();
-
-  // Hero
-  const emojiMap = {
-    student: '📚', army: '🪖', student_higher: '🎓',
-    employed: '💼', self_employed: '🚀', unemployed: '🔍'
+    // ── יזמות ───────────────────────────────────────────────
+    entrepreneurship: {
+      icon: "🚀",
+      color: "rgba(167,139,250,0.15)",
+      iconColor: "#a78bfa",
+      title: "קרנות וסיוע ליזמים",
+      tagline: "ממשלת ישראל תממן חלק מהחלום שלך",
+      description: "רשות החדשנות מציעה מענקים של עד 50% מעלויות הפיתוח. קיימות קרנות ייעודיות לנשים יזמות, לצעירים, ולסטארטאפים בתחילת דרכם. כמו כן, ניתן לקבל ליווי עסקי חינמי מ'מרכז שלי'.",
+      links: [
+        { text: "רשות החדשנות – מענקים", url: "https://innovationisrael.org.il", icon: "🚀" },
+        { text: "קרן לעסקים קטנים", url: "https://www.mosdot.co.il", icon: "💼" },
+        { text: "ליווי עסקי – מרכז שלי", text2: "ייעוץ חינמי לעסקים", url: "https://www.sheli.org.il", icon: "🤝" }
+      ],
+      steps: [
+        { title: "גבש רעיון וכתוב תוכנית עסקית", text: "אפילו 2 עמודים – מה אתה מוכר, למי, ואיך תרוויח." },
+        { title: "פנה למרכז שלי", text: "קבל ייעוץ עסקי חינמי מיועץ מנוסה – ממשלה ממנת אותו." },
+        { title: "בדוק מענקים רלוונטיים", text: "כנס לרשות החדשנות ומצא קרן המתאימה לתחום שלך." },
+        { title: "הגש בקשה", text: "הגשת בקשה למענק אורכת 1-3 חודשים – התחל מוקדם." }
+      ]
+    }
   };
-  document.getElementById('result-emoji').textContent = emojiMap[status] || '✨';
-  document.getElementById('profile-label').textContent = profile;
-  document.getElementById('result-title').textContent = `שלום, ${profile} בן/בת ${age}`;
-  document.getElementById('result-desc').textContent =
-    `מצאנו ${countRights()} זכויות ומסלולים מותאמים לפרופיל שלך. הנה הפירוט המלא:`;
 
-  // Cards
-  const cards = [];
+  // ============================================================
+  // QUIZ LOGIC
+  // ============================================================
+  const questions = [
+    {
+      id: "age",
+      title: "מה הגיל שלך?",
+      subtitle: "זה עוזר לנו להתאים את הזכויות הרלוונטיות לשלב החיים שלך",
+      type: "options",
+      options: [
+        { value: "teen", label: "14–17", icon: "🎒", sub: "תלמיד תיכון/חטיבה" },
+        { value: "young", label: "18–24", icon: "🪖", sub: "צבא/לימודים/תחילת קריירה" },
+        { value: "adult", label: "25–35", icon: "💼", sub: "עבודה/משפחה/הקמת עסק" },
+        { value: "mid", label: "36–50", icon: "📈", sub: "קריירה/הורות/נדל\"ן" },
+        { value: "senior", label: "51+", icon: "🌟", sub: "ניסיון/פרישה מוקדמת/ייעוץ" }
+      ]
+    },
+    {
+      id: "transition",
+      title: "האם אתה לפני מעבר משמעותי בחיים?",
+      subtitle: "מעברים פותחים זכויות חדשות – חשוב לדעת מה מגיע",
+      type: "options",
+      cols: 1,
+      options: [
+        { value: "school_to_army", label: "מתיכון לצבא / שירות לאומי", icon: "🪖" },
+        { value: "army_to_study", label: "שחרור מהצבא → לימודים", icon: "🎓" },
+        { value: "study_to_work", label: "סיום לימודים → שוק העבודה", icon: "💼" },
+        { value: "work_to_business", label: "שכיר → עצמאי / יזם", icon: "🚀" },
+        { value: "none", label: "לא, אני בשלב יציב", icon: "✅" }
+      ]
+    },
+    {
+      id: "status",
+      title: "מה הסטטוס התעסוקתי שלך?",
+      subtitle: "מה עיקר פעילותך כיום?",
+      type: "options",
+      options: [
+        { value: "student", label: "סטודנט / תלמיד", icon: "📚" },
+        { value: "employee", label: "שכיר", icon: "💼" },
+        { value: "freelance", label: "עצמאי / פרילנסר", icon: "💻" },
+        { value: "unemployed", label: "מחפש עבודה", icon: "🔍" },
+        { value: "army", label: "שירות צבאי / לאומי", icon: "🪖" },
+        { value: "business", label: "בעל עסק", icon: "🏢" }
+      ]
+    },
+    {
+      id: "income",
+      title: "מה ההכנסה החודשית שלך?",
+      subtitle: "ברוטו (לפני מסים) – נשמר בסודיות מוחלטת",
+      type: "income",
+      placeholder: "לדוגמה: 8500"
+    },
+    {
+      id: "interests",
+      title: "מה תחומי העניין שלך?",
+      subtitle: "בחר עד 3 תחומים שהכי מעניינים אותך",
+      type: "multi",
+      max: 3,
+      options: [
+        { value: "tech", label: "טכנולוגיה / הייטק", icon: "💻" },
+        { value: "health_interest", label: "בריאות / רפואה", icon: "🏥" },
+        { value: "finance", label: "כלכלה / השקעות", icon: "📊" },
+        { value: "art", label: "אמנות / יצירה", icon: "🎨" },
+        { value: "education", label: "חינוך / הוראה", icon: "📚" },
+        { value: "social", label: "עבודה סוציאלית", icon: "🤝" },
+        { value: "business_int", label: "עסקים / יזמות", icon: "🚀" },
+        { value: "law", label: "משפטים / ממשל", icon: "⚖️" }
+      ]
+    },
+    {
+      id: "housing_status",
+      title: "מה מצב הדיור שלך?",
+      subtitle: "כדי להמליץ על סיוע בדיור אם רלוונטי",
+      type: "options",
+      options: [
+        { value: "parents", label: "גר עם הורים", icon: "🏡" },
+        { value: "renting", label: "שוכר דירה", icon: "🏠" },
+        { value: "owner", label: "בעל דירה", icon: "🔑" },
+        { value: "looking", label: "מחפש דיור", icon: "🔍" }
+      ]
+    }
+  ];
 
-  // ─ Immediate Rights
-  const rights = getImmediateRights();
-  if (rights.length)
-    cards.push({ icon: '⚡', color: 'icon-blue', cat: 'זכויות מיידיות', title: 'זכויות שמגיעות לך עכשיו', items: rights });
+  let answers = {};
+  let currentQ = 0;
+  let selectedMulti = [];
 
-  // ─ Transition
-  const trans = getTransitionRights();
-  if (trans.length)
-    cards.push({ icon: '🔄', color: 'icon-gold', cat: 'מעבר קרוב', title: 'הכנה למעבר הבא שלך', items: trans });
+  function startQuiz() {
+    document.getElementById("hero-section").style.display = "none";
+    const qs = document.getElementById("quiz-section");
+    qs.style.display = "block";
+    qs.classList.add("animate-in");
+    renderQuestion();
+  }
 
-  // ─ Financial
-  const fin = getFinancialRights();
-  if (fin.length)
-    cards.push({ icon: '💰', color: 'icon-teal', cat: 'הטבות כלכליות', title: 'הטבות כספיות ומענקים', items: fin });
+  function renderQuestion() {
+    const q = questions[currentQ];
+    const total = questions.length;
+    const pct = Math.round((currentQ / total) * 100);
 
-  // ─ Paths
-  const paths = getRecommendedPaths();
-  if (paths.length)
-    cards.push({ icon: '🌟', color: 'icon-purple', cat: 'מסלולים מומלצים', title: 'מסלולים שיכולים לעניין אותך', items: paths });
+    document.getElementById("progress-label").textContent = `שאלה ${currentQ + 1} מתוך ${total}`;
+    document.getElementById("progress-percent").textContent = pct + "%";
+    document.getElementById("progress-fill").style.width = pct + "%";
 
-  // ─ Regional
-  if (region === 'periphery' || region === 'south' || region === 'north')
-    cards.push({ icon: '📍', color: 'icon-blue', cat: 'הטבות אזוריות', title: `הטבות מיוחדות לאזורך`,
-      items: ['תמיכה בפריפריה', 'הנחות ארנונה', 'קרן קיימת לישראל — מסלולי ייחוד', 'ביה"ס שדה ותוכניות אזוריות'] });
-
-  // ─ Education
-  const edu = getEducationRights();
-  if (edu.length)
-    cards.push({ icon: '📚', color: 'icon-gold', cat: 'חינוך ולימודים', title: 'זכויות ומלגות בחינוך', items: edu });
-
-  const container = document.getElementById('results-cards');
-  container.innerHTML = '';
-  cards.forEach((c, i) => {
-    const el = document.createElement('div');
-    el.className = 'result-card';
-    el.style.animationDelay = (i * 0.08) + 's';
-    el.innerHTML = `
-      <div class="result-card-header">
-        <div class="result-card-icon ${c.color}">${c.icon}</div>
-        <div>
-          <div class="result-card-category">${c.cat}</div>
-          <div class="result-card-title">${c.title}</div>
-        </div>
-      </div>
-      <div class="result-items">${c.items.map(it => `<span class="result-item">${it}</span>`).join('')}</div>
+    let html = `
+      <div class="question-card animate-in">
+        <div class="question-number">שאלה ${currentQ + 1}</div>
+        <h2>${q.title}</h2>
+        <p class="subtitle">${q.subtitle}</p>
     `;
-    container.appendChild(el);
-  });
-}
 
-function countRights() {
-  let c = 0;
-  c += getImmediateRights().length;
-  c += getFinancialRights().length;
-  c += getRecommendedPaths().length;
-  c += getEducationRights().length;
-  return Math.max(c, 5);
-}
+    if (q.type === "options") {
+      const cols = q.cols === 1 ? "single-col" : "";
+      html += `<div class="options-grid ${cols}">`;
+      q.options.forEach(opt => {
+        const sel = answers[q.id] === opt.value ? "selected" : "";
+        html += `
+          <button class="option-btn ${sel}" onclick="selectOption('${q.id}','${opt.value}',this)">
+            <span class="option-icon">${opt.icon}</span>
+            <div>
+              <div>${opt.label}</div>
+              ${opt.sub ? `<div style="font-size:0.78rem;color:#6b7280;margin-top:2px">${opt.sub}</div>` : ""}
+            </div>
+          </button>`;
+      });
+      html += `</div>`;
+    }
 
-function getImmediateRights() {
-  const { status, age, transition, income } = answers;
-  const r = [];
-  if (status === 'student' || status === 'army') r.push('ביטוח בריאות ממלכתי מלא', 'ארוחות מסובסדות בבתי ספר');
-  if (status === 'army') r.push('שכר חייל', 'ביטוח חיים צבאי', 'זכאות לסל שחרור');
-  if (status === 'employed') r.push('ימי מחלה בתשלום', 'חופשה שנתית', 'פנסיה חובה', 'קרן השתלמות', 'פיצויי פיטורין');
-  if (status === 'self_employed') r.push('ביטוח לאומי עצמאי', 'ניכויי מס הכנסה', 'קרן פנסיה עצמאית', 'ביטוח אבטלה (חלקי)');
-  if (status === 'unemployed') r.push('דמי אבטלה', 'סיוע ממשרד הרווחה', 'קורסי הכשרה מקצועית', 'שירות התעסוקה');
-  if (income === 'low' || income === 'none') r.push('הבטחת הכנסה', 'פטור ממס הכנסה', 'הנחות בארנונה');
-  if (age < 18) r.push('קצבת ילדים', 'זכויות קטין מוגן');
-  return [...new Set(r)].slice(0, 7);
-}
+    if (q.type === "multi") {
+      html += `<div style="font-size:0.8rem;color:#6b7280;margin-bottom:14px">בחר עד ${q.max} תחומים</div>`;
+      html += `<div class="options-grid">`;
+      q.options.forEach(opt => {
+        const sel = selectedMulti.includes(opt.value) ? "selected" : "";
+        html += `
+          <button class="option-btn ${sel}" onclick="toggleMulti('${opt.value}',this,${q.max})">
+            <span class="option-icon">${opt.icon}</span>
+            <span>${opt.label}</span>
+          </button>`;
+      });
+      html += `</div>`;
+    }
 
-function getTransitionRights() {
-  const { transition, status } = answers;
-  const r = [];
-  if (transition === 'high_to_army') r.push('מוקד גיוס — בדיקת תפקידים', 'פרופיל רפואי ומסלולי שיבוץ', 'ייעוץ מקצועי לפני גיוס', 'הכנה לקורסי קצונה');
-  if (transition === 'army_to_civilian') r.push('מענק שחרור', 'מלגת לימודים לחיילים משוחררים', 'הנחות סטודנט', 'תוכנית עמיתים — אוניברסיטאות', 'ייעוץ תעסוקתי מוקדם');
-  if (transition === 'middle_to_high') r.push('בחירת מסלול לימודים', 'ייעוץ כיתתי', 'תוכניות העשרה', 'תואר ראשון מואץ ב-7 שנים');
-  if (transition === 'new_job') r.push('ימי הסתגלות', 'הסכם עבודה — זכויות בסיסיות', 'תקופת ניסיון — הגנות', 'הפרשות פנסיה מהיום הראשון');
-  if (transition === 'none') r.push('ייעוץ קריירה', 'תכנון פיננסי אישי');
-  return r.slice(0, 6);
-}
+    if (q.type === "income") {
+      html += `
+        <input type="number" class="income-input" id="income-input"
+          placeholder="${q.placeholder}"
+          value="${answers.income || ""}"
+          oninput="answers.income=this.value"
+        />
+        <div style="font-size:0.8rem;color:#6b7280;margin-top:10px;text-align:center">
+          שכר מינימום: 5,880₪ | ממוצע שכר: ~13,000₪
+        </div>`;
+    }
 
-function getFinancialRights() {
-  const { income, status, age } = answers;
-  const r = [];
-  if (income === 'none' || income === 'low') r.push('הבטחת הכנסה', 'סיוע בשכר דירה', 'קצבת נכות (אם רלוונטי)', 'מענק עבודה (מס הכנסה שלילי)');
-  if (income === 'mid_low') r.push('זיכוי מס הכנסה', 'הנחות על תחבורה ציבורית', 'סיוע בשכר דירה');
-  if (income === 'mid') r.push('קרן השתלמות פטורה ממס', 'הפרשות מוגדלות לפנסיה', 'ביטוח מנהלים');
-  if (status === 'student_higher') r.push('מלגת קיום', 'הלוואת סטודנטים בריבית אפס', 'הנחות ארנונה לסטודנט', 'כרטיס "רב-קו" מסובסד');
-  if (age < 21) r.push('חשבון בנק ללא עמלות לצעירים', 'הטבות לצעיר ראשון');
-  if (status === 'self_employed') r.push('החזרי מע"מ', 'ניכויי הוצאות עסקיות', 'ביטוח לאומי מופחת בשנה הראשונה');
-  return [...new Set(r)].slice(0, 7);
-}
+    html += `</div>
+    <div class="nav-buttons">
+      ${currentQ > 0 ? `<button class="btn-back" onclick="prevQ()">→ חזור</button>` : ""}
+      <button class="btn-next" onclick="nextQ()">
+        ${currentQ === questions.length - 1 ? "✨ קבל המלצות" : "המשך ←"}
+      </button>
+    </div>`;
 
-function getRecommendedPaths() {
-  const { interests } = answers;
-  const map = {
-    tech: ['מסלול הייטק 8200', 'Bootcamp פיתוח תוכנה', 'מלגות CS אוניברסיטאיות', 'תוכנית הצמדה טכנולוגית'],
-    art: ['המרכז לאמנויות', 'בצלאל — מסלולי קבלה', 'מלגות לאמנים צעירים', 'תוכנית הנשיא לעיצוב'],
-    business: ['מרכזי יזמות אוניברסיטאיים', 'תוכנית HUB ממשלתית', 'הלוואות סטארטאפ', 'מסלולי MBA מהיר'],
-    health: ['מסלולי רפואה ופארמה', 'מלגות לסיעוד', 'תוכניות לעובדי בריאות', 'פסיכולוגיה — מלגות ייחוד'],
-    law: ['מסלולי משפטים אוניברסיטאיים', 'קליניקות משפטיות', 'מסלול מדיניות ציבורית', 'הסנגוריה הציבורית — מתנדבים'],
-    military: ['קורסי קצונה', 'תפקידי פיקוד', 'מסלול קדם קצינאים', 'לימודי ביטחון וממשל'],
-    sports: ['אקדמיות ספורט', 'מלגות ספורטאים מצטיינים', 'הכשרת מאמנים', 'ספורט נכים ונגיש'],
-    social: ['עבודה סוציאלית — מלגות', 'שנת שירות', 'תוכנית "עתיד"', 'עמותות — מסלולי קריירה'],
-    nature: ['תוכנית "אדם וטבע"', 'לימודי סביבה ואקולוגיה', 'קרן קיימת לישראל', 'פארקי טבע — מסלולי עבודה'],
-    media: ['בתי ספר לתקשורת', 'יוניברסטי — מסלולי קולנוע', 'מלגות עיתונאות', 'פודקאסט ויוטיוב — מימון ציבורי'],
-    science: ['מלגות מחקר אוניברסיטאיות', 'קרן ביינו — מדע', 'פריצות מדעיות — מלגות', 'מסלולי דוקטורט מהיר'],
-    education_field: ['מסלולי הוראה + מלגה', '"אתגר" — הוראה בפריפריה', 'הכשרת מורים ממוקדת', 'חינוך מיוחד — תמיכה']
-  };
-  const result = [];
-  interests.forEach(i => { if (map[i]) result.push(...map[i]); });
-  return [...new Set(result)].slice(0, 8);
-}
+    document.getElementById("question-container").innerHTML = html;
+  }
 
-function getEducationRights() {
-  const { education, status, age } = answers;
-  const r = [];
-  if (status === 'student_higher') r.push('מלגת עידוד', 'הנחה על דמי רישום', 'מעונות סטודנטים', 'ספריית אוניברסיטה ותוכנות חינם');
-  if (education === 'high' || education === 'bagrut') r.push('מנחות לבגרות', 'קורסים להשלמת בגרות', 'תואר ראשון — מסלול ישיר');
-  if (status === 'army') r.push('לימודים בזמן שירות', 'הכנה לפסיכומטרי', 'מלגות לאחר שחרור');
-  if (age < 25) r.push('פסיכומטרי — עד 3 פעמים', 'כניסה לאוניברסיטה ללא פסיכומטרי (מסלולים)', 'שנת הכנה — מלגות');
-  return [...new Set(r)].slice(0, 6);
-}
+  function selectOption(qId, val, el) {
+    answers[qId] = val;
+    document.querySelectorAll(".option-btn").forEach(b => b.classList.remove("selected"));
+    el.classList.add("selected");
+  }
 
-function restartQuiz() {
-  Object.keys(answers).forEach(k => { if (k !== 'age') delete answers[k]; });
-  answers.interests = [];
-  answers.age = 18;
-  currentQ = 1;
-  document.getElementById('results-section').classList.remove('visible');
-  document.getElementById('quiz-section').style.display = 'block';
-  document.querySelectorAll('.option-btn, .tag-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('age-slider').value = 18;
-  document.getElementById('age-val').textContent = '18';
-  showQuestion(1);
-  document.getElementById('quiz-section').scrollIntoView({ behavior: 'smooth' });
-}
+  function toggleMulti(val, el, max) {
+    if (selectedMulti.includes(val)) {
+      selectedMulti = selectedMulti.filter(v => v !== val);
+      el.classList.remove("selected");
+    } else {
+      if (selectedMulti.length >= max) return;
+      selectedMulti.push(val);
+      el.classList.add("selected");
+    }
+    answers.interests = selectedMulti;
+  }
 
-// Init
-updateAgeCategory();
-updateProgress();
+  function nextQ() {
+    if (currentQ < questions.length - 1) {
+      currentQ++;
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      showResults();
+    }
+  }
+
+  function prevQ() {
+    if (currentQ > 0) {
+      currentQ--;
+      renderQuestion();
+    }
+  }
+
+  // ============================================================
+  // RESULTS LOGIC
+  // ============================================================
+  function showResults() {
+    document.getElementById("quiz-section").style.display = "none";
+    const rs = document.getElementById("results-section");
+    rs.style.display = "block";
+
+    const relevantRights = getRelevantRights();
+    const grid = document.getElementById("rights-grid");
+    grid.innerHTML = "";
+
+    relevantRights.forEach((rightKey, i) => {
+      const r = RIGHTS_DB[rightKey];
+      if (!r) return;
+      grid.innerHTML += buildRightCard(r, i);
+    });
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function getRelevantRights() {
+    const { age, status, transition, income, housing_status } = answers;
+    let rights = ["health_basic"];
+
+    if (age === "teen") rights.push("health_young");
+    if (age === "young") rights.push("health_young", "army_rights");
+    if (status === "employee" || status === "business") rights.push("employment_rights", "minimum_wage");
+    if (status === "freelance" || status === "business") rights.push("freelance_rights");
+    if (status === "student") rights.push("student_rights");
+    if (status === "unemployed") rights.push("income_support", "minimum_wage");
+    if (status === "army" || transition === "school_to_army" || transition === "army_to_study") rights.push("army_rights");
+    if (transition === "work_to_business") rights.push("entrepreneurship", "freelance_rights");
+    if (housing_status === "looking" || housing_status === "renting") rights.push("housing");
+
+    const interests = answers.interests || [];
+    if (interests.includes("business_int") || interests.includes("tech")) rights.push("entrepreneurship");
+    if (income && parseInt(income) < 6000) rights.push("income_support");
+
+    return [...new Set(rights)];
+  }
+
+  function buildRightCard(r, index) {
+    const linksHtml = r.links.map(l =>
+      `<li><a href="${l.url}" target="_blank" rel="noopener">
+        <span class="link-icon">${l.icon}</span>${l.text}
+        <span style="margin-right:auto;font-size:0.75rem;color:#374151">↗</span>
+      </a></li>`
+    ).join("");
+
+    const stepsHtml = r.steps.map((s, i) =>
+      `<li class="action-step">
+        <div class="step-number">${i + 1}</div>
+        <div class="step-text"><strong>${s.title}</strong><br/>${s.text}</div>
+      </li>`
+    ).join("");
+
+    return `
+      <div class="right-card" id="card-${index}">
+        <div class="right-card-header" onclick="toggleCard(${index})">
+          <div class="right-icon" style="background:${r.color}">
+            <span style="color:${r.iconColor}">${r.icon}</span>
+          </div>
+          <div class="right-card-title">
+            <h3>${r.title}</h3>
+            <p>${r.tagline}</p>
+          </div>
+          <div class="expand-icon">▼</div>
+        </div>
+        <div class="right-card-body">
+          <p class="right-description">${r.description}</p>
+          <div class="card-tabs">
+            <button class="card-tab active" onclick="switchTab(${index},'info',this)">📋 מידע</button>
+            <button class="card-tab" onclick="switchTab(${index},'links',this)">🔗 קישורים</button>
+            <button class="card-tab" onclick="switchTab(${index},'steps',this)">✅ תוכנית פעולה</button>
+          </div>
+          <div class="tab-content active" id="tab-${index}-info">
+            <p style="color:#9ca3af;font-size:0.92rem;line-height:1.7">${r.description}</p>
+          </div>
+          <div class="tab-content" id="tab-${index}-links">
+            <ul class="links-list">${linksHtml}</ul>
+          </div>
+          <div class="tab-content" id="tab-${index}-steps">
+            <ul class="action-steps">${stepsHtml}</ul>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function toggleCard(index) {
+    const card = document.getElementById(`card-${index}`);
+    card.classList.toggle("expanded");
+  }
+
+  function switchTab(cardIndex, tabName, el) {
+    ["info","links","steps"].forEach(t => {
+      const el2 = document.getElementById(`tab-${cardIndex}-${t}`);
+      if (el2) el2.classList.remove("active");
+    });
+    document.getElementById(`tab-${cardIndex}-${tabName}`).classList.add("active");
+    el.closest(".card-tabs").querySelectorAll(".card-tab").forEach(b => b.classList.remove("active"));
+    el.classList.add("active");
+  }
+
+  function restart() {
+    answers = {};
+    selectedMulti = [];
+    currentQ = 0;
+    document.getElementById("results-section").style.display = "none";
+    document.getElementById("hero-section").style.display = "block";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 </script>
 </body>
 </html>
