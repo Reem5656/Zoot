@@ -1,1127 +1,1754 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>זכויותAI – המדריך האישי שלך</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #0f0f1a;
-      color: #e0e0e0;
-      min-height: 100vh;
-    }
-
-    /* ===== HEADER ===== */
-    header {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-      padding: 20px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(100,200,255,0.15);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-    }
-
-    .logo {
-      font-size: 1.6rem;
-      font-weight: 800;
-      background: linear-gradient(90deg, #64c8ff, #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
-    }
-
-    .logo span { font-weight: 300; }
-
-    nav a {
-      color: #9ca3af;
-      text-decoration: none;
-      margin-right: 24px;
-      font-size: 0.9rem;
-      transition: color 0.3s;
-    }
-
-    nav a:hover { color: #64c8ff; }
-
-    /* ===== HERO ===== */
-    .hero {
-      text-align: center;
-      padding: 80px 20px 60px;
-      background: radial-gradient(ellipse at top, #1a2a4a 0%, transparent 70%);
-    }
-
-    .hero-badge {
-      display: inline-block;
-      background: rgba(100,200,255,0.1);
-      border: 1px solid rgba(100,200,255,0.3);
-      color: #64c8ff;
-      padding: 6px 18px;
-      border-radius: 50px;
-      font-size: 0.85rem;
-      margin-bottom: 20px;
-      letter-spacing: 1px;
-    }
-
-    .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, #fff 0%, #a0c4ff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero p {
-      font-size: 1.15rem;
-      color: #9ca3af;
-      max-width: 560px;
-      margin: 0 auto 36px;
-      line-height: 1.7;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      color: white;
-      border: none;
-      padding: 16px 40px;
-      border-radius: 50px;
-      font-size: 1.05rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s;
-      box-shadow: 0 4px 24px rgba(59,130,246,0.4);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(59,130,246,0.5);
-    }
-
-    /* ===== QUIZ SECTION ===== */
-    #quiz-section {
-      display: none;
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-    }
-
-    .progress-container {
-      margin-bottom: 32px;
-    }
-
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      color: #6b7280;
-      margin-bottom: 10px;
-    }
-
-    .progress-bar {
-      height: 6px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      border-radius: 10px;
-      transition: width 0.5s ease;
-    }
-
-    .question-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 40px;
-      margin-bottom: 20px;
-      backdrop-filter: blur(10px);
-    }
-
-    .question-number {
-      font-size: 0.8rem;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 12px;
-    }
-
-    .question-card h2 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #f3f4f6;
-      margin-bottom: 8px;
-      line-height: 1.4;
-    }
-
-    .question-card .subtitle {
-      color: #6b7280;
-      font-size: 0.9rem;
-      margin-bottom: 28px;
-    }
-
-    .options-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .options-grid.single-col {
-      grid-template-columns: 1fr;
-    }
-
-    .option-btn {
-      background: rgba(255,255,255,0.04);
-      border: 1.5px solid rgba(255,255,255,0.1);
-      color: #d1d5db;
-      padding: 16px 20px;
-      border-radius: 14px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      text-align: right;
-      transition: all 0.25s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .option-btn:hover {
-      background: rgba(59,130,246,0.1);
-      border-color: #3b82f6;
-      color: #fff;
-      transform: translateX(-3px);
-    }
-
-    .option-btn.selected {
-      background: rgba(59,130,246,0.15);
-      border-color: #3b82f6;
-      color: #60a5fa;
-    }
-
-    .option-icon { font-size: 1.3rem; }
-
-    .slider-container {
-      padding: 10px 0;
-    }
-
-    .slider-value {
-      text-align: center;
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: #60a5fa;
-      margin-bottom: 16px;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      -webkit-appearance: none;
-      height: 8px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.1);
-      outline: none;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(59,130,246,0.5);
-    }
-
-    .slider-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      color: #6b7280;
-      margin-top: 8px;
-    }
-
-    .income-input {
-      width: 100%;
-      background: rgba(255,255,255,0.05);
-      border: 1.5px solid rgba(255,255,255,0.1);
-      border-radius: 14px;
-      padding: 16px 20px;
-      font-size: 1.1rem;
-      color: #f3f4f6;
-      outline: none;
-      transition: border-color 0.3s;
-      direction: ltr;
-      text-align: center;
-    }
-
-    .income-input:focus { border-color: #3b82f6; }
-
-    .nav-buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .btn-back {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: #9ca3af;
-      padding: 14px 28px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: all 0.25s;
-    }
-
-    .btn-back:hover { background: rgba(255,255,255,0.1); color: #fff; }
-
-    .btn-next {
-      flex: 1;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      border: none;
-      color: white;
-      padding: 14px 28px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 700;
-      transition: all 0.3s;
-      box-shadow: 0 4px 20px rgba(59,130,246,0.3);
-    }
-
-    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(59,130,246,0.4); }
-
-    /* ===== RESULTS ===== */
-    #results-section {
-      display: none;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-    }
-
-    .results-header {
-      text-align: center;
-      margin-bottom: 48px;
-    }
-
-    .results-header .score-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(34,197,94,0.1);
-      border: 1px solid rgba(34,197,94,0.3);
-      color: #4ade80;
-      padding: 8px 20px;
-      border-radius: 50px;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-    }
-
-    .results-header h2 {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #f3f4f6;
-      margin-bottom: 10px;
-    }
-
-    .results-header p {
-      color: #6b7280;
-      font-size: 1rem;
-    }
-
-    /* ===== RIGHT CARD ===== */
-    .rights-grid {
-      display: grid;
-      gap: 24px;
-    }
-
-    .right-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 20px;
-      overflow: hidden;
-      transition: all 0.3s;
-    }
-
-    .right-card:hover {
-      border-color: rgba(100,200,255,0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    }
-
-    .right-card-header {
-      padding: 24px 28px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      cursor: pointer;
-      background: rgba(255,255,255,0.02);
-      transition: background 0.3s;
-    }
-
-    .right-card-header:hover { background: rgba(255,255,255,0.04); }
-
-    .right-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      flex-shrink: 0;
-    }
-
-    .right-card-title { flex: 1; }
-
-    .right-card-title h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #f3f4f6;
-      margin-bottom: 4px;
-    }
-
-    .right-card-title p {
-      font-size: 0.85rem;
-      color: #6b7280;
-    }
-
-    .expand-icon {
-      color: #6b7280;
-      font-size: 1.2rem;
-      transition: transform 0.3s;
-    }
-
-    .right-card.expanded .expand-icon { transform: rotate(180deg); }
-
-    .right-card-body {
-      display: none;
-      padding: 0 28px 28px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .right-card.expanded .right-card-body { display: block; }
-
-    .right-description {
-      color: #9ca3af;
-      font-size: 0.95rem;
-      line-height: 1.75;
-      margin: 20px 0;
-    }
-
-    /* Tabs inside card */
-    .card-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .card-tab {
-      padding: 8px 18px;
-      border-radius: 50px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: transparent;
-      color: #6b7280;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.25s;
-    }
-
-    .card-tab.active {
-      background: rgba(59,130,246,0.15);
-      border-color: #3b82f6;
-      color: #60a5fa;
-    }
-
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* Links */
-    .links-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .links-list li a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      color: #60a5fa;
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: all 0.25s;
-    }
-
-    .links-list li a:hover {
-      background: rgba(59,130,246,0.08);
-      border-color: rgba(59,130,246,0.3);
-      transform: translateX(-3px);
-    }
-
-    .link-icon { font-size: 1.1rem; }
-
-    /* Action Plan */
-    .action-steps {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .action-step {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-    }
-
-    .step-number {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: white;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .step-text {
-      color: #d1d5db;
-      font-size: 0.92rem;
-      line-height: 1.6;
-    }
-
-    .step-text strong { color: #f3f4f6; }
-
-    /* Restart */
-    .restart-section {
-      text-align: center;
-      margin-top: 48px;
-    }
-
-    .btn-restart {
-      background: transparent;
-      border: 1.5px solid rgba(255,255,255,0.15);
-      color: #9ca3af;
-      padding: 12px 32px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: all 0.3s;
-    }
-
-    .btn-restart:hover {
-      border-color: rgba(255,255,255,0.3);
-      color: #fff;
-    }
-
-    /* Animations */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .animate-in { animation: fadeInUp 0.5s ease forwards; }
-
-    @media (max-width: 600px) {
-      .options-grid { grid-template-columns: 1fr; }
-      .question-card { padding: 28px 20px; }
-      header { padding: 16px 20px; }
-      nav { display: none; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zoot — המצפן שלך במסלול</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Frank+Ruhl+Libre:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #38BDF8;
+    --sky-light: #7DD3FC;
+    --sky-pale: #E0F2FE;
+    --sky-deep: #0EA5E9;
+    --sky-darker: #0284C7;
+    --white: #FFFFFF;
+    --off-white: #F8FBFF;
+    --slate: #0F172A;
+    --slate-mid: #1E293B;
+    --slate-soft: #334155;
+    --gold: #F59E0B;
+    --gold-light: #FDE68A;
+    --mint: #10B981;
+    --coral: #F97316;
+    --text-dark: #0F172A;
+    --text-mid: #334155;
+    --text-soft: #64748B;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--off-white);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ======= NOISE TEXTURE OVERLAY ======= */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ======= HERO SECTION ======= */
+  #hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0F172A 0%, #0C2340 40%, #0369A1 80%, #38BDF8 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+  }
+
+  /* Animated background circles */
+  #hero::before {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%);
+    top: -200px; left: -200px;
+    animation: pulse-bg 8s ease-in-out infinite alternate;
+  }
+  #hero::after {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(14,165,233,0.12) 0%, transparent 70%);
+    bottom: -150px; right: -100px;
+    animation: pulse-bg 10s ease-in-out infinite alternate-reverse;
+  }
+
+  @keyframes pulse-bg {
+    from { transform: scale(1) translate(0,0); opacity: 0.6; }
+    to   { transform: scale(1.2) translate(30px, 20px); opacity: 1; }
+  }
+
+  /* Floating dots grid */
+  .dots-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(125,211,252,0.25) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    animation: drift 20s linear infinite;
+  }
+  @keyframes drift { from { background-position: 0 0; } to { background-position: 40px 40px; } }
+
+  /* ======= NAV ======= */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(15,23,42,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(56,189,248,0.15);
+    transition: all 0.3s ease;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+  }
+
+  .nav-compass {
+    width: 36px; height: 36px;
+    position: relative;
+  }
+
+  .nav-brand {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--white), var(--sky-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-tagline {
+    font-size: 0.78rem;
+    color: rgba(125,211,252,0.8);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  /* ======= HERO CONTENT ======= */
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 700px;
+    animation: hero-enter 1s ease forwards;
+  }
+
+  @keyframes hero-enter {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Main Compass SVG */
+  .compass-main {
+    width: 130px; height: 130px;
+    margin: 0 auto 2.5rem;
+    animation: compass-spin-slow 20s linear infinite;
+    filter: drop-shadow(0 0 30px rgba(56,189,248,0.6));
+  }
+
+  @keyframes compass-spin-slow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  .compass-needle {
+    animation: needle-pulse 3s ease-in-out infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+
+  @keyframes needle-pulse {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg); }
+    75% { transform: rotate(-5deg); }
+  }
+
+  .hero-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 40px rgba(0,0,0,0.3);
+  }
+
+  .hero-title span {
+    background: linear-gradient(135deg, var(--sky-light), var(--sky));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-slogan {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: rgba(125,211,252,0.9);
+    font-weight: 300;
+    letter-spacing: 2px;
+    margin-bottom: 2.5rem;
+    font-family: 'Frank Ruhl Libre', serif;
+  }
+
+  .hero-sub {
+    font-size: clamp(0.9rem, 2vw, 1.05rem);
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+    max-width: 520px;
+    margin: 0 auto 3rem;
+    line-height: 1.8;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 1rem 2.5rem;
+    background: linear-gradient(135deg, var(--sky-deep), var(--sky));
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 30px rgba(56,189,248,0.4), 0 2px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(56,189,248,0.5), 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .cta-btn:hover::before { opacity: 1; }
+
+  .hero-stats {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 3rem;
+    margin-top: 5rem;
+    animation: hero-enter 1s 0.3s ease both;
+  }
+
+  .stat-item {
+    text-align: center;
+    color: var(--white);
+  }
+
+  .stat-num {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--sky-light), var(--white));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1px;
+    font-weight: 300;
+  }
+
+  .stat-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.15);
+    align-self: stretch;
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    animation: bounce-hint 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce-hint {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ======= JOURNEY SECTION ======= */
+  #journey {
+    background: var(--white);
+    position: relative;
+  }
+
+  /* Blue wave separator */
+  .wave-sep {
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    background: linear-gradient(135deg, #0F172A 0%, #0369A1 100%);
+  }
+
+  .wave-sep svg {
+    display: block;
+    width: 100%;
+  }
+
+  /* ======= QUESTIONNAIRE ======= */
+  #questionnaire {
+    background: var(--off-white);
+    padding: 5rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #questionnaire::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--sky-deep), var(--sky-light), var(--sky-deep));
+    background-size: 200% 100%;
+    animation: shimmer-line 3s linear infinite;
+  }
+
+  @keyframes shimmer-line {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+  }
+
+  .section-label {
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 4px;
+    font-weight: 600;
+    color: var(--sky-deeper, var(--sky-darker));
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+
+  .section-title {
+    text-align: center;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.7rem;
+    line-height: 1.2;
+  }
+
+  .section-title span {
+    color: var(--sky-deep);
+  }
+
+  .section-subtitle {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-soft);
+    max-width: 500px;
+    margin: 0 auto 3.5rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* Progress Bar */
+  .progress-wrap {
+    max-width: 680px;
+    margin: 0 auto 2.5rem;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.7rem;
+  }
+
+  .progress-text {
+    font-size: 0.82rem;
+    color: var(--text-soft);
+    font-weight: 500;
+  }
+
+  .progress-pct {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--sky-deep);
+  }
+
+  .progress-track {
+    height: 6px;
+    background: rgba(56,189,248,0.15);
+    border-radius: 50px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sky-deep), var(--sky-light));
+    border-radius: 50px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(56,189,248,0.5);
+  }
+
+  /* Step Dots */
+  .step-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(56,189,248,0.25);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .step-dot.active {
+    background: var(--sky-deep);
+    transform: scale(1.4);
+    box-shadow: 0 0 8px rgba(56,189,248,0.6);
+  }
+
+  .step-dot.done {
+    background: var(--sky-light);
+  }
+
+  /* Question Card */
+  .q-card {
+    max-width: 680px;
+    margin: 0 auto;
+    background: var(--white);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 60px rgba(56,189,248,0.12), 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(56,189,248,0.15);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+  }
+
+  .q-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .q-step-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: linear-gradient(135deg, var(--sky-pale), rgba(56,189,248,0.1));
+    border: 1px solid rgba(56,189,248,0.3);
+    color: var(--sky-darker);
+    border-radius: 50px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 1.2rem;
+  }
+
+  .q-text {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: clamp(1.2rem, 3vw, 1.55rem);
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+
+  .q-hint {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    margin-bottom: 1.8rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* Option Cards */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+  }
+
+  .options-grid.single-col {
+    grid-template-columns: 1fr;
+  }
+
+  .opt-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 1.2rem;
+    border: 1.5px solid rgba(56,189,248,0.2);
+    border-radius: 14px;
+    background: var(--white);
+    cursor: pointer;
+    text-align: right;
+    transition: all 0.25s ease;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .opt-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(56,189,248,0.08), rgba(14,165,233,0.04));
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .opt-btn:hover {
+    border-color: var(--sky);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(56,189,248,0.2);
+  }
+
+  .opt-btn:hover::before { opacity: 1; }
+
+  .opt-btn.selected {
+    border-color: var(--sky-deep);
+    background: linear-gradient(135deg, var(--sky-pale), rgba(56,189,248,0.08));
+    box-shadow: 0 4px 16px rgba(56,189,248,0.25);
+  }
+
+  .opt-btn.selected::before { opacity: 1; }
+
+  .opt-emoji {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(56,189,248,0.1);
+    border-radius: 10px;
+    transition: all 0.25s ease;
+  }
+
+  .opt-btn.selected .opt-emoji {
+    background: rgba(56,189,248,0.2);
+    transform: scale(1.1);
+  }
+
+  .opt-label { flex: 1; }
+  .opt-sub {
+    display: block;
+    font-size: 0.73rem;
+    color: var(--text-soft);
+    font-weight: 300;
+    margin-top: 1px;
+  }
+
+  .check-icon {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 2px solid rgba(56,189,248,0.3);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+  }
+
+  .opt-btn.selected .check-icon {
+    background: var(--sky-deep);
+    border-color: var(--sky-deep);
+  }
+
+  .check-icon svg { display: none; }
+  .opt-btn.selected .check-icon svg { display: block; }
+
+  /* Number input */
+  .number-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--off-white);
+    border: 1.5px solid rgba(56,189,248,0.2);
+    border-radius: 14px;
+    padding: 0.5rem 1rem;
+    transition: all 0.25s ease;
+  }
+
+  .number-input-wrap:focus-within {
+    border-color: var(--sky-deep);
+    box-shadow: 0 0 0 3px rgba(56,189,248,0.15);
+  }
+
+  .number-btn {
+    width: 36px; height: 36px;
+    border: none;
+    background: rgba(56,189,248,0.15);
+    color: var(--sky-darker);
+    border-radius: 8px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-family: 'Heebo', sans-serif;
+  }
+
+  .number-btn:hover { background: rgba(56,189,248,0.3); }
+
+  .number-val {
+    flex: 1;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    font-family: 'Frank Ruhl Libre', serif;
+    background: none;
+    border: none;
+    outline: none;
+  }
+
+  .number-unit {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+  }
+
+  /* Nav Buttons */
+  .q-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(56,189,248,0.1);
+  }
+
+  .btn-back {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.7rem 1.3rem;
+    border: 1.5px solid rgba(56,189,248,0.25);
+    border-radius: 50px;
+    background: transparent;
+    color: var(--text-soft);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .btn-back:hover {
+    border-color: var(--sky);
+    color: var(--sky-darker);
+    background: var(--sky-pale);
+  }
+
+  .btn-next {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 2rem;
+    background: linear-gradient(135deg, var(--sky-deep), var(--sky));
+    color: var(--white);
+    border: none;
+    border-radius: 50px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(56,189,248,0.35);
+  }
+
+  .btn-next:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(56,189,248,0.45);
+  }
+
+  .btn-next:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ======= RESULTS SECTION ======= */
+  #results {
+    display: none;
+    background: var(--off-white);
+    padding: 4rem 1.5rem;
+    min-height: 100vh;
+  }
+
+  #results.visible {
+    display: block;
+    animation: hero-enter 0.6s ease forwards;
+  }
+
+  .results-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .results-greeting {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .results-greeting span { color: var(--sky-deep); }
+
+  .results-sub {
+    font-size: 1rem;
+    color: var(--text-soft);
+    font-weight: 300;
+    max-width: 500px;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+  }
+
+  /* Profile Card */
+  .profile-card {
+    max-width: 680px;
+    margin: 0 auto 3rem;
+    background: linear-gradient(135deg, var(--slate) 0%, var(--slate-mid) 100%);
+    border-radius: 24px;
+    padding: 2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    box-shadow: 0 20px 60px rgba(15,23,42,0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .profile-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%);
+  }
+
+  .profile-compass {
+    width: 80px; height: 80px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 15px rgba(56,189,248,0.5));
+  }
+
+  .profile-info { flex: 1; }
+
+  .profile-name {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+
+  .profile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.7rem;
+  }
+
+  .profile-tag {
+    background: rgba(56,189,248,0.2);
+    border: 1px solid rgba(56,189,248,0.3);
+    color: var(--sky-light);
+    border-radius: 50px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .profile-score {
+    text-align: center;
+  }
+
+  .score-circle {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(var(--sky) 0%, var(--sky-deep) 70%, rgba(255,255,255,0.1) 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: 0 auto 0.4rem;
+  }
+
+  .score-circle::before {
+    content: '';
+    position: absolute;
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    background: var(--slate-mid);
+  }
+
+  .score-num {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--white);
+    position: relative;
+    z-index: 1;
+  }
+
+  .score-label {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1px;
+  }
+
+  /* Rights Cards */
+  .rights-title {
+    text-align: center;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.4rem;
+  }
+
+  .rights-sub {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-soft);
+    margin-bottom: 2rem;
+  }
+
+  .rights-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .right-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 1.8rem;
+    border: 1.5px solid rgba(56,189,248,0.15);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .right-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--sky-deep), var(--sky-light));
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease;
+  }
+
+  .right-card:hover {
+    border-color: rgba(56,189,248,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(56,189,248,0.15);
+  }
+
+  .right-card:hover::before { transform: scaleY(1); }
+
+  .right-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--sky-pale), rgba(56,189,248,0.15));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .right-card:hover .right-icon {
+    background: linear-gradient(135deg, var(--sky-deep), var(--sky));
+  }
+
+  .right-name {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.4rem;
+  }
+
+  .right-desc {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    line-height: 1.6;
+    margin-bottom: 1.2rem;
+    font-weight: 300;
+  }
+
+  .right-priority {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 0.2rem 0.7rem;
+    border-radius: 50px;
+    margin-bottom: 1rem;
+  }
+
+  .priority-high {
+    background: rgba(249,115,22,0.1);
+    color: var(--coral);
+    border: 1px solid rgba(249,115,22,0.2);
+  }
+
+  .priority-mid {
+    background: rgba(56,189,248,0.1);
+    color: var(--sky-darker);
+    border: 1px solid rgba(56,189,248,0.25);
+  }
+
+  .priority-low {
+    background: rgba(16,185,129,0.1);
+    color: var(--mint);
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+
+  .right-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .action-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+
+  .step-num {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sky-deep), var(--sky));
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .right-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--sky-darker);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid transparent;
+  }
+
+  .right-link:hover {
+    color: var(--sky-deep);
+    border-bottom-color: var(--sky);
+  }
+
+  /* Restart Button */
+  .restart-wrap {
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  .restart-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 2rem;
+    border: 1.5px solid rgba(56,189,248,0.3);
+    border-radius: 50px;
+    background: transparent;
+    color: var(--sky-darker);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .restart-btn:hover {
+    background: var(--sky-pale);
+    border-color: var(--sky);
+    transform: translateY(-2px);
+  }
+
+  /* ======= FOOTER ======= */
+  footer {
+    background: var(--slate);
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  footer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sky), transparent);
+  }
+
+  .footer-logo {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--sky-light), var(--white));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-tagline {
+    color: rgba(125,211,252,0.7);
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.5px;
+  }
+
+  /* ======= RESPONSIVE ======= */
+  @media (max-width: 600px) {
+    .options-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 1.5rem; }
+    .stat-num { font-size: 1.7rem; }
+    .profile-card { flex-direction: column; text-align: center; }
+    .q-card { padding: 1.5rem; }
+    .nav { padding: 1rem 1.2rem; }
+  }
+</style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-  <div class="logo">זכויות<span>AI</span></div>
-  <nav>
-    <a href="#">ראשי</a>
-    <a href="#">זכויות</a>
-    <a href="#">מסלולים</a>
-    <a href="#">צור קשר</a>
-  </nav>
-</header>
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo">
+    <svg class="nav-compass" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="18" stroke="#38BDF8" stroke-width="1.5" opacity="0.6"/>
+      <circle cx="20" cy="20" r="14" stroke="#7DD3FC" stroke-width="1" opacity="0.4"/>
+      <circle cx="20" cy="20" r="2.5" fill="#38BDF8"/>
+      <!-- N/S/E/W marks -->
+      <line x1="20" y1="4" x2="20" y2="8" stroke="#38BDF8" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="20" y1="32" x2="20" y2="36" stroke="#7DD3FC" stroke-width="1" stroke-linecap="round"/>
+      <line x1="4" y1="20" x2="8" y2="20" stroke="#7DD3FC" stroke-width="1" stroke-linecap="round"/>
+      <line x1="32" y1="20" x2="36" y2="20" stroke="#7DD3FC" stroke-width="1" stroke-linecap="round"/>
+      <!-- Needle -->
+      <polygon points="20,7 22.5,20 20,22.5 17.5,20" fill="#38BDF8"/>
+      <polygon points="20,33 22.5,20 20,17.5 17.5,20" fill="rgba(255,255,255,0.3)"/>
+    </svg>
+    <div>
+      <div class="nav-brand">Zoot</div>
+      <div class="nav-tagline">המצפן שלך במסלול</div>
+    </div>
+  </a>
+</nav>
 
 <!-- HERO -->
-<section class="hero" id="hero-section">
-  <div class="hero-badge">✨ AI-Powered · עברית · חינמי לחלוטין</div>
-  <h1>גלה את הזכויות<br/>שמגיעות לך</h1>
-  <p>שאלון חכם של 2 דקות שמנתח את המצב שלך ומביא לך המלצות מדויקות עם תוכנית פעולה ברורה.</p>
-  <button class="btn-primary" onclick="startQuiz()">🚀 התחל את השאלון</button>
-</section>
+<section id="hero">
+  <div class="dots-grid"></div>
 
-<!-- QUIZ -->
-<section id="quiz-section">
-  <div class="progress-container">
-    <div class="progress-info">
-      <span id="progress-label">שאלה 1 מתוך 6</span>
-      <span id="progress-percent">0%</span>
+  <div class="hero-content">
+    <!-- Main Compass -->
+    <svg class="compass-main" viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="65" cy="65" r="62" stroke="#38BDF8" stroke-width="1.5" opacity="0.3"/>
+      <circle cx="65" cy="65" r="50" stroke="#7DD3FC" stroke-width="1" opacity="0.2"/>
+      <circle cx="65" cy="65" r="38" stroke="#38BDF8" stroke-width="1" opacity="0.15"/>
+      <!-- Tick marks -->
+      <line x1="65" y1="5" x2="65" y2="14" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/>
+      <line x1="65" y1="116" x2="65" y2="125" stroke="#7DD3FC" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="5" y1="65" x2="14" y2="65" stroke="#7DD3FC" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="116" y1="65" x2="125" y2="65" stroke="#7DD3FC" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- Small ticks -->
+      <line x1="106" y1="24" x2="101" y2="29" stroke="#38BDF8" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+      <line x1="24" y1="24" x2="29" y2="29" stroke="#38BDF8" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+      <line x1="106" y1="106" x2="101" y2="101" stroke="#38BDF8" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+      <line x1="24" y1="106" x2="29" y2="101" stroke="#38BDF8" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+      <!-- Needle group -->
+      <g class="compass-needle">
+        <polygon points="65,15 69,62 65,67 61,62" fill="url(#needleGrad)"/>
+        <polygon points="65,115 69,68 65,63 61,68" fill="rgba(255,255,255,0.25)"/>
+      </g>
+      <circle cx="65" cy="65" r="5" fill="#38BDF8" opacity="0.9"/>
+      <circle cx="65" cy="65" r="2.5" fill="white"/>
+      <!-- Letter N -->
+      <text x="60" y="28" fill="#38BDF8" font-size="10" font-family="Heebo" font-weight="700" opacity="0.8">N</text>
+      <defs>
+        <linearGradient id="needleGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#38BDF8"/>
+          <stop offset="100%" stop-color="#0EA5E9"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <h1 class="hero-title">גלה את<br><span>המסלול שלך</span></h1>
+    <p class="hero-slogan">— המצפן שלך במסלול —</p>
+    <p class="hero-sub">
+      בZoot אנחנו לא עוזרים לך למלא טפסים —
+      אנחנו עוזרים לך להבין <strong>מי אתה עכשיו</strong>
+      ולבנות <strong>לאן אתה הולך.</strong>
+    </p>
+    <a href="#questionnaire" class="cta-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      התחל את המסלול שלך
+    </a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">7</span>
+      <span class="stat-label">שאלות בלבד</span>
     </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">אישי לך</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num">∞</span>
+      <span class="stat-label">אפשרויות לגלות</span>
     </div>
   </div>
-  <div id="question-container"></div>
+
+  <div class="scroll-hint">
+    <span>גלול למטה</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- QUESTIONNAIRE -->
+<section id="questionnaire">
+  <p class="section-label">מסע אישי</p>
+  <h2 class="section-title">בוא נכיר אותך <span>לעומק</span></h2>
+  <p class="section-subtitle">7 שאלות קצרות שיעזרו לנו למפות את הנתיב שמתאים בדיוק לך ולמקום שאתה נמצא בחיים</p>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-header">
+      <span class="progress-text" id="progressLabel">שאלה 1 מתוך 7</span>
+      <span class="progress-pct" id="progressPct">14%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:14%"></div>
+    </div>
+  </div>
+
+  <!-- Step Dots -->
+  <div class="step-dots" id="stepDots"></div>
+
+  <!-- Question Card -->
+  <div class="q-card visible" id="qCard">
+    <div id="qContent"></div>
+    <div class="q-nav">
+      <button class="btn-back" id="btnBack" onclick="prevStep()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        חזרה
+      </button>
+      <button class="btn-next" id="btnNext" onclick="nextStep()">
+        המשך
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
 </section>
 
 <!-- RESULTS -->
-<section id="results-section">
-  <div class="results-header animate-in">
-    <div class="score-badge">✅ הניתוח הושלם</div>
-    <h2>הזכויות שמגיעות לך</h2>
-    <p>לחץ על כל כרטיס לפרטים מלאים, קישורים רשמיים ותוכנית פעולה</p>
+<div id="results">
+  <div class="results-header">
+    <h2 class="results-greeting" id="resultsGreeting">המסלול שלך <span>מוכן</span> ✨</h2>
+    <p class="results-sub">בהתאם למה שסיפרת לנו, מצאנו את הזכויות וההזדמנויות הכי רלוונטיות עבורך</p>
   </div>
-  <div class="rights-grid" id="rights-grid"></div>
-  <div class="restart-section">
-    <button class="btn-restart" onclick="restart()">🔄 מלא שאלון מחדש</button>
+
+  <!-- Profile Card -->
+  <div class="profile-card" id="profileCard">
+    <svg class="profile-compass" viewBox="0 0 80 80" fill="none">
+      <circle cx="40" cy="40" r="37" stroke="#38BDF8" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="40" cy="40" r="28" stroke="#7DD3FC" stroke-width="1" opacity="0.3"/>
+      <line x1="40" y1="5" x2="40" y2="12" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/>
+      <line x1="40" y1="68" x2="40" y2="75" stroke="#7DD3FC" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="5" y1="40" x2="12" y2="40" stroke="#7DD3FC" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="68" y1="40" x2="75" y2="40" stroke="#7DD3FC" stroke-width="1.5" stroke-linecap="round"/>
+      <polygon points="40,10 43,38 40,42 37,38" fill="#38BDF8"/>
+      <polygon points="40,70 43,42 40,38 37,42" fill="rgba(255,255,255,0.3)"/>
+      <circle cx="40" cy="40" r="4" fill="#38BDF8"/>
+      <circle cx="40" cy="40" r="2" fill="white"/>
+    </svg>
+    <div class="profile-info">
+      <div class="profile-name" id="profileName">הפרופיל שלך</div>
+      <div style="font-size:0.85rem;color:rgba(255,255,255,0.6);font-weight:300;" id="profileDesc">מסלול מותאם אישית</div>
+      <div class="profile-tags" id="profileTags"></div>
+    </div>
+    <div class="profile-score">
+      <div class="score-circle">
+        <span class="score-num" id="scoreNum">7</span>
+      </div>
+      <div class="score-label">זכויות<br>רלוונטיות</div>
+    </div>
   </div>
-</section>
+
+  <!-- Rights -->
+  <h3 class="rights-title">הנתיב שלך</h3>
+  <p class="rights-sub">כל כרטיס הוא צעד אמיתי שאפשר לעשות עכשיו</p>
+  <div class="rights-grid" id="rightsGrid"></div>
+
+  <div class="restart-wrap">
+    <button class="restart-btn" onclick="restartQuiz()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 4v6h6M23 20v-6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      התחל מחדש
+    </button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Zoot</div>
+  <div class="footer-tagline">המצפן שלך במסלול</div>
+  <p class="footer-copy">© 2025 Zoot · כל הזכויות שמורות</p>
+</footer>
 
 <script>
-  // ============================================================
-  // DATA LAYER – כל הזכויות עם תוכן מלא
-  // ============================================================
-  const RIGHTS_DB = {
-
-    // ── בריאות ──────────────────────────────────────────────
-    health_basic: {
-      icon: "🏥",
-      color: "rgba(59,130,246,0.15)",
-      iconColor: "#3b82f6",
-      title: "סל שירותי הבריאות",
-      tagline: "כיסוי רפואי בסיסי לכל תושב ישראל",
-      description: "כל תושב ישראל זכאי לסל שירותי בריאות הכולל: ביקורי רופא, אשפוז, תרופות, ניתוחים, מעבדה ודימות. הסל מעודכן מדי שנה ומספק מענה לרוב הצרכים הרפואיים. אין צורך בהסכמת חברת ביטוח – זהו זכות חוקית.",
-      links: [
-        { text: "סל שירותי הבריאות – אתר הממשלה", url: "https://www.gov.il/he/departments/general/basket_services", icon: "🏛️" },
-        { text: "מאגר התרופות הכלולות בסל", url: "https://www.health.gov.il/Services/Committee/Pages/default.aspx", icon: "💊" },
-        { text: "בחירת קופת חולים – כל.זכות", url: "https://www.kolzchut.org.il/he/קופות_חולים", icon: "📋" }
-      ],
-      steps: [
-        { title: "בדוק את קופת החולים שלך", text: "ודא שאתה רשום בקופת חולים. אם לא – התרשם בסניף הקרוב." },
-        { title: "הכר את הסל", text: "כנס לאתר <strong>gov.il</strong> וחפש את רשימת השירותים הכלולים בסל שלך." },
-        { title: "בקש הפניות נכון", text: "לרופא מומחה תמיד תבקש הפניה מרופא המשפחה – חוסך תשלום נוסף." },
-        { title: "דאג לפטורים", text: "אם אתה במצב כלכלי קשה, בקש פטור מתשלום השתתפות עצמית בקופה." }
-      ]
-    },
-
-    health_young: {
-      icon: "👶",
-      color: "rgba(167,139,250,0.15)",
-      iconColor: "#a78bfa",
-      title: "שירותי בריאות לנוער",
-      tagline: "זכויות מיוחדות לבני 18-25",
-      description: "בני נוער עד גיל 18 מקבלים שירותי שיניים בחינם. עד גיל 25 קיימת זכאות לפסיכולוג או עו\"ס בשירותי בריאות הנפש ללא עלות. כמו כן, חיסונים שגרתיים ניתנים ללא תשלום.",
-      links: [
-        { text: "שיניים לנוער – ביטוח לאומי", url: "https://www.btl.gov.il/Benefits/Health/Pages/default.aspx", icon: "🦷" },
-        { text: "בריאות הנפש לצעירים – שיחה", url: "https://sahar.org.il", icon: "🧠" },
-        { text: "חיסונים – משרד הבריאות", url: "https://www.health.gov.il/Subjects/Vaccines/Pages/default.aspx", icon: "💉" }
-      ],
-      steps: [
-        { title: "שיניים – פנה לקופה", text: "עד גיל 18 הגש תביעה בקופת החולים שלך לטיפולי שיניים בחינם." },
-        { title: "בריאות הנפש", text: "פנה לרופא המשפחה וקבל הפניה לפסיכולוג קליני תוך 4 שבועות בחינם." },
-        { title: "חיסונים", text: "בדוק ביצוע חיסונים בתיק הבריאות – השלם מה שחסר בחינם." }
-      ]
-    },
-
-    // ── כספי ────────────────────────────────────────────────
-    minimum_wage: {
-      icon: "💰",
-      color: "rgba(34,197,94,0.15)",
-      iconColor: "#22c55e",
-      title: "שכר מינימום",
-      tagline: "שכר 5,880₪ לחודש נכון ל-2024",
-      description: "כל עובד שכיר בישראל זכאי לשכר מינימום של 5,880₪ לחודש (47.30₪ לשעה). שכר מינימום חל גם על עובדים זרים, מתמחים ועבודה חלקית (באופן יחסי). מעסיק שמשלם פחות עובר על החוק ועלול להיקנס.",
-      links: [
-        { text: "שכר מינימום – משרד העבודה", url: "https://www.gov.il/he/departments/general/minimumwage", icon: "🏛️" },
-        { text: "תלונה על הפרת שכר מינימום", url: "https://www.gov.il/he/departments/general/complaint_minimum_wage", icon: "📝" },
-        { text: "מחשבון שכר – כל.זכות", url: "https://www.kolzchut.org.il/he/שכר_מינימום", icon: "🧮" }
-      ],
-      steps: [
-        { title: "בדוק את תלוש המשכורת", text: "ודא שהשכר לשעה לא נמוך מ-47.30₪. חשב: שכר חודשי ÷ שעות חודשיות." },
-        { title: "אם מגיע לך יותר", text: "שוחח עם המעסיק. אם לא מגיב, פנה לממונה על שכר מינימום במשרד העבודה." },
-        { title: "תיעוד", text: "שמור את כל התלושים – הם הוכחה חוקית לתשלום." },
-        { title: "תלונה", text: "ניתן להגיש תלונה אנונימית לממונה על שכר – ללא חשש מפיטורים." }
-      ]
-    },
-
-    income_support: {
-      icon: "🤝",
-      color: "rgba(251,146,60,0.15)",
-      iconColor: "#fb923c",
-      title: "גמלת הבטחת הכנסה",
-      tagline: "רשת ביטחון לאנשים ללא הכנסה מספקת",
-      description: "מי שאין לו מקור הכנסה מספיק (או בכלל), יכול לקבל גמלה מביטוח לאומי. הסכום משתנה לפי גודל המשפחה, ומחייב הוכחת חיפוש עבודה פעיל. רווק מתחת גיל 55 מקבל כ-2,700₪ לחודש.",
-      links: [
-        { text: "הבטחת הכנסה – ביטוח לאומי", url: "https://www.btl.gov.il/Benefits/Habitahon_Hachnasa/Pages/default.aspx", icon: "🏛️" },
-        { text: "מחשבון זכאות", url: "https://www.btl.gov.il/Benefits/Habitahon_Hachnasa/Pages/Calculator.aspx", icon: "🧮" },
-        { text: "הגשת תביעה מקוונת", url: "https://www.btl.gov.il/online_services/Pages/habitahon_hachnasa.aspx", icon: "📤" }
-      ],
-      steps: [
-        { title: "בדוק זכאות", text: "כנס למחשבון הזכאות של ביטוח לאומי ומלא את הפרטים." },
-        { title: "קבל אישור חיפוש עבודה", text: "הירשם בלשכת התעסוקה – זה תנאי לקבלת הגמלה." },
-        { title: "הגש תביעה", text: "הגש תביעה אונליין בביטוח לאומי – הגמלה מאושרת בתוך 30-60 יום." },
-        { title: "עדכן שינויים", text: "כל שינוי בהכנסה חייב לדווח לביטוח לאומי תוך 30 יום." }
-      ]
-    },
-
-    // ── עבודה ───────────────────────────────────────────────
-    employment_rights: {
-      icon: "⚖️",
-      color: "rgba(100,200,255,0.15)",
-      iconColor: "#64c8ff",
-      title: "זכויות עובד בסיסיות",
-      tagline: "מה מגיע לך כשכיר – ובכמה",
-      description: "כל עובד שכיר זכאי ל: דמי הבראה (378₪ ליום), חופשה שנתית (10-24 ימים לפי ותק), ימי מחלה (1.5 יום לחודש), פנסיה חובה (17.5% מהשכר), ופיצויים בפיטורים. כל אלה הם זכויות חוק ולא טובות לב.",
-      links: [
-        { text: "זכויות עובד – משרד העבודה", url: "https://www.gov.il/he/departments/topics/employees-rights", icon: "⚖️" },
-        { text: "חישוב דמי הבראה", url: "https://www.kolzchut.org.il/he/דמי_הבראה", icon: "🧮" },
-        { text: "פנסיה חובה – מבטחים", url: "https://www.gov.il/he/departments/general/pension_insurance", icon: "🏦" }
-      ],
-      steps: [
-        { title: "בדוק תלוש מפורט", text: "ודא שמופיעים: פנסיה, קרן השתלמות (אם זכאי), הבראה ומחלה." },
-        { title: "דרוש הסכם עבודה", text: "כל עובד חייב לקבל הסכם עבודה חתום – הגן על עצמך משפטית." },
-        { title: "מעקב אחר ימי חופשה", text: "שמור רישום אישי של ימי החופשה שניצלת מול מה שמגיע לך." },
-        { title: "פיצויים בפיטורים", text: "בפיטורים – מגיעים לך פיצויים מלאים. קבל ייעוץ לפני חתימה על כל מסמך." }
-      ]
-    },
-
-    freelance_rights: {
-      icon: "💻",
-      color: "rgba(167,139,250,0.15)",
-      iconColor: "#a78bfa",
-      title: "זכויות עצמאי / פרילנסר",
-      tagline: "ניהול נכון של עסק עצמאי",
-      description: "עצמאי (עוסק פטור/מורשה) חייב בדיווח מס הכנסה ומע\"מ. עוסק פטור (מחזור עד 120,000₪/שנה) פטור ממע\"מ אך חייב בביטוח לאומי. קיימות הוצאות מוכרות שמקטינות את המס: טלפון, נסיעות, ציוד ועוד.",
-      links: [
-        { text: "פתיחת עוסק פטור – רשות המיסים", url: "https://www.gov.il/he/departments/general/open_exempt_dealer", icon: "🏛️" },
-        { text: "הוצאות מוכרות לעצמאי", url: "https://www.kolzchut.org.il/he/הוצאות_מוכרות_לעצמאים", icon: "📋" },
-        { text: "ביטוח לאומי לעצמאים", url: "https://www.btl.gov.il/Benefits/Independent/Pages/default.aspx", icon: "🛡️" }
-      ],
-      steps: [
-        { title: "פתח עוסק (אם טרם עשית)", text: "פתח תיק ברשות המיסים ובביטוח לאומי – ניתן אונליין בתוך 20 דקות." },
-        { title: "עקוב אחר הכנסות", text: "השתמש באפליקציה או גיליון Excel לתיעוד כל הכנסה והוצאה." },
-        { title: "שמור חשבוניות", text: "כל קנייה עסקית – שמור חשבונית. זה יקטין את המס שתשלם." },
-        { title: "הגש דוח שנתי", text: "מגיש דוח עד 30 באפריל. מומלץ רואה חשבון לשנה הראשונה." }
-      ]
-    },
-
-    // ── לימודים ─────────────────────────────────────────────
-    student_rights: {
-      icon: "🎓",
-      color: "rgba(34,197,94,0.15)",
-      iconColor: "#22c55e",
-      title: "מלגות ועזרה כלכלית לסטודנטים",
-      tagline: "אל תממן לבד – יש עזרה שממתינה לך",
-      description: "סטודנטים יכולים לקבל: מלגת עידוד (עד 30,000₪ לשנה), הלוואה בשוק ההון, מלגות ממוסדות, סיוע שכר לימוד ממשרד הרווחה, ומלגות חברות היי-טק. כ-40% מהסטודנטים זכאים לסיוע כלכלי כלשהו.",
-      links: [
-        { text: "מלגות – רשות לסטודנטים", url: "https://students.gov.il/scholarships", icon: "🎓" },
-        { text: "הלוואות לסטודנטים", url: "https://students.gov.il/loans", icon: "🏦" },
-        { text: "מלגות חברות – אתר דן אנד ברדסטריט", url: "https://students.gov.il", icon: "💼" }
-      ],
-      steps: [
-        { title: "בדוק זכאות למלגות", text: "כנס לאתר הרשות הלאומית לסטודנטים ומלא שאלון זכאות." },
-        { title: "פנה למחלקת רווחה", text: "לכל אוניברסיטה יש מחלקת רווחה לסטודנטים – קבל ייעוץ אישי." },
-        { title: "הגש מועמדות למלגות", text: "חפש מלגות ספציפיות לתחום לימודיך – יש מלגות ייעודיות לכל תחום." },
-        { title: "שמור על קשר", text: "הצטרף לרשימות תפוצה של הרשות לסטודנטים – הודעות על מלגות חדשות." }
-      ]
-    },
-
-    // ── צבא / שירות לאומי ───────────────────────────────────
-    army_rights: {
-      icon: "🪖",
-      color: "rgba(251,146,60,0.15)",
-      iconColor: "#fb923c",
-      title: "זכויות לחיילים ומשתחררים",
-      tagline: "מה מגיע לך בשירות ואחריו",
-      description: "חיילים בשירות חובה זכאים ל: מענק שחרור (שכר חובה מלא לאחר שחרור), מלגות קדם-אקדמאיות, סיוע בדיור (מענק דיור), עדיפות בקבלה למוסדות אקדמאיים, ומענק לרכישת מחשב לאחר שחרור.",
-      links: [
-        { text: "זכויות משתחרר – אגף השיקום", url: "https://www.idf.il/units/rehabilitation-department/", icon: "🪖" },
-        { text: "מלגות לחיילים – רשות לסטודנטים", url: "https://students.gov.il/soldiers", icon: "🎓" },
-        { text: "מענק דיור למשתחררים", url: "https://www.kolzchut.org.il/he/זכויות_חיילים_משתחררים", icon: "🏠" }
-      ],
-      steps: [
-        { title: "לפני השחרור", text: "בקש מהקצין הממונה רשימת זכויות מגיעות – חודש לפני השחרור." },
-        { title: "פתח תיק בדיור", text: "מיד לאחר שחרור, פנה למשרד הבינוי לקבלת מענק דיור." },
-        { title: "מלגות אקדמאיות", text: "הגש מועמדות למלגות ייעודיות לחיילים משתחררים ברשות לסטודנטים." },
-        { title: "קרן השתלמות", text: "בדוק אם צברת כספים בקרן השתלמות בצבא ואיך לממשם." }
-      ]
-    },
-
-    // ── דיור ────────────────────────────────────────────────
-    housing: {
-      icon: "🏠",
-      color: "rgba(100,200,255,0.15)",
-      iconColor: "#64c8ff",
-      title: "סיוע בדיור",
-      tagline: "מה ניתן לקבל לדיור ראשון",
-      description: "משרד הבינוי מציע: מחיר למשתכן (דירה בהנחה), מענק לרכישת דירה ראשונה, סיוע בשכר דירה (מחוסרי דיור), ותוכנית 'שכר דירה בר השגה'. הזכאות תלויה בגיל, מצב משפחתי והכנסה.",
-      links: [
-        { text: "מחיר למשתכן – משרד הבינוי", url: "https://www.moch.gov.il/mechir_lamishtaken/Pages/default.aspx", icon: "🏗️" },
-        { text: "סיוע בשכר דירה", url: "https://www.moch.gov.il/siyua_shchadira/Pages/default.aspx", icon: "🏠" },
-        { text: "מחשבון זכאות דיור", url: "https://www.moch.gov.il", icon: "🧮" }
-      ],
-      steps: [
-        { title: "בדוק זכאות", text: "כנס לאתר משרד הבינוי ובדוק אם אתה עומד בתנאי הזכאות." },
-        { title: "הירשם להגרלות", text: "עקוב אחר פרסומי מחיר למשתכן – ההגרלות מתקיימות כל כמה חודשים." },
-        { title: "קבל ייעוץ משכנתא", text: "לפני רכישה, קבל ייעוץ ממשכנתא בנק – השווה 3 בנקים לפחות." },
-        { title: "סיוע בשכ\"ד", text: "אם אין בית, הגש בקשה לסיוע בשכר דירה ממשרד הבינוי." }
-      ]
-    },
-
-    // ── יזמות ───────────────────────────────────────────────
-    entrepreneurship: {
-      icon: "🚀",
-      color: "rgba(167,139,250,0.15)",
-      iconColor: "#a78bfa",
-      title: "קרנות וסיוע ליזמים",
-      tagline: "ממשלת ישראל תממן חלק מהחלום שלך",
-      description: "רשות החדשנות מציעה מענקים של עד 50% מעלויות הפיתוח. קיימות קרנות ייעודיות לנשים יזמות, לצעירים, ולסטארטאפים בתחילת דרכם. כמו כן, ניתן לקבל ליווי עסקי חינמי מ'מרכז שלי'.",
-      links: [
-        { text: "רשות החדשנות – מענקים", url: "https://innovationisrael.org.il", icon: "🚀" },
-        { text: "קרן לעסקים קטנים", url: "https://www.mosdot.co.il", icon: "💼" },
-        { text: "ליווי עסקי – מרכז שלי", text2: "ייעוץ חינמי לעסקים", url: "https://www.sheli.org.il", icon: "🤝" }
-      ],
-      steps: [
-        { title: "גבש רעיון וכתוב תוכנית עסקית", text: "אפילו 2 עמודים – מה אתה מוכר, למי, ואיך תרוויח." },
-        { title: "פנה למרכז שלי", text: "קבל ייעוץ עסקי חינמי מיועץ מנוסה – ממשלה ממנת אותו." },
-        { title: "בדוק מענקים רלוונטיים", text: "כנס לרשות החדשנות ומצא קרן המתאימה לתחום שלך." },
-        { title: "הגש בקשה", text: "הגשת בקשה למענק אורכת 1-3 חודשים – התחל מוקדם." }
-      ]
-    }
-  };
-
-  // ============================================================
-  // QUIZ LOGIC
-  // ============================================================
-  const questions = [
-    {
-      id: "age",
-      title: "מה הגיל שלך?",
-      subtitle: "זה עוזר לנו להתאים את הזכויות הרלוונטיות לשלב החיים שלך",
-      type: "options",
-      options: [
-        { value: "teen", label: "14–17", icon: "🎒", sub: "תלמיד תיכון/חטיבה" },
-        { value: "young", label: "18–24", icon: "🪖", sub: "צבא/לימודים/תחילת קריירה" },
-        { value: "adult", label: "25–35", icon: "💼", sub: "עבודה/משפחה/הקמת עסק" },
-        { value: "mid", label: "36–50", icon: "📈", sub: "קריירה/הורות/נדל\"ן" },
-        { value: "senior", label: "51+", icon: "🌟", sub: "ניסיון/פרישה מוקדמת/ייעוץ" }
-      ]
-    },
-    {
-      id: "transition",
-      title: "האם אתה לפני מעבר משמעותי בחיים?",
-      subtitle: "מעברים פותחים זכויות חדשות – חשוב לדעת מה מגיע",
-      type: "options",
-      cols: 1,
-      options: [
-        { value: "school_to_army", label: "מתיכון לצבא / שירות לאומי", icon: "🪖" },
-        { value: "army_to_study", label: "שחרור מהצבא → לימודים", icon: "🎓" },
-        { value: "study_to_work", label: "סיום לימודים → שוק העבודה", icon: "💼" },
-        { value: "work_to_business", label: "שכיר → עצמאי / יזם", icon: "🚀" },
-        { value: "none", label: "לא, אני בשלב יציב", icon: "✅" }
-      ]
-    },
-    {
-      id: "status",
-      title: "מה הסטטוס התעסוקתי שלך?",
-      subtitle: "מה עיקר פעילותך כיום?",
-      type: "options",
-      options: [
-        { value: "student", label: "סטודנט / תלמיד", icon: "📚" },
-        { value: "employee", label: "שכיר", icon: "💼" },
-        { value: "freelance", label: "עצמאי / פרילנסר", icon: "💻" },
-        { value: "unemployed", label: "מחפש עבודה", icon: "🔍" },
-        { value: "army", label: "שירות צבאי / לאומי", icon: "🪖" },
-        { value: "business", label: "בעל עסק", icon: "🏢" }
-      ]
-    },
-    {
-      id: "income",
-      title: "מה ההכנסה החודשית שלך?",
-      subtitle: "ברוטו (לפני מסים) – נשמר בסודיות מוחלטת",
-      type: "income",
-      placeholder: "לדוגמה: 8500"
-    },
-    {
-      id: "interests",
-      title: "מה תחומי העניין שלך?",
-      subtitle: "בחר עד 3 תחומים שהכי מעניינים אותך",
-      type: "multi",
-      max: 3,
-      options: [
-        { value: "tech", label: "טכנולוגיה / הייטק", icon: "💻" },
-        { value: "health_interest", label: "בריאות / רפואה", icon: "🏥" },
-        { value: "finance", label: "כלכלה / השקעות", icon: "📊" },
-        { value: "art", label: "אמנות / יצירה", icon: "🎨" },
-        { value: "education", label: "חינוך / הוראה", icon: "📚" },
-        { value: "social", label: "עבודה סוציאלית", icon: "🤝" },
-        { value: "business_int", label: "עסקים / יזמות", icon: "🚀" },
-        { value: "law", label: "משפטים / ממשל", icon: "⚖️" }
-      ]
-    },
-    {
-      id: "housing_status",
-      title: "מה מצב הדיור שלך?",
-      subtitle: "כדי להמליץ על סיוע בדיור אם רלוונטי",
-      type: "options",
-      options: [
-        { value: "parents", label: "גר עם הורים", icon: "🏡" },
-        { value: "renting", label: "שוכר דירה", icon: "🏠" },
-        { value: "owner", label: "בעל דירה", icon: "🔑" },
-        { value: "looking", label: "מחפש דיור", icon: "🔍" }
-      ]
-    }
-  ];
-
-  let answers = {};
-  let currentQ = 0;
-  let selectedMulti = [];
-
-  function startQuiz() {
-    document.getElementById("hero-section").style.display = "none";
-    const qs = document.getElementById("quiz-section");
-    qs.style.display = "block";
-    qs.classList.add("animate-in");
-    renderQuestion();
+// ======= DATA =======
+const questions = [
+  {
+    id: 'age',
+    step: 'שלב 1 — גיל',
+    emoji: '🎂',
+    text: 'כמה שנים יש לך?',
+    hint: 'הגיל שלך עוזר לנו להבין באיזה שלב חיים אתה נמצא ומה הכי רלוונטי עבורך',
+    type: 'number',
+    min: 14, max: 30, default: 18,
+    unit: 'שנים'
+  },
+  {
+    id: 'status',
+    step: 'שלב 2 — סטטוס',
+    emoji: '📍',
+    text: 'מה הסטטוס שלך כרגע?',
+    hint: 'בחר את האפשרות שמתארת אותך הכי טוב ברגע הזה',
+    type: 'options',
+    options: [
+      { emoji: '🏫', label: 'תלמיד תיכון', sub: 'כיתות ז׳-י״ב', val: 'highschool' },
+      { emoji: '🎓', label: 'סטודנט', sub: 'לומד בו״ג / מכללה', val: 'student' },
+      { emoji: '🪖', label: 'חייל/ת', sub: 'שירות סדיר / מילואים', val: 'soldier' },
+      { emoji: '💼', label: 'עובד/ת', sub: 'עבודה במשרה חלקית/מלאה', val: 'employed' },
+      { emoji: '🔍', label: 'מחפש/ת עבודה', sub: 'בין עבודות / בהתחלה', val: 'unemployed' },
+      { emoji: '🌀', label: 'מעבר בחיים', sub: 'אחרי צבא / מסע / שינוי', val: 'transition' }
+    ]
+  },
+  {
+    id: 'location',
+    step: 'שלב 3 — מגורים',
+    emoji: '📍',
+    text: 'איפה אתה גר?',
+    hint: 'המיקום משפיע על איזה תמיכות וזכויות מגיעות לך',
+    type: 'options',
+    options: [
+      { emoji: '🏙️', label: 'מרכז', sub: 'תל אביב, גוש דן', val: 'center' },
+      { emoji: '🌇', label: 'צפון', sub: 'חיפה, גליל, צפון', val: 'north' },
+      { emoji: '🌆', label: 'דרום', sub: 'באר שבע, נגב', val: 'south' },
+      { emoji: '🏘️', label: 'ירושלים', sub: 'ירושלים והסביבה', val: 'jerusalem' },
+      { emoji: '🌿', label: 'פריפריה', sub: 'עיירות פיתוח, מושבים', val: 'periphery' },
+      { emoji: '🏡', label: 'יישוב קטן', sub: 'כפר / קיבוץ / מושב', val: 'village' }
+    ]
+  },
+  {
+    id: 'income',
+    step: 'שלב 4 — הכנסה',
+    emoji: '💰',
+    text: 'מה ההכנסה החודשית שלך בערך?',
+    hint: 'המידע נשמר פרטי ועוזר לנו להבין לאיזה סיוע אתה זכאי',
+    type: 'options',
+    options: [
+      { emoji: '🌱', label: 'ללא הכנסה', sub: 'תלמיד / ללא עבודה', val: 'none' },
+      { emoji: '💵', label: 'עד ₪3,000', sub: 'הכנסה נמוכה', val: 'low' },
+      { emoji: '💴', label: '₪3,000 – ₪6,000', sub: 'הכנסה בינונית-נמוכה', val: 'mid-low' },
+      { emoji: '💶', label: '₪6,000 – ₪10,000', sub: 'הכנסה בינונית', val: 'mid' },
+      { emoji: '💷', label: 'מעל ₪10,000', sub: 'הכנסה גבוהה', val: 'high' }
+    ]
+  },
+  {
+    id: 'family',
+    step: 'שלב 5 — מצב משפחתי',
+    emoji: '👨‍👩‍👧',
+    text: 'מה מצבך המשפחתי?',
+    hint: 'יש זכויות שקשורות ישירות למצב המשפחתי שלך',
+    type: 'options',
+    options: [
+      { emoji: '🏠', label: 'גר עם הורים', sub: 'בבית ההורים', val: 'parents' },
+      { emoji: '🧍', label: 'גר לבד', sub: 'דירה עצמאית / שכירות', val: 'alone' },
+      { emoji: '💑', label: 'זוגיות / נשוי', sub: 'עם פרטנר / בני זוג', val: 'couple' },
+      { emoji: '👶', label: 'הורה', sub: 'יש לי ילדים', val: 'parent' },
+      { emoji: '🏘️', label: 'שותפות', sub: 'גר עם שותפים לדירה', val: 'roommates' }
+    ]
+  },
+  {
+    id: 'goals',
+    step: 'שלב 6 — מטרות',
+    emoji: '🎯',
+    text: 'מה הכי חשוב לך עכשיו?',
+    hint: 'בחר עד 2 תחומים שהכי חשוב לך לקדם בתקופה הזאת',
+    type: 'options',
+    multi: true,
+    max: 2,
+    options: [
+      { emoji: '📚', label: 'לימודים', sub: 'תואר / מקצוע / הכשרה', val: 'study' },
+      { emoji: '💼', label: 'קריירה', sub: 'עבודה / התקדמות', val: 'career' },
+      { emoji: '🏠', label: 'דיור', sub: 'דירה / עצמאות', val: 'housing' },
+      { emoji: '💰', label: 'כסף וחיסכון', sub: 'יציבות פיננסית', val: 'money' },
+      { emoji: '❤️', label: 'בריאות', sub: 'גוף ונפש', val: 'health' },
+      { emoji: '🌍', label: 'עולם ונסיעות', sub: 'לראות את העולם', val: 'travel' }
+    ]
+  },
+  {
+    id: 'challenge',
+    step: 'שלב 7 — אתגר',
+    emoji: '💡',
+    text: 'מה האתגר הכי גדול שלך עכשיו?',
+    hint: 'אין תשובה נכונה — אנחנו רוצים להבין מה מעסיק אותך',
+    type: 'options',
+    options: [
+      { emoji: '🗺️', label: 'לא יודע לאן להמשיך', sub: 'חוסר כיוון', val: 'direction' },
+      { emoji: '💸', label: 'קשיים כלכליים', sub: 'חסר כסף / עומס חובות', val: 'money' },
+      { emoji: '📋', label: 'לא יודע מה מגיע לי', sub: 'בלבול עם זכויות', val: 'rights' },
+      { emoji: '🏠', label: 'בעיית דיור', sub: 'שכירות / עצמאות', val: 'housing' },
+      { emoji: '😰', label: 'לחץ ועייפות', sub: 'צבא / עבודה / לימודים', val: 'stress' },
+      { emoji: '🎓', label: 'קשיים בלימודים', sub: 'אקדמיה / מקצוע', val: 'study' }
+    ]
   }
+];
 
-  function renderQuestion() {
-    const q = questions[currentQ];
-    const total = questions.length;
-    const pct = Math.round((currentQ / total) * 100);
+// ======= STATE =======
+const answers = {};
+let currentStep = 0;
 
-    document.getElementById("progress-label").textContent = `שאלה ${currentQ + 1} מתוך ${total}`;
-    document.getElementById("progress-percent").textContent = pct + "%";
-    document.getElementById("progress-fill").style.width = pct + "%";
+// ======= RIGHTS DATABASE =======
+const allRights = [
+  {
+    id: 'bituchleumi_youth',
+    name: 'קצבת ביטוח לאומי לנוער',
+    icon: '🏛️',
+    desc: 'מגיע לצעירים עד גיל 22 שעובדים ולומדים — מקבלים השלמת הכנסה וגמלאות',
+    priority: 'high',
+    conditions: (a) => a.age <= 22,
+    steps: ['כנס לאתר ביטוח לאומי', 'בחר בטופס תביעה לגמלה', 'העלה מסמכי זהות + תלושי שכר', 'תוצאות תוך 30 יום'],
+    link: 'https://www.btl.gov.il',
+    linkText: 'אתר ביטוח לאומי'
+  },
+  {
+    id: 'grants_students',
+    name: 'מענקי לימודים לסטודנטים',
+    icon: '🎓',
+    desc: 'מלגות ומענקים ממשלתיים לסטודנטים, כולל מלגת נשיא המדינה ותמיכת קרנות',
+    priority: 'high',
+    conditions: (a) => a.status === 'student' || a.goals?.includes('study'),
+    steps: ['הגש בקשה דרך אתר הסוכנות היהודית', 'בדוק מלגות במוסד הלימודי שלך', 'הגש תוך 30.9 של כל שנה'],
+    link: 'https://www.studentgrants.org.il',
+    linkText: 'מלגות לסטודנטים'
+  },
+  {
+    id: 'soldier_rights',
+    name: 'זכויות חייל משוחרר',
+    icon: '🪖',
+    desc: 'מענק שחרור, הלוואות לדיור, סיוע בשכר לימוד, ועדיפות בדיור ממשלתי',
+    priority: 'high',
+    conditions: (a) => a.status === 'soldier' || a.status === 'transition',
+    steps: ['קבל אישור שחרור ממשרד הביטחון', 'פנה למרכז שחרור קרוב', 'בדוק זכאות להלוואה דרך הבנק'],
+    link: 'https://www.btl.gov.il/benefits/Soldiers',
+    linkText: 'זכויות חיילים'
+  },
+  {
+    id: 'rent_support',
+    name: 'סיוע בשכר דירה',
+    icon: '🏠',
+    desc: 'משרד הבינוי מעניק סיוע חודשי לצעירים עצמאים ולמי שמתקשה בדמי שכירות',
+    priority: 'high',
+    conditions: (a) => a.family === 'alone' || a.goals?.includes('housing') || a.challenge === 'housing',
+    steps: ['בדוק זכאות באתר משרד הבינוי', 'הגש בקשה עם חוזה שכירות', 'קבל החלטה תוך 45 יום'],
+    link: 'https://www.moch.gov.il',
+    linkText: 'משרד הבינוי'
+  },
+  {
+    id: 'periphery_benefits',
+    name: 'הטבות לפריפריה',
+    icon: '🌿',
+    desc: 'ישובי עדיפות לאומית מקבלים הטבות מס, זכאות לסיוע ייחודי בדיור וקידום מקצועי',
+    priority: 'mid',
+    conditions: (a) => a.location === 'periphery' || a.location === 'north' || a.location === 'south' || a.location === 'village',
+    steps: ['בדוק האם ישובך נמצא ברשימת עדיפות לאומית', 'פנה לעיריה / מועצה מקומית', 'הגש בקשה להטבות ישיבה'],
+    link: 'https://www.gov.il/he/departments/general/national_priority',
+    linkText: 'עדיפות לאומית'
+  },
+  {
+    id: 'income_support',
+    name: 'הבטחת הכנסה',
+    icon: '💰',
+    desc: 'לצעירים עצמאים ללא הכנסה מספקת — גמלת הבטחת הכנסה מביטוח לאומי',
+    priority: 'high',
+    conditions: (a) => a.income === 'none' || a.income === 'low' || a.challenge === 'money',
+    steps: ['ודא שעמדת בתקופת אכשרה', 'הגש תביעה אונליין דרך ביטוח לאומי', 'הגע לראיון במרכז ביטוח לאומי'],
+    link: 'https://www.btl.gov.il/benefits/income_support',
+    linkText: 'הבטחת הכנסה'
+  },
+  {
+    id: 'career_counseling',
+    name: 'ייעוץ תעסוקה חינמי',
+    icon: '💼',
+    desc: 'שירות התעסוקה מעניק ייעוץ קריירה, הכשרות מקצועיות, ותמיכה במציאת עבודה',
+    priority: 'mid',
+    conditions: (a) => a.status === 'unemployed' || a.goals?.includes('career'),
+    steps: ['הירשם בלשכת התעסוקה הקרובה', 'קבע פגישה עם יועץ', 'בחר קורס הכשרה מתאים'],
+    link: 'https://www.taasuka.gov.il',
+    linkText: 'שירות התעסוקה'
+  },
+  {
+    id: 'health_youth',
+    name: 'בריאות הנפש לצעירים',
+    icon: '❤️',
+    desc: 'עד גיל 25 זכאים לפגישות חינמיות עם פסיכולוג בקופת חולים — ללא השתתפות עצמית',
+    priority: 'mid',
+    conditions: (a) => a.age <= 25 || a.goals?.includes('health') || a.challenge === 'stress',
+    steps: ['פנה לרופא משפחה בקופת חולים שלך', 'בקש הפניה לשירות לבריאות הנפש', 'התחל טיפול תוך 2-4 שבועות'],
+    link: 'https://www.health.gov.il',
+    linkText: 'משרד הבריאות'
+  },
+  {
+    id: 'savings_youth',
+    name: 'חיסכון לכל ילד / צעיר',
+    icon: '🐖',
+    desc: 'מי שנולד אחרי 2017 זכאי לחיסכון ממשלתי, ואפשר להגדיל אותו עם תרומה עצמאית',
+    priority: 'low',
+    conditions: (a) => a.age <= 20 || a.goals?.includes('money'),
+    steps: ['בדוק מה נצבר בחסכון שלך בביטוח לאומי', 'הגדל את החיסכון ב-50% עם הפקדה עצמית', 'בחר מסלול השקעה מתאים'],
+    link: 'https://www.btl.gov.il/benefits/savings',
+    linkText: 'חיסכון לכל ילד'
+  }
+];
 
+// ======= RENDER =======
+function renderDots() {
+  const container = document.getElementById('stepDots');
+  container.innerHTML = questions.map((_, i) => {
+    let cls = 'step-dot';
+    if (i < currentStep) cls += ' done';
+    else if (i === currentStep) cls += ' active';
+    return `<div class="${cls}" onclick="goToStep(${i})"></div>`;
+  }).join('');
+}
+
+function updateProgress() {
+  const pct = Math.round(((currentStep + 1) / questions.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressLabel').textContent = `שאלה ${currentStep + 1} מתוך ${questions.length}`;
+  document.getElementById('btnBack').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+}
+
+function renderQuestion() {
+  const q = questions[currentStep];
+  const card = document.getElementById('qCard');
+  card.classList.remove('visible');
+
+  setTimeout(() => {
     let html = `
-      <div class="question-card animate-in">
-        <div class="question-number">שאלה ${currentQ + 1}</div>
-        <h2>${q.title}</h2>
-        <p class="subtitle">${q.subtitle}</p>
+      <div class="q-step-badge">
+        <span>${q.emoji}</span>
+        <span>${q.step}</span>
+      </div>
+      <h3 class="q-text">${q.text}</h3>
+      <p class="q-hint">${q.hint}</p>
     `;
 
-    if (q.type === "options") {
-      const cols = q.cols === 1 ? "single-col" : "";
-      html += `<div class="options-grid ${cols}">`;
-      q.options.forEach(opt => {
-        const sel = answers[q.id] === opt.value ? "selected" : "";
-        html += `
-          <button class="option-btn ${sel}" onclick="selectOption('${q.id}','${opt.value}',this)">
-            <span class="option-icon">${opt.icon}</span>
-            <div>
-              <div>${opt.label}</div>
-              ${opt.sub ? `<div style="font-size:0.78rem;color:#6b7280;margin-top:2px">${opt.sub}</div>` : ""}
-            </div>
-          </button>`;
-      });
-      html += `</div>`;
-    }
-
-    if (q.type === "multi") {
-      html += `<div style="font-size:0.8rem;color:#6b7280;margin-bottom:14px">בחר עד ${q.max} תחומים</div>`;
-      html += `<div class="options-grid">`;
-      q.options.forEach(opt => {
-        const sel = selectedMulti.includes(opt.value) ? "selected" : "";
-        html += `
-          <button class="option-btn ${sel}" onclick="toggleMulti('${opt.value}',this,${q.max})">
-            <span class="option-icon">${opt.icon}</span>
-            <span>${opt.label}</span>
-          </button>`;
-      });
-      html += `</div>`;
-    }
-
-    if (q.type === "income") {
+    if (q.type === 'number') {
+      const val = answers[q.id] || q.default;
       html += `
-        <input type="number" class="income-input" id="income-input"
-          placeholder="${q.placeholder}"
-          value="${answers.income || ""}"
-          oninput="answers.income=this.value"
-        />
-        <div style="font-size:0.8rem;color:#6b7280;margin-top:10px;text-align:center">
-          שכר מינימום: 5,880₪ | ממוצע שכר: ~13,000₪
-        </div>`;
+        <div class="number-input-wrap">
+          <button class="number-btn" onclick="changeNum(-1, '${q.id}', ${q.min}, ${q.max})">−</button>
+          <input class="number-val" type="number" id="numInput_${q.id}" value="${val}" min="${q.min}" max="${q.max}" onchange="answers['${q.id}'] = parseInt(this.value)">
+          <span class="number-unit">${q.unit}</span>
+          <button class="number-btn" onclick="changeNum(1, '${q.id}', ${q.min}, ${q.max})">+</button>
+        </div>
+      `;
+      answers[q.id] = answers[q.id] || q.default;
+    } else {
+      const selected = answers[q.id] || (q.multi ? [] : null);
+      html += `<div class="options-grid ${q.options.length <= 2 ? 'single-col' : ''}">`;
+      q.options.forEach(opt => {
+        const isSelected = q.multi
+          ? (selected || []).includes(opt.val)
+          : selected === opt.val;
+        html += `
+          <button class="opt-btn ${isSelected ? 'selected' : ''}" onclick="selectOption('${q.id}', '${opt.val}', ${!!q.multi}, ${q.max || 1})">
+            <div class="opt-emoji">${opt.emoji}</div>
+            <div class="opt-label">
+              ${opt.label}
+              ${opt.sub ? `<span class="opt-sub">${opt.sub}</span>` : ''}
+            </div>
+            <div class="check-icon">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </button>
+        `;
+      });
+      html += '</div>';
     }
 
-    html += `</div>
-    <div class="nav-buttons">
-      ${currentQ > 0 ? `<button class="btn-back" onclick="prevQ()">→ חזור</button>` : ""}
-      <button class="btn-next" onclick="nextQ()">
-        ${currentQ === questions.length - 1 ? "✨ קבל המלצות" : "המשך ←"}
-      </button>
-    </div>`;
+    document.getElementById('qContent').innerHTML = html;
+    updateNextBtn();
+    card.classList.add('visible');
+  }, 200);
+}
 
-    document.getElementById("question-container").innerHTML = html;
-  }
-
-  function selectOption(qId, val, el) {
+function selectOption(qId, val, multi, max) {
+  if (multi) {
+    if (!answers[qId]) answers[qId] = [];
+    const idx = answers[qId].indexOf(val);
+    if (idx >= 0) {
+      answers[qId].splice(idx, 1);
+    } else {
+      if (answers[qId].length < max) {
+        answers[qId].push(val);
+      } else {
+        // Replace last
+        answers[qId][answers[qId].length - 1] = val;
+      }
+    }
+  } else {
     answers[qId] = val;
-    document.querySelectorAll(".option-btn").forEach(b => b.classList.remove("selected"));
-    el.classList.add("selected");
   }
+  renderQuestion();
+}
 
-  function toggleMulti(val, el, max) {
-    if (selectedMulti.includes(val)) {
-      selectedMulti = selectedMulti.filter(v => v !== val);
-      el.classList.remove("selected");
-    } else {
-      if (selectedMulti.length >= max) return;
-      selectedMulti.push(val);
-      el.classList.add("selected");
-    }
-    answers.interests = selectedMulti;
+function changeNum(delta, id, min, max) {
+  const input = document.getElementById(`numInput_${id}`);
+  let val = parseInt(input.value) + delta;
+  val = Math.max(min, Math.min(max, val));
+  input.value = val;
+  answers[id] = val;
+}
+
+function updateNextBtn() {
+  const q = questions[currentStep];
+  const btn = document.getElementById('btnNext');
+  if (q.type === 'number') {
+    btn.disabled = false;
+    btn.textContent = currentStep === questions.length - 1 ? 'גלה את המסלול שלך ✨' : 'המשך →';
+    return;
   }
+  const ans = answers[q.id];
+  const hasAnswer = q.multi ? (ans && ans.length > 0) : !!ans;
+  btn.disabled = !hasAnswer;
+  btn.innerHTML = currentStep === questions.length - 1
+    ? 'גלה את המסלול שלך ✨'
+    : `המשך <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+}
 
-  function nextQ() {
-    if (currentQ < questions.length - 1) {
-      currentQ++;
-      renderQuestion();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      showResults();
-    }
+function nextStep() {
+  if (currentStep < questions.length - 1) {
+    currentStep++;
+    renderDots();
+    updateProgress();
+    renderQuestion();
+  } else {
+    showResults();
   }
+}
 
-  function prevQ() {
-    if (currentQ > 0) {
-      currentQ--;
-      renderQuestion();
-    }
+function prevStep() {
+  if (currentStep > 0) {
+    currentStep--;
+    renderDots();
+    updateProgress();
+    renderQuestion();
   }
+}
 
-  // ============================================================
-  // RESULTS LOGIC
-  // ============================================================
-  function showResults() {
-    document.getElementById("quiz-section").style.display = "none";
-    const rs = document.getElementById("results-section");
-    rs.style.display = "block";
-
-    const relevantRights = getRelevantRights();
-    const grid = document.getElementById("rights-grid");
-    grid.innerHTML = "";
-
-    relevantRights.forEach((rightKey, i) => {
-      const r = RIGHTS_DB[rightKey];
-      if (!r) return;
-      grid.innerHTML += buildRightCard(r, i);
-    });
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
+function goToStep(i) {
+  if (i <= currentStep) {
+    currentStep = i;
+    renderDots();
+    updateProgress();
+    renderQuestion();
   }
+}
 
-  function getRelevantRights() {
-    const { age, status, transition, income, housing_status } = answers;
-    let rights = ["health_basic"];
+// ======= RESULTS =======
+function showResults() {
+  document.getElementById('questionnaire').style.display = 'none';
+  const resultsEl = document.getElementById('results');
+  resultsEl.classList.add('visible');
+  resultsEl.scrollIntoView({ behavior: 'smooth' });
 
-    if (age === "teen") rights.push("health_young");
-    if (age === "young") rights.push("health_young", "army_rights");
-    if (status === "employee" || status === "business") rights.push("employment_rights", "minimum_wage");
-    if (status === "freelance" || status === "business") rights.push("freelance_rights");
-    if (status === "student") rights.push("student_rights");
-    if (status === "unemployed") rights.push("income_support", "minimum_wage");
-    if (status === "army" || transition === "school_to_army" || transition === "army_to_study") rights.push("army_rights");
-    if (transition === "work_to_business") rights.push("entrepreneurship", "freelance_rights");
-    if (housing_status === "looking" || housing_status === "renting") rights.push("housing");
+  // Filter rights
+  const relevant = allRights.filter(r => r.conditions(answers));
 
-    const interests = answers.interests || [];
-    if (interests.includes("business_int") || interests.includes("tech")) rights.push("entrepreneurship");
-    if (income && parseInt(income) < 6000) rights.push("income_support");
+  // Profile
+  buildProfile(relevant.length);
+  buildRights(relevant);
+}
 
-    return [...new Set(rights)];
+function buildProfile(count) {
+  const statusMap = {
+    highschool: 'תלמיד תיכון', student: 'סטודנט', soldier: 'חייל/ת',
+    employed: 'עובד/ת', unemployed: 'מחפש/ת עבודה', transition: 'במעבר בחיים'
+  };
+  const goalMap = {
+    study: 'לימודים', career: 'קריירה', housing: 'דיור',
+    money: 'כסף', health: 'בריאות', travel: 'עולם'
+  };
+
+  const statusLabel = statusMap[answers.status] || 'צעיר/ה';
+  const age = answers.age || 18;
+
+  document.getElementById('profileName').textContent = `בן/בת ${age}, ${statusLabel}`;
+  document.getElementById('profileDesc').textContent = 'מצאנו עבורך את הנתיב המדויק';
+  document.getElementById('scoreNum').textContent = count;
+
+  const tags = [];
+  if (answers.location) {
+    const locMap = { center:'מרכז', north:'צפון', south:'דרום', jerusalem:'ירושלים', periphery:'פריפריה', village:'יישוב קטן' };
+    tags.push(locMap[answers.location] || answers.location);
   }
+  if (answers.goals && answers.goals.length) {
+    answers.goals.forEach(g => tags.push(goalMap[g] || g));
+  }
+  tags.push(`${count} זכויות`);
 
-  function buildRightCard(r, index) {
-    const linksHtml = r.links.map(l =>
-      `<li><a href="${l.url}" target="_blank" rel="noopener">
-        <span class="link-icon">${l.icon}</span>${l.text}
-        <span style="margin-right:auto;font-size:0.75rem;color:#374151">↗</span>
-      </a></li>`
-    ).join("");
+  document.getElementById('profileTags').innerHTML = tags.map(t =>
+    `<span class="profile-tag">${t}</span>`
+  ).join('');
+}
 
-    const stepsHtml = r.steps.map((s, i) =>
-      `<li class="action-step">
-        <div class="step-number">${i + 1}</div>
-        <div class="step-text"><strong>${s.title}</strong><br/>${s.text}</div>
-      </li>`
-    ).join("");
+function buildRights(rights) {
+  const priorityLabel = { high: '⚡ עדיפות גבוהה', mid: '📌 רלוונטי', low: '💡 לבדוק' };
+  const priorityClass = { high: 'priority-high', mid: 'priority-mid', low: 'priority-low' };
 
-    return `
-      <div class="right-card" id="card-${index}">
-        <div class="right-card-header" onclick="toggleCard(${index})">
-          <div class="right-icon" style="background:${r.color}">
-            <span style="color:${r.iconColor}">${r.icon}</span>
+  // Sort: high first
+  const sorted = [...rights].sort((a, b) => {
+    const order = { high: 0, mid: 1, low: 2 };
+    return (order[a.priority] || 1) - (order[b.priority] || 1);
+  });
+
+  document.getElementById('rightsGrid').innerHTML = sorted.map((r, idx) => `
+    <div class="right-card" style="animation: hero-enter 0.5s ${idx * 0.1}s ease both;">
+      <div class="right-icon">${r.icon}</div>
+      <span class="right-priority ${priorityClass[r.priority]}">${priorityLabel[r.priority]}</span>
+      <h4 class="right-name">${r.name}</h4>
+      <p class="right-desc">${r.desc}</p>
+      <div class="right-actions">
+        ${r.steps.map((s, i) => `
+          <div class="action-step">
+            <div class="step-num">${i + 1}</div>
+            <span>${s}</span>
           </div>
-          <div class="right-card-title">
-            <h3>${r.title}</h3>
-            <p>${r.tagline}</p>
-          </div>
-          <div class="expand-icon">▼</div>
-        </div>
-        <div class="right-card-body">
-          <p class="right-description">${r.description}</p>
-          <div class="card-tabs">
-            <button class="card-tab active" onclick="switchTab(${index},'info',this)">📋 מידע</button>
-            <button class="card-tab" onclick="switchTab(${index},'links',this)">🔗 קישורים</button>
-            <button class="card-tab" onclick="switchTab(${index},'steps',this)">✅ תוכנית פעולה</button>
-          </div>
-          <div class="tab-content active" id="tab-${index}-info">
-            <p style="color:#9ca3af;font-size:0.92rem;line-height:1.7">${r.description}</p>
-          </div>
-          <div class="tab-content" id="tab-${index}-links">
-            <ul class="links-list">${linksHtml}</ul>
-          </div>
-          <div class="tab-content" id="tab-${index}-steps">
-            <ul class="action-steps">${stepsHtml}</ul>
-          </div>
-        </div>
-      </div>`;
-  }
+        `).join('')}
+      </div>
+      <a href="${r.link}" target="_blank" rel="noopener" class="right-link">
+        🔗 ${r.linkText}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  `).join('');
+}
 
-  function toggleCard(index) {
-    const card = document.getElementById(`card-${index}`);
-    card.classList.toggle("expanded");
-  }
+function restartQuiz() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  currentStep = 0;
+  document.getElementById('results').classList.remove('visible');
+  document.getElementById('questionnaire').style.display = 'block';
+  document.getElementById('questionnaire').scrollIntoView({ behavior: 'smooth' });
+  renderDots();
+  updateProgress();
+  renderQuestion();
+}
 
-  function switchTab(cardIndex, tabName, el) {
-    ["info","links","steps"].forEach(t => {
-      const el2 = document.getElementById(`tab-${cardIndex}-${t}`);
-      if (el2) el2.classList.remove("active");
-    });
-    document.getElementById(`tab-${cardIndex}-${tabName}`).classList.add("active");
-    el.closest(".card-tabs").querySelectorAll(".card-tab").forEach(b => b.classList.remove("active"));
-    el.classList.add("active");
-  }
-
-  function restart() {
-    answers = {};
-    selectedMulti = [];
-    currentQ = 0;
-    document.getElementById("results-section").style.display = "none";
-    document.getElementById("hero-section").style.display = "block";
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+// ======= INIT =======
+renderDots();
+updateProgress();
+renderQuestion();
 </script>
 </body>
 </html>
