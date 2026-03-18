@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>זכות - המדריך לישראלי</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #0038b8 0%, #0038b8 50%, #ffffff 50%, #ffffff 100%);
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+        
+        .container {
+            max-width: 428px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            background: linear-gradient(135deg, #0038b8, #0051d5);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .search-bar {
+            padding: 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #0038b8;
+            border-radius: 25px;
+            font-size: 16px;
+            text-align: right;
+        }
+        
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 20px;
+        }
+        
+        .category-card {
+            background: white;
+            border: 2px solid #0038b8;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,56,184,0.3);
+        }
+        
+        .category-card .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .category-card h3 {
+            color: #0038b8;
+            font-size: 16px;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 428px;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .nav-item {
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 5px 15px;
+        }
+        
+        .nav-item.active {
+            color: #0038b8;
+        }
+        
+        .nav-item .icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            display: none;
+            padding: 20px;
+        }
+
+        .quiz-container.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0038b8, #0051d5);
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+
+        .question-card {
+            background: white;
+            border: 2px solid #0038b8;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .question-card h2 {
+            color: #0038b8;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            border-color: #0038b8;
+            background: #e8f0ff;
+        }
+
+        .option.selected {
+            background: #0038b8;
+            color: white;
+            border-color: #0038b8;
+        }
+
+        .quiz-button {
+            width: 100%;
+            background: #0038b8;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-button:hover {
+            background: #0051d5;
+        }
+
+        .quiz-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .results-container {
+            display: none;
+            padding: 20px;
+        }
+
+        .results-container.active {
+            display: block;
+        }
+
+        .result-card {
+            background: white;
+            border: 2px solid #0038b8;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .result-card h3 {
+            color: #0038b8;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .result-card p {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .home-content {
+            display: block;
+        }
+
+        .home-content.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🇮🇱 זכות</h1>
+            <p>המדריך המלא לזכויות האזרח הישראלי</p>
+        </header>
+
+        <div class="home-content">
+            <div class="search-bar">
+                <input type="text" placeholder="🔍 חפש זכות או נושא...">
+            </div>
+
+            <div class="categories">
+                <div class="category-card" onclick="startQuiz()">
+                    <div class="icon">📋</div>
+                    <h3>מצא את הזכויות שלך</h3>
+                </div>
+                <div class="category-card">
+                    <div class="icon">💼</div>
+                    <h3>זכויות עובדים</h3>
+                </div>
+                <div class="category-card">
+                    <div class="icon">🏥</div>
+                    <h3>זכויות בריאות</h3>
+                </div>
+                <div class="category-card">
+                    <div class="icon">👨‍👩‍👧</div>
+                    <h3>זכויות משפחה</h3>
+                </div>
+                <div class="category-card">
+                    <div class="icon">🎓</div>
+                    <h3>זכויות סטודנטים</h3>
+                </div>
+                <div class="category-card">
+                    <div class="icon">🏠</div>
+                    <h3>זכויות דיור</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="quiz-container" id="quizContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 20%"></div>
+            </div>
+
+            <div id="questionContainer"></div>
+
+            <button class="quiz-button" id="nextButton" onclick="nextQuestion()" disabled>
+                המשך
+            </button>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-container" id="resultsContainer">
+            <h2 style="color: #0038b8; text-align: center; margin-bottom: 20px;">הזכויות המותאמות לך</h2>
+            <div id="resultsContent"></div>
+            <button class="quiz-button" onclick="resetQuiz()">חזור לדף הבית</button>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <span class="icon">🏠</span>
+                <span>בית</span>
+            </div>
+            <div class="nav-item">
+                <span class="icon">📚</span>
+                <span>מדריכים</span>
+            </div>
+            <div class="nav-item">
+                <span class="icon">💬</span>
+                <span>צ'אט</span>
+            </div>
+            <div class="nav-item">
+                <span class="icon">👤</span>
+                <span>פרופיל</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "מה המצב התעסוקתי שלך?",
+                options: ["עובד שכיר", "עצמאי", "סטודנט", "לא עובד כרגע"],
+                key: "employment"
+            },
+            {
+                question: "האם יש לך ילדים?",
+                options: ["כן", "לא", "מתכנן בעתיד"],
+                key: "children"
+            },
+            {
+                question: "האם יש לך מגבלה רפואית או נכות?",
+                options: ["כן", "לא", "מוגבלות זמנית"],
+                key: "disability"
+            },
+            {
+                question: "מה גילך?",
+                options: ["מתחת ל-18", "18-30", "31-50", "מעל 50"],
+                key: "age"
+            },
+            {
+                question: "האם אתה שוכר דירה?",
+                options: ["כן", "לא, יש לי דירה", "גר עם הורים"],
+                key: "housing"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = {};
+
+        function startQuiz() {
+            document.querySelector('.home-content').classList.add('hidden');
+            document.getElementById('quizContainer').classList.add('active');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            const container = document.getElementById('questionContainer');
+            
+            let html = `
+                <div class="question-card">
+                    <h2>שאלה ${currentQuestion + 1} מתוך ${questions.length}</h2>
+                    <h2>${question.question}</h2>
+            `;
+
+            question.options.forEach((option, index) => {
+                html += `<div class="option" onclick="selectOption('${question.key}', '${option}', this)">${option}</div>`;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+
+            // Update progress
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function selectOption(key, value, element) {
+            // Remove previous selection
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            answers[key] = value;
+            document.getElementById('nextButton').disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                showQuestion();
+                document.getElementById('nextButton').disabled = true;
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizContainer').classList.remove('active');
+            document.getElementById('resultsContainer').classList.add('active');
+
+            const resultsContent = document.getElementById('resultsContent');
+            let html = '';
+
+            // Generate personalized results based on answers
+            if (answers.employment === 'עובד שכיר') {
+                html += `
+                    <div class="result-card">
+                        <h3>💼 זכויות עובדים</h3>
+                        <p>כעובד שכיר, זכאי לימי חופשה, דמי הבראה, ופיצויי פיטורים. בדוק את חוזה העבודה שלך.</p>
+                    </div>
+                `;
+            }
+
+            if (answers.children === 'כן') {
+                html += `
+                    <div class="result-card">
+                        <h3>👨‍👩‍👧 זכויות הורים</h3>
+                        <p>זכאי לקצבת ילדים, הנחות בארנונה, ותמיכה בחינוך. בדוק באתר הביטוח הלאומי.</p>
+                    </div>
+                `;
+            }
+
+            if (answers.disability === 'כן') {
+                html += `
+                    <div class="result-card">
+                        <h3>♿ זכויות לאנשים עם מוגבלות</h3>
+                        <p>זכאי לקצבת נכות, הנחות במיסים, ותמיכה בנגישות. פנה למוסד לביטוח לאומי.</p>
+                    </div>
+                `;
+            }
+
+            if (answers.age === '18-30') {
+                html += `
+                    <div class="result-card">
+                        <h3>🎓 זכויות צעירים</h3>
+                        <p>זכאי לסיוע בשכר לימוד, תמיכה במגורים, והטבות לחיילים משוחררים.</p>
+                    </div>
+                `;
+            }
+
+            if (answers.housing === 'כן') {
+                html += `
+                    <div class="result-card">
+                        <h3>🏠 זכויות שוכרים</h3>
+                        <p>הזכות לדירה תקינה, שקיפות בחוזה, והגנה מפני גירוש שרירותי.</p>
+                    </div>
+                `;
+            }
+
+            resultsContent.innerHTML = html;
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            answers = {};
+            document.querySelector('.home-content').classList.remove('hidden');
+            document.getElementById('quizContainer').classList.remove('active');
+            document.getElementById('resultsContainer').classList.remove('active');
+            document.getElementById('nextButton').disabled = true;
+        }
+    </script>
+</body>
+</html>
