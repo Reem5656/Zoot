@@ -1,473 +1,1377 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>זכות - המדריך לישראלי</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #0038b8 0%, #0038b8 50%, #ffffff 50%, #ffffff 100%);
-            min-height: 100vh;
-            padding-bottom: 70px;
-        }
-        
-        .container {
-            max-width: 428px;
-            margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-        
-        header {
-            background: linear-gradient(135deg, #0038b8, #0051d5);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        header h1 {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        
-        .search-bar {
-            padding: 15px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .search-bar input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #0038b8;
-            border-radius: 25px;
-            font-size: 16px;
-            text-align: right;
-        }
-        
-        .categories {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            padding: 20px;
-        }
-        
-        .category-card {
-            background: white;
-            border: 2px solid #0038b8;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,56,184,0.3);
-        }
-        
-        .category-card .icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-        
-        .category-card h3 {
-            color: #0038b8;
-            font-size: 16px;
-        }
-        
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 428px;
-            width: 100%;
-            background: white;
-            border-top: 1px solid #e0e0e0;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .nav-item {
-            text-align: center;
-            color: #666;
-            font-size: 12px;
-            cursor: pointer;
-            padding: 5px 15px;
-        }
-        
-        .nav-item.active {
-            color: #0038b8;
-        }
-        
-        .nav-item .icon {
-            font-size: 24px;
-            display: block;
-            margin-bottom: 3px;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>המדריך לישראלי</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Frank+Ruhl+Libre:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg2: #0f1628;
+    --card: #141c35;
+    --card2: #1a2340;
+    --border: rgba(99,120,210,0.18);
+    --accent: #4f7cff;
+    --accent2: #7c5cfc;
+    --gold: #f5c842;
+    --text: #e8eaf6;
+    --text2: #8b96c8;
+    --text3: #4a5580;
+    --success: #2dd4bf;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+    --glow: 0 0 40px rgba(79,124,255,0.15);
+  }
 
-        /* Quiz Styles */
-        .quiz-container {
-            display: none;
-            padding: 20px;
-        }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .quiz-container.active {
-            display: block;
-        }
+  html { scroll-behavior: smooth; }
 
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #0038b8, #0051d5);
-            transition: width 0.3s;
-            border-radius: 10px;
-        }
+  /* ─── Background ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 20%, rgba(79,124,255,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124,92,252,0.07) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
 
-        .question-card {
-            background: white;
-            border: 2px solid #0038b8;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
+  .noise {
+    position: fixed; inset: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
 
-        .question-card h2 {
-            color: #0038b8;
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
+  /* ─── Nav ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+    height: 68px;
+    background: rgba(10,14,26,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
 
-        .option {
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+  .nav-logo {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
 
-        .option:hover {
-            border-color: #0038b8;
-            background: #e8f0ff;
-        }
+  .nav-logo span { color: var(--accent); }
 
-        .option.selected {
-            background: #0038b8;
-            color: white;
-            border-color: #0038b8;
-        }
+  .nav-links {
+    display: flex; gap: 32px;
+    list-style: none;
+  }
 
-        .quiz-button {
-            width: 100%;
-            background: #0038b8;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 25px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+  .nav-links a {
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
 
-        .quiz-button:hover {
-            background: #0051d5;
-        }
+  .nav-links a:hover { color: var(--text); }
 
-        .quiz-button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
+  .nav-cta {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 9px 22px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    font-family: 'Heebo', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
 
-        .results-container {
-            display: none;
-            padding: 20px;
-        }
+  .nav-cta:hover {
+    background: #6b90ff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(79,124,255,0.4);
+  }
 
-        .results-container.active {
-            display: block;
-        }
+  /* ─── Hero ─── */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 100px 24px 60px;
+  }
 
-        .result-card {
-            background: white;
-            border: 2px solid #0038b8;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-        }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(79,124,255,0.12);
+    border: 1px solid rgba(79,124,255,0.3);
+    color: #849dff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    animation: fadeUp 0.6s ease both;
+  }
 
-        .result-card h3 {
-            color: #0038b8;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
 
-        .result-card p {
-            color: #333;
-            line-height: 1.6;
-        }
+  .hero-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    animation: fadeUp 0.6s 0.1s ease both;
+    max-width: 800px;
+  }
 
-        .home-content {
-            display: block;
-        }
+  .hero-title .highlight {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-        .home-content.hidden {
-            display: none;
-        }
-    </style>
+  .hero-sub {
+    margin-top: 20px;
+    font-size: 1.15rem;
+    color: var(--text2);
+    font-weight: 400;
+    line-height: 1.7;
+    max-width: 520px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 16px;
+    margin-top: 40px;
+    flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    padding: 15px 32px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Heebo', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s;
+    box-shadow: 0 8px 24px rgba(79,124,255,0.35);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px rgba(79,124,255,0.5);
+  }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--card);
+    color: var(--text);
+    padding: 15px 28px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Heebo', sans-serif;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: all 0.25s;
+  }
+
+  .btn-secondary:hover {
+    background: var(--card2);
+    border-color: rgba(99,120,210,0.4);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    display: flex; gap: 48px;
+    margin-top: 64px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .stat-item { text-align: center; }
+
+  .stat-num {
+    display: block;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .stat-num .accent { color: var(--accent); }
+
+  .stat-label {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--text3);
+    font-weight: 500;
+    margin-top: 6px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ─── Features ─── */
+  .features {
+    position: relative; z-index: 1;
+    padding: 100px 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 1rem;
+    color: var(--text2);
+    line-height: 1.7;
+    max-width: 500px;
+    margin-bottom: 60px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .feature-card:hover {
+    border-color: rgba(79,124,255,0.3);
+    transform: translateY(-4px);
+    box-shadow: var(--glow);
+  }
+
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-icon {
+    width: 48px; height: 48px;
+    background: rgba(79,124,255,0.12);
+    border: 1px solid rgba(79,124,255,0.2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+
+  .feature-name {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .feature-desc {
+    font-size: 0.9rem;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+
+  /* ─── Quiz Section ─── */
+  #quiz-section {
+    position: relative; z-index: 1;
+    padding: 100px 24px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .quiz-container {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 48px;
+    box-shadow: var(--shadow), var(--glow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quiz-container::after {
+    content: '';
+    position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(79,124,255,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Progress */
+  .progress-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 32px;
+  }
+
+  .progress-info {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+  }
+
+  .progress-num { color: var(--accent); }
+
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+    margin: 0 16px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 4px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* Question */
+  .question-block { display: none; }
+  .question-block.active { display: block; animation: fadeUp 0.4s ease both; }
+
+  .question-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    background: rgba(79,124,255,0.1);
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+
+  .question-text {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .question-hint {
+    font-size: 0.88rem;
+    color: var(--text3);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  /* Options */
+  .options-grid {
+    display: grid;
+    gap: 10px;
+  }
+
+  .options-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+
+  .option-btn {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    color: var(--text2);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: right;
+  }
+
+  .option-btn:hover {
+    background: rgba(79,124,255,0.08);
+    border-color: rgba(79,124,255,0.4);
+    color: var(--text);
+    transform: translateX(-2px);
+  }
+
+  .option-btn.selected {
+    background: rgba(79,124,255,0.12);
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  .option-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  /* Slider */
+  .slider-wrap {
+    padding: 8px 0;
+  }
+
+  .range-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 6px;
+    outline: none;
+    margin: 16px 0;
+    position: relative;
+  }
+
+  .range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    cursor: pointer;
+    box-shadow: 0 0 0 4px rgba(79,124,255,0.2);
+    transition: box-shadow 0.2s;
+  }
+
+  .range-slider::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 0 7px rgba(79,124,255,0.25);
+  }
+
+  .slider-labels {
+    display: flex; justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text3);
+  }
+
+  .slider-val {
+    text-align: center;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 8px 0;
+  }
+
+  /* Checkbox tags */
+  .tags-wrap {
+    display: flex; flex-wrap: wrap; gap: 10px;
+  }
+
+  .tag-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 16px;
+    color: var(--text2);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tag-btn:hover {
+    background: rgba(79,124,255,0.08);
+    border-color: rgba(79,124,255,0.4);
+    color: var(--text);
+  }
+
+  .tag-btn.selected {
+    background: rgba(79,124,255,0.15);
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  /* Navigation buttons */
+  .quiz-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-back {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--text2);
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-back:hover { border-color: rgba(99,120,210,0.5); color: var(--text); }
+
+  .btn-next {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    padding: 13px 28px;
+    border-radius: 10px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s;
+    box-shadow: 0 4px 16px rgba(79,124,255,0.35);
+  }
+
+  .btn-next:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(79,124,255,0.5);
+  }
+
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ─── Results ─── */
+  #results-section {
+    display: none;
+    position: relative; z-index: 1;
+    padding: 100px 24px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  #results-section.visible { display: block; animation: fadeUp 0.5s ease both; }
+
+  .result-hero {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 48px;
+    margin-bottom: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(79,124,255,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .result-emoji {
+    font-size: 3.5rem;
+    margin-bottom: 16px;
+    display: block;
+    animation: pop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  .result-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+
+  .result-sub {
+    font-size: 1rem;
+    color: var(--text2);
+    line-height: 1.7;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .profile-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(79,124,255,0.12);
+    border: 1px solid rgba(79,124,255,0.3);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #849dff;
+    margin-bottom: 24px;
+  }
+
+  .results-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    transition: all 0.25s;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .result-card:hover {
+    border-color: rgba(79,124,255,0.3);
+    transform: translateX(-4px);
+  }
+
+  .result-card-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .result-card-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .icon-blue { background: rgba(79,124,255,0.15); }
+  .icon-purple { background: rgba(124,92,252,0.15); }
+  .icon-gold { background: rgba(245,200,66,0.15); }
+  .icon-teal { background: rgba(45,212,191,0.15); }
+
+  .result-card-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .result-card-category {
+    font-size: 0.78rem;
+    color: var(--text3);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+  }
+
+  .result-items {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 4px;
+  }
+
+  .result-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 0.83rem;
+    color: var(--text2);
+    font-weight: 500;
+  }
+
+  .result-restart {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  /* ─── Footer ─── */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--text3);
+    font-size: 0.85rem;
+    line-height: 1.8;
+  }
+
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* ─── Animations ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.6); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 640px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero-stats { gap: 28px; flex-wrap: wrap; justify-content: center; }
+    .quiz-container { padding: 28px 22px; }
+    .options-grid.cols-2 { grid-template-columns: 1fr; }
+    .result-hero { padding: 32px 22px; }
+    .result-card { padding: 22px 20px; }
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🇮🇱 זכות</h1>
-            <p>המדריך המלא לזכויות האזרח הישראלי</p>
-        </header>
 
-        <div class="home-content">
-            <div class="search-bar">
-                <input type="text" placeholder="🔍 חפש זכות או נושא...">
-            </div>
+<div class="noise"></div>
 
-            <div class="categories">
-                <div class="category-card" onclick="startQuiz()">
-                    <div class="icon">📋</div>
-                    <h3>מצא את הזכויות שלך</h3>
-                </div>
-                <div class="category-card">
-                    <div class="icon">💼</div>
-                    <h3>זכויות עובדים</h3>
-                </div>
-                <div class="category-card">
-                    <div class="icon">🏥</div>
-                    <h3>זכויות בריאות</h3>
-                </div>
-                <div class="category-card">
-                    <div class="icon">👨‍👩‍👧</div>
-                    <h3>זכויות משפחה</h3>
-                </div>
-                <div class="category-card">
-                    <div class="icon">🎓</div>
-                    <h3>זכויות סטודנטים</h3>
-                </div>
-                <div class="category-card">
-                    <div class="icon">🏠</div>
-                    <h3>זכויות דיור</h3>
-                </div>
-            </div>
-        </div>
+<!-- ─── Nav ─── -->
+<nav>
+  <div class="nav-logo">המדריך <span>לישראלי</span></div>
+  <ul class="nav-links">
+    <li><a href="#features">מה תמצאו כאן</a></li>
+    <li><a href="#quiz-section">השאלון</a></li>
+  </ul>
+  <button class="nav-cta" onclick="scrollToQuiz()">התחל עכשיו →</button>
+</nav>
 
-        <!-- Quiz Section -->
-        <div class="quiz-container" id="quizContainer">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill" style="width: 20%"></div>
-            </div>
+<!-- ─── Hero ─── -->
+<section class="hero">
+  <div class="hero-badge">גרסה 2.0 — חדש ומשופר</div>
+  <h1 class="hero-title">
+    גלה את הזכויות<br />
+    <span class="highlight">שמגיעות לך</span>
+  </h1>
+  <p class="hero-sub">
+    שאלון חכם ומותאם אישית שמנתח את המצב שלך ומציג את כל הזכויות, ההטבות והמסלולים הרלוונטיים בדיוק עבורך.
+  </p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="scrollToQuiz()">
+      <span>▶</span>
+      <span>התחל את השאלון</span>
+    </button>
+    <button class="btn-secondary" onclick="scrollToFeatures()">
+      <span>מה תמצאו כאן</span>
+      <span>↓</span>
+    </button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">50<span class="accent">+</span></span>
+      <span class="stat-label">זכויות במאגר</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">8</span>
+      <span class="stat-label">קטגוריות</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">3<span class="accent">′</span></span>
+      <span class="stat-label">זמן מילוי</span>
+    </div>
+  </div>
+</section>
 
-            <div id="questionContainer"></div>
+<!-- ─── Features ─── -->
+<section class="features" id="features">
+  <div class="section-label">למה דווקא אנחנו</div>
+  <h2 class="section-title">מותאם לך,<br />לא לכולם</h2>
+  <p class="section-sub">
+    האפליקציה מזהה את השלב בחיים שלך ומציגה רק את המידע שרלוונטי עבורך.
+  </p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <div class="feature-name">שאלון מסתגל</div>
+      <p class="feature-desc">השאלות משתנות בהתאם לתשובות שלך — לא תראה שאלות שלא רלוונטיות לך.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-name">תוצאות מיידיות</div>
+      <p class="feature-desc">בסיום השאלון תקבל רשימה מלאה של זכויות, הטבות ומסלולים — מיד, ללא המתנה.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <div class="feature-name">פרטיות מלאה</div>
+      <p class="feature-desc">המידע שלך נשאר אצלך — אנחנו לא אוספים, מאחסנים או מעבירים שום מידע אישי.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
+      <div class="feature-name">מעברי חיים</div>
+      <p class="feature-desc">גיוס? מעבר לאוניברסיטה? עצמאי חדש? מזהים את נקודת המעבר ומכינים אותך.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-name">לפי הכנסה</div>
+      <p class="feature-desc">מחשבים בדיוק אילו הטבות מגיעות לך לפי רמת ההכנסה שלך.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌟</div>
+      <div class="feature-name">הכל במקום אחד</div>
+      <p class="feature-desc">ביטוח לאומי, מלגות, הטבות מס, שירותי תעסוקה — הכל מרוכז בתוצאה אחת.</p>
+    </div>
+  </div>
+</section>
 
-            <button class="quiz-button" id="nextButton" onclick="nextQuestion()" disabled>
-                המשך
-            </button>
-        </div>
+<!-- ─── Quiz ─── -->
+<section id="quiz-section">
+  <div style="text-align:center;margin-bottom:40px;">
+    <div class="section-label">השאלון האישי</div>
+    <h2 class="section-title">גלה מה מגיע לך</h2>
+    <p class="section-sub" style="margin:0 auto;">ענה על מספר שאלות ונציג לך תמונה מלאה של הזכויות שלך.</p>
+  </div>
 
-        <!-- Results Section -->
-        <div class="results-container" id="resultsContainer">
-            <h2 style="color: #0038b8; text-align: center; margin-bottom: 20px;">הזכויות המותאמות לך</h2>
-            <div id="resultsContent"></div>
-            <button class="quiz-button" onclick="resetQuiz()">חזור לדף הבית</button>
-        </div>
+  <div class="quiz-container">
 
-        <div class="bottom-nav">
-            <div class="nav-item active">
-                <span class="icon">🏠</span>
-                <span>בית</span>
-            </div>
-            <div class="nav-item">
-                <span class="icon">📚</span>
-                <span>מדריכים</span>
-            </div>
-            <div class="nav-item">
-                <span class="icon">💬</span>
-                <span>צ'אט</span>
-            </div>
-            <div class="nav-item">
-                <span class="icon">👤</span>
-                <span>פרופיל</span>
-            </div>
-        </div>
+    <!-- Progress -->
+    <div class="progress-header">
+      <span class="progress-info">שאלה <span class="progress-num" id="q-current">1</span></span>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-bar" style="width:10%"></div>
+      </div>
+      <span class="progress-info"><span class="progress-num" id="q-total">8</span> שאלות</span>
     </div>
 
-    <script>
-        const questions = [
-            {
-                question: "מה המצב התעסוקתי שלך?",
-                options: ["עובד שכיר", "עצמאי", "סטודנט", "לא עובד כרגע"],
-                key: "employment"
-            },
-            {
-                question: "האם יש לך ילדים?",
-                options: ["כן", "לא", "מתכנן בעתיד"],
-                key: "children"
-            },
-            {
-                question: "האם יש לך מגבלה רפואית או נכות?",
-                options: ["כן", "לא", "מוגבלות זמנית"],
-                key: "disability"
-            },
-            {
-                question: "מה גילך?",
-                options: ["מתחת ל-18", "18-30", "31-50", "מעל 50"],
-                key: "age"
-            },
-            {
-                question: "האם אתה שוכר דירה?",
-                options: ["כן", "לא, יש לי דירה", "גר עם הורים"],
-                key: "housing"
-            }
-        ];
+    <!-- Q1: Age -->
+    <div class="question-block active" data-q="1">
+      <span class="question-tag">פרטים אישיים</span>
+      <h3 class="question-text">כמה שנים יש לך?</h3>
+      <p class="question-hint">הגיל שלך קובע איזה זכויות ומסלולים רלוונטיים עבורך.</p>
+      <div class="slider-wrap">
+        <div class="slider-val" id="age-val">18</div>
+        <input type="range" class="range-slider" id="age-slider" min="14" max="70" value="18"
+          oninput="document.getElementById('age-val').textContent=this.value; answers.age=parseInt(this.value); updateAgeCategory();" />
+        <div class="slider-labels">
+          <span>14</span>
+          <span>70+</span>
+        </div>
+      </div>
+    </div>
 
-        let currentQuestion = 0;
-        let answers = {};
+    <!-- Q2: Status -->
+    <div class="question-block" data-q="2">
+      <span class="question-tag">מצב עכשווי</span>
+      <h3 class="question-text">מה המצב שלך כרגע?</h3>
+      <p class="question-hint">בחר את האפשרות שמתאימה לך ביותר.</p>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this,'status','student')">
+          <span class="option-icon">🎒</span><span>תלמיד בחינוך</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'status','army')">
+          <span class="option-icon">🪖</span><span>משרת / עתיד להתגייס</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'status','student_higher')">
+          <span class="option-icon">🎓</span><span>סטודנט באקדמיה</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'status','employed')">
+          <span class="option-icon">💼</span><span>עובד שכיר</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'status','self_employed')">
+          <span class="option-icon">🚀</span><span>עצמאי / פרילנסר</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'status','unemployed')">
+          <span class="option-icon">🔍</span><span>מחפש עבודה</span>
+        </button>
+      </div>
+    </div>
 
-        function startQuiz() {
-            document.querySelector('.home-content').classList.add('hidden');
-            document.getElementById('quizContainer').classList.add('active');
-            showQuestion();
-        }
+    <!-- Q3: Transition -->
+    <div class="question-block" data-q="3">
+      <span class="question-tag">מעברי חיים</span>
+      <h3 class="question-text">האם אתה לקראת מעבר?</h3>
+      <p class="question-hint">מעברים מרכזיים בחיים כוללים זכויות וסיוע מיוחד.</p>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this,'transition','middle_to_high')">
+          <span class="option-icon">📚</span><span>מחטיבה לתיכון</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'transition','high_to_army')">
+          <span class="option-icon">🪖</span><span>מתיכון לצבא</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'transition','army_to_civilian')">
+          <span class="option-icon">🎓</span><span>שחרור מהצבא</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'transition','new_job')">
+          <span class="option-icon">💼</span><span>מעבר עבודה חדש</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'transition','none')">
+          <span class="option-icon">✅</span><span>לא, אני יציב כרגע</span>
+        </button>
+      </div>
+    </div>
 
-        function showQuestion() {
-            const question = questions[currentQuestion];
-            const container = document.getElementById('questionContainer');
-            
-            let html = `
-                <div class="question-card">
-                    <h2>שאלה ${currentQuestion + 1} מתוך ${questions.length}</h2>
-                    <h2>${question.question}</h2>
-            `;
+    <!-- Q4: Employment type (conditional) -->
+    <div class="question-block" data-q="4">
+      <span class="question-tag">פרטי תעסוקה</span>
+      <h3 class="question-text" id="q4-text">מה סוג ההעסקה שלך?</h3>
+      <p class="question-hint">זה משפיע על הזכויות שמגיעות לך מהמעסיק ומהביטוח הלאומי.</p>
+      <div class="options-grid" id="q4-options">
+        <button class="option-btn" onclick="selectOption(this,'employment_type','full')">
+          <span class="option-icon">⏰</span><span>משרה מלאה</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'employment_type','part')">
+          <span class="option-icon">🕐</span><span>משרה חלקית</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'employment_type','contract')">
+          <span class="option-icon">📄</span><span>חוזה / קבלן</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'employment_type','na')">
+          <span class="option-icon">➖</span><span>לא רלוונטי</span>
+        </button>
+      </div>
+    </div>
 
-            question.options.forEach((option, index) => {
-                html += `<div class="option" onclick="selectOption('${question.key}', '${option}', this)">${option}</div>`;
-            });
+    <!-- Q5: Income -->
+    <div class="question-block" data-q="5">
+      <span class="question-tag">הכנסה חודשית</span>
+      <h3 class="question-text">מה ההכנסה החודשית שלך (ברוטו)?</h3>
+      <p class="question-hint">הטבות רבות מחושבות לפי רמת ההכנסה. המידע נשאר פרטי לחלוטין.</p>
+      <div class="options-grid cols-2">
+        <button class="option-btn" onclick="selectOption(this,'income','none')">
+          <span class="option-icon">⭕</span><span>אין הכנסה</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'income','low')">
+          <span class="option-icon">📊</span><span>עד ₪5,000</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'income','mid_low')">
+          <span class="option-icon">📈</span><span>₪5,000 – ₪10,000</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'income','mid')">
+          <span class="option-icon">💰</span><span>₪10,000 – ₪20,000</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'income','high')">
+          <span class="option-icon">💎</span><span>₪20,000 – ₪35,000</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'income','very_high')">
+          <span class="option-icon">🏆</span><span>מעל ₪35,000</span>
+        </button>
+      </div>
+    </div>
 
-            html += `</div>`;
-            container.innerHTML = html;
+    <!-- Q6: Education -->
+    <div class="question-block" data-q="6">
+      <span class="question-tag">השכלה</span>
+      <h3 class="question-text">מה רמת ההשכלה שלך?</h3>
+      <p class="question-hint">משפיע על המסלולים ומלגות הלימודים שרלוונטיות עבורך.</p>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this,'education','middle')">
+          <span class="option-icon">🏫</span><span>חטיבת ביניים</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'education','high')">
+          <span class="option-icon">🏛️</span><span>תיכון (בוגר / לומד)</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'education','bagrut')">
+          <span class="option-icon">📜</span><span>בגרות מלאה</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'education','academic')">
+          <span class="option-icon">🎓</span><span>תואר אקדמי</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'education','post')">
+          <span class="option-icon">🔬</span><span>תואר שני / שלישי</span>
+        </button>
+      </div>
+    </div>
 
-            // Update progress
-            const progress = ((currentQuestion + 1) / questions.length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-        }
+    <!-- Q7: Interests -->
+    <div class="question-block" data-q="7">
+      <span class="question-tag">תחומי עניין</span>
+      <h3 class="question-text">מה מעניין אותך? (בחר עד 3)</h3>
+      <p class="question-hint">נתאים לך המלצות על מסלולים, קורסים ותוכניות בתחומים שאוהב.</p>
+      <div class="tags-wrap" id="interests-wrap">
+        <button class="tag-btn" onclick="toggleInterest(this,'tech')">💻 טכנולוגיה</button>
+        <button class="tag-btn" onclick="toggleInterest(this,'art')">🎨 אמנות ועיצוב</button>
+        <button class="tag-btn" onclick="toggleInterest(this,'business')">📈 עסקים ויזמות</button>
+        <button class="tag-btn" onclick="toggleInterest(this,'health')">🏥 בריאות ורפואה</button>
+        <button class="tag-btn" onclick="toggleInterest(this,'law')">⚖️ משפטים וחברה</button>
+        <button class="tag-btn" onclick="toggleInterest(this,'education_field')">📚 חינוך והוראה</button>
+        <button class="tag-btn" onclick="toggleInterest(this,'military')">🛡️ ביטחון ומנהיגות</button>
+        <button class="tag-btn" onclick="toggleInterest(this,'nature')">🌿 טבע וסביבה</button>
+        <button class="tag-btn" onclick="toggleInterest(this,'sports')">⚽ ספורט ופעילות גופנית</button>
+        <button class="tag-btn" onclick="toggleInterest(this,'social')">🤝 עבודה סוציאלית</button>
+        <button class="tag-btn" onclick="toggleInterest(this,'media')">🎬 תקשורת ומדיה</button>
+        <button class="tag-btn" onclick="toggleInterest(this,'science')">🔬 מדע ומחקר</button>
+      </div>
+    </div>
 
-        function selectOption(key, value, element) {
-            // Remove previous selection
-            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-            element.classList.add('selected');
-            
-            answers[key] = value;
-            document.getElementById('nextButton').disabled = false;
-        }
+    <!-- Q8: Region -->
+    <div class="question-block" data-q="8">
+      <span class="question-tag">מיקום</span>
+      <h3 class="question-text">באיזה אזור אתה גר?</h3>
+      <p class="question-hint">ישנן הטבות אזוריות ותוכניות מיוחדות לפי מקום מגורים.</p>
+      <div class="options-grid cols-2">
+        <button class="option-btn" onclick="selectOption(this,'region','north')">
+          <span class="option-icon">🌄</span><span>צפון</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'region','center')">
+          <span class="option-icon">🏙️</span><span>מרכז</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'region','jerusalem')">
+          <span class="option-icon">🕌</span><span>ירושלים</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'region','south')">
+          <span class="option-icon">🏜️</span><span>דרום / נגב</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'region','periphery')">
+          <span class="option-icon">🌾</span><span>פריפריה</span>
+        </button>
+        <button class="option-btn" onclick="selectOption(this,'region','abroad')">
+          <span class="option-icon">✈️</span><span>בחו"ל</span>
+        </button>
+      </div>
+    </div>
 
-        function nextQuestion() {
-            currentQuestion++;
-            
-            if (currentQuestion < questions.length) {
-                showQuestion();
-                document.getElementById('nextButton').disabled = true;
-            } else {
-                showResults();
-            }
-        }
+    <!-- Navigation -->
+    <div class="quiz-nav">
+      <button class="btn-back" id="btn-back" onclick="goBack()" style="visibility:hidden">
+        ← חזרה
+      </button>
+      <button class="btn-next" id="btn-next" onclick="goNext()">
+        המשך →
+      </button>
+    </div>
+  </div>
+</section>
 
-        function showResults() {
-            document.getElementById('quizContainer').classList.remove('active');
-            document.getElementById('resultsContainer').classList.add('active');
+<!-- ─── Results ─── -->
+<section id="results-section">
+  <div style="text-align:center;margin-bottom:40px;">
+    <div class="section-label">הפרופיל שלך</div>
+    <h2 class="section-title">הנה מה שמגיע לך</h2>
+    <p class="section-sub" style="margin:0 auto;">בהתבסס על התשובות שלך, אספנו את כל הזכויות והמסלולים הרלוונטיים.</p>
+  </div>
 
-            const resultsContent = document.getElementById('resultsContent');
-            let html = '';
+  <div class="result-hero">
+    <span class="result-emoji" id="result-emoji">🎯</span>
+    <div class="profile-badge" id="result-profile">
+      <span>📋</span>
+      <span id="profile-label">טוען...</span>
+    </div>
+    <h2 class="result-title" id="result-title">הפרופיל שלך</h2>
+    <p class="result-sub" id="result-desc">תוכן מותאם אישית</p>
+  </div>
 
-            // Generate personalized results based on answers
-            if (answers.employment === 'עובד שכיר') {
-                html += `
-                    <div class="result-card">
-                        <h3>💼 זכויות עובדים</h3>
-                        <p>כעובד שכיר, זכאי לימי חופשה, דמי הבראה, ופיצויי פיטורים. בדוק את חוזה העבודה שלך.</p>
-                    </div>
-                `;
-            }
+  <div class="results-grid" id="results-cards"></div>
 
-            if (answers.children === 'כן') {
-                html += `
-                    <div class="result-card">
-                        <h3>👨‍👩‍👧 זכויות הורים</h3>
-                        <p>זכאי לקצבת ילדים, הנחות בארנונה, ותמיכה בחינוך. בדוק באתר הביטוח הלאומי.</p>
-                    </div>
-                `;
-            }
+  <div class="result-restart">
+    <button class="btn-secondary" onclick="restartQuiz()">
+      🔄 התחל מחדש
+    </button>
+  </div>
+</section>
 
-            if (answers.disability === 'כן') {
-                html += `
-                    <div class="result-card">
-                        <h3>♿ זכויות לאנשים עם מוגבלות</h3>
-                        <p>זכאי לקצבת נכות, הנחות במיסים, ותמיכה בנגישות. פנה למוסד לביטוח לאומי.</p>
-                    </div>
-                `;
-            }
+<!-- ─── Footer ─── -->
+<footer>
+  <p>המדריך לישראלי — כל הזכויות שמגיעות לך, במקום אחד.</p>
+  <p style="margin-top:8px;color:var(--text3);font-size:0.8rem;">
+    המידע באתר הוא כללי בלבד ואינו מהווה ייעוץ משפטי. לייעוץ פרטני פנה לגורם מוסמך.
+  </p>
+</footer>
 
-            if (answers.age === '18-30') {
-                html += `
-                    <div class="result-card">
-                        <h3>🎓 זכויות צעירים</h3>
-                        <p>זכאי לסיוע בשכר לימוד, תמיכה במגורים, והטבות לחיילים משוחררים.</p>
-                    </div>
-                `;
-            }
+<script>
+// ─── State ───
+let currentQ = 1;
+const totalQ = 8;
+const answers = { age: 18, interests: [] };
 
-            if (answers.housing === 'כן') {
-                html += `
-                    <div class="result-card">
-                        <h3>🏠 זכויות שוכרים</h3>
-                        <p>הזכות לדירה תקינה, שקיפות בחוזה, והגנה מפני גירוש שרירותי.</p>
-                    </div>
-                `;
-            }
+// ─── Navigation ───
+function scrollToQuiz() {
+  document.getElementById('quiz-section').scrollIntoView({ behavior: 'smooth' });
+}
+function scrollToFeatures() {
+  document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+}
 
-            resultsContent.innerHTML = html;
-        }
+// ─── Quiz Logic ───
+function updateProgress() {
+  const pct = (currentQ / totalQ) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('q-current').textContent = currentQ;
+  document.getElementById('btn-back').style.visibility = currentQ > 1 ? 'visible' : 'hidden';
+  document.getElementById('btn-next').textContent = currentQ === totalQ ? 'צפה בתוצאות ✨' : 'המשך →';
+}
 
-        function resetQuiz() {
-            currentQuestion = 0;
-            answers = {};
-            document.querySelector('.home-content').classList.remove('hidden');
-            document.getElementById('quizContainer').classList.remove('active');
-            document.getElementById('resultsContainer').classList.remove('active');
-            document.getElementById('nextButton').disabled = true;
-        }
-    </script>
+function showQuestion(n) {
+  document.querySelectorAll('.question-block').forEach(b => b.classList.remove('active'));
+  const target = document.querySelector(`[data-q="${n}"]`);
+  if (target) target.classList.add('active');
+  updateProgress();
+}
+
+function selectOption(btn, key, val) {
+  const parent = btn.closest('.options-grid');
+  parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[key] = val;
+}
+
+function toggleInterest(btn, val) {
+  if (btn.classList.contains('selected')) {
+    btn.classList.remove('selected');
+    answers.interests = answers.interests.filter(i => i !== val);
+  } else {
+    if (answers.interests.length >= 3) return;
+    btn.classList.add('selected');
+    answers.interests.push(val);
+  }
+}
+
+function updateAgeCategory() {
+  const age = answers.age;
+  if (age < 16) answers.ageGroup = 'young';
+  else if (age < 18) answers.ageGroup = 'teen';
+  else if (age < 22) answers.ageGroup = 'young_adult';
+  else if (age < 35) answers.ageGroup = 'adult';
+  else if (age < 55) answers.ageGroup = 'mid';
+  else answers.ageGroup = 'senior';
+}
+
+function goNext() {
+  if (currentQ === totalQ) { showResults(); return; }
+  currentQ++;
+  showQuestion(currentQ);
+  document.getElementById('quiz-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function goBack() {
+  if (currentQ > 1) {
+    currentQ--;
+    showQuestion(currentQ);
+  }
+}
+
+// ─── Results Engine ───
+function showResults() {
+  document.getElementById('quiz-section').style.display = 'none';
+  const rs = document.getElementById('results-section');
+  rs.classList.add('visible');
+  rs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  buildResults();
+}
+
+function getProfileLabel() {
+  const s = answers.status;
+  const t = answers.transition;
+  if (s === 'student') return 'תלמיד בחינוך';
+  if (s === 'army' || t === 'high_to_army') return 'משרת צבאי / עתיד להתגייס';
+  if (t === 'army_to_civilian') return 'משוחרר מהצבא';
+  if (s === 'student_higher') return 'סטודנט';
+  if (s === 'self_employed') return 'עצמאי';
+  if (s === 'employed') return 'עובד שכיר';
+  if (s === 'unemployed') return 'מחפש עבודה';
+  return 'ישראלי';
+}
+
+function buildResults() {
+  const { age, status, transition, income, education, interests, region, ageGroup } = answers;
+  const profile = getProfileLabel();
+
+  // Hero
+  const emojiMap = {
+    student: '📚', army: '🪖', student_higher: '🎓',
+    employed: '💼', self_employed: '🚀', unemployed: '🔍'
+  };
+  document.getElementById('result-emoji').textContent = emojiMap[status] || '✨';
+  document.getElementById('profile-label').textContent = profile;
+  document.getElementById('result-title').textContent = `שלום, ${profile} בן/בת ${age}`;
+  document.getElementById('result-desc').textContent =
+    `מצאנו ${countRights()} זכויות ומסלולים מותאמים לפרופיל שלך. הנה הפירוט המלא:`;
+
+  // Cards
+  const cards = [];
+
+  // ─ Immediate Rights
+  const rights = getImmediateRights();
+  if (rights.length)
+    cards.push({ icon: '⚡', color: 'icon-blue', cat: 'זכויות מיידיות', title: 'זכויות שמגיעות לך עכשיו', items: rights });
+
+  // ─ Transition
+  const trans = getTransitionRights();
+  if (trans.length)
+    cards.push({ icon: '🔄', color: 'icon-gold', cat: 'מעבר קרוב', title: 'הכנה למעבר הבא שלך', items: trans });
+
+  // ─ Financial
+  const fin = getFinancialRights();
+  if (fin.length)
+    cards.push({ icon: '💰', color: 'icon-teal', cat: 'הטבות כלכליות', title: 'הטבות כספיות ומענקים', items: fin });
+
+  // ─ Paths
+  const paths = getRecommendedPaths();
+  if (paths.length)
+    cards.push({ icon: '🌟', color: 'icon-purple', cat: 'מסלולים מומלצים', title: 'מסלולים שיכולים לעניין אותך', items: paths });
+
+  // ─ Regional
+  if (region === 'periphery' || region === 'south' || region === 'north')
+    cards.push({ icon: '📍', color: 'icon-blue', cat: 'הטבות אזוריות', title: `הטבות מיוחדות לאזורך`,
+      items: ['תמיכה בפריפריה', 'הנחות ארנונה', 'קרן קיימת לישראל — מסלולי ייחוד', 'ביה"ס שדה ותוכניות אזוריות'] });
+
+  // ─ Education
+  const edu = getEducationRights();
+  if (edu.length)
+    cards.push({ icon: '📚', color: 'icon-gold', cat: 'חינוך ולימודים', title: 'זכויות ומלגות בחינוך', items: edu });
+
+  const container = document.getElementById('results-cards');
+  container.innerHTML = '';
+  cards.forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'result-card';
+    el.style.animationDelay = (i * 0.08) + 's';
+    el.innerHTML = `
+      <div class="result-card-header">
+        <div class="result-card-icon ${c.color}">${c.icon}</div>
+        <div>
+          <div class="result-card-category">${c.cat}</div>
+          <div class="result-card-title">${c.title}</div>
+        </div>
+      </div>
+      <div class="result-items">${c.items.map(it => `<span class="result-item">${it}</span>`).join('')}</div>
+    `;
+    container.appendChild(el);
+  });
+}
+
+function countRights() {
+  let c = 0;
+  c += getImmediateRights().length;
+  c += getFinancialRights().length;
+  c += getRecommendedPaths().length;
+  c += getEducationRights().length;
+  return Math.max(c, 5);
+}
+
+function getImmediateRights() {
+  const { status, age, transition, income } = answers;
+  const r = [];
+  if (status === 'student' || status === 'army') r.push('ביטוח בריאות ממלכתי מלא', 'ארוחות מסובסדות בבתי ספר');
+  if (status === 'army') r.push('שכר חייל', 'ביטוח חיים צבאי', 'זכאות לסל שחרור');
+  if (status === 'employed') r.push('ימי מחלה בתשלום', 'חופשה שנתית', 'פנסיה חובה', 'קרן השתלמות', 'פיצויי פיטורין');
+  if (status === 'self_employed') r.push('ביטוח לאומי עצמאי', 'ניכויי מס הכנסה', 'קרן פנסיה עצמאית', 'ביטוח אבטלה (חלקי)');
+  if (status === 'unemployed') r.push('דמי אבטלה', 'סיוע ממשרד הרווחה', 'קורסי הכשרה מקצועית', 'שירות התעסוקה');
+  if (income === 'low' || income === 'none') r.push('הבטחת הכנסה', 'פטור ממס הכנסה', 'הנחות בארנונה');
+  if (age < 18) r.push('קצבת ילדים', 'זכויות קטין מוגן');
+  return [...new Set(r)].slice(0, 7);
+}
+
+function getTransitionRights() {
+  const { transition, status } = answers;
+  const r = [];
+  if (transition === 'high_to_army') r.push('מוקד גיוס — בדיקת תפקידים', 'פרופיל רפואי ומסלולי שיבוץ', 'ייעוץ מקצועי לפני גיוס', 'הכנה לקורסי קצונה');
+  if (transition === 'army_to_civilian') r.push('מענק שחרור', 'מלגת לימודים לחיילים משוחררים', 'הנחות סטודנט', 'תוכנית עמיתים — אוניברסיטאות', 'ייעוץ תעסוקתי מוקדם');
+  if (transition === 'middle_to_high') r.push('בחירת מסלול לימודים', 'ייעוץ כיתתי', 'תוכניות העשרה', 'תואר ראשון מואץ ב-7 שנים');
+  if (transition === 'new_job') r.push('ימי הסתגלות', 'הסכם עבודה — זכויות בסיסיות', 'תקופת ניסיון — הגנות', 'הפרשות פנסיה מהיום הראשון');
+  if (transition === 'none') r.push('ייעוץ קריירה', 'תכנון פיננסי אישי');
+  return r.slice(0, 6);
+}
+
+function getFinancialRights() {
+  const { income, status, age } = answers;
+  const r = [];
+  if (income === 'none' || income === 'low') r.push('הבטחת הכנסה', 'סיוע בשכר דירה', 'קצבת נכות (אם רלוונטי)', 'מענק עבודה (מס הכנסה שלילי)');
+  if (income === 'mid_low') r.push('זיכוי מס הכנסה', 'הנחות על תחבורה ציבורית', 'סיוע בשכר דירה');
+  if (income === 'mid') r.push('קרן השתלמות פטורה ממס', 'הפרשות מוגדלות לפנסיה', 'ביטוח מנהלים');
+  if (status === 'student_higher') r.push('מלגת קיום', 'הלוואת סטודנטים בריבית אפס', 'הנחות ארנונה לסטודנט', 'כרטיס "רב-קו" מסובסד');
+  if (age < 21) r.push('חשבון בנק ללא עמלות לצעירים', 'הטבות לצעיר ראשון');
+  if (status === 'self_employed') r.push('החזרי מע"מ', 'ניכויי הוצאות עסקיות', 'ביטוח לאומי מופחת בשנה הראשונה');
+  return [...new Set(r)].slice(0, 7);
+}
+
+function getRecommendedPaths() {
+  const { interests } = answers;
+  const map = {
+    tech: ['מסלול הייטק 8200', 'Bootcamp פיתוח תוכנה', 'מלגות CS אוניברסיטאיות', 'תוכנית הצמדה טכנולוגית'],
+    art: ['המרכז לאמנויות', 'בצלאל — מסלולי קבלה', 'מלגות לאמנים צעירים', 'תוכנית הנשיא לעיצוב'],
+    business: ['מרכזי יזמות אוניברסיטאיים', 'תוכנית HUB ממשלתית', 'הלוואות סטארטאפ', 'מסלולי MBA מהיר'],
+    health: ['מסלולי רפואה ופארמה', 'מלגות לסיעוד', 'תוכניות לעובדי בריאות', 'פסיכולוגיה — מלגות ייחוד'],
+    law: ['מסלולי משפטים אוניברסיטאיים', 'קליניקות משפטיות', 'מסלול מדיניות ציבורית', 'הסנגוריה הציבורית — מתנדבים'],
+    military: ['קורסי קצונה', 'תפקידי פיקוד', 'מסלול קדם קצינאים', 'לימודי ביטחון וממשל'],
+    sports: ['אקדמיות ספורט', 'מלגות ספורטאים מצטיינים', 'הכשרת מאמנים', 'ספורט נכים ונגיש'],
+    social: ['עבודה סוציאלית — מלגות', 'שנת שירות', 'תוכנית "עתיד"', 'עמותות — מסלולי קריירה'],
+    nature: ['תוכנית "אדם וטבע"', 'לימודי סביבה ואקולוגיה', 'קרן קיימת לישראל', 'פארקי טבע — מסלולי עבודה'],
+    media: ['בתי ספר לתקשורת', 'יוניברסטי — מסלולי קולנוע', 'מלגות עיתונאות', 'פודקאסט ויוטיוב — מימון ציבורי'],
+    science: ['מלגות מחקר אוניברסיטאיות', 'קרן ביינו — מדע', 'פריצות מדעיות — מלגות', 'מסלולי דוקטורט מהיר'],
+    education_field: ['מסלולי הוראה + מלגה', '"אתגר" — הוראה בפריפריה', 'הכשרת מורים ממוקדת', 'חינוך מיוחד — תמיכה']
+  };
+  const result = [];
+  interests.forEach(i => { if (map[i]) result.push(...map[i]); });
+  return [...new Set(result)].slice(0, 8);
+}
+
+function getEducationRights() {
+  const { education, status, age } = answers;
+  const r = [];
+  if (status === 'student_higher') r.push('מלגת עידוד', 'הנחה על דמי רישום', 'מעונות סטודנטים', 'ספריית אוניברסיטה ותוכנות חינם');
+  if (education === 'high' || education === 'bagrut') r.push('מנחות לבגרות', 'קורסים להשלמת בגרות', 'תואר ראשון — מסלול ישיר');
+  if (status === 'army') r.push('לימודים בזמן שירות', 'הכנה לפסיכומטרי', 'מלגות לאחר שחרור');
+  if (age < 25) r.push('פסיכומטרי — עד 3 פעמים', 'כניסה לאוניברסיטה ללא פסיכומטרי (מסלולים)', 'שנת הכנה — מלגות');
+  return [...new Set(r)].slice(0, 6);
+}
+
+function restartQuiz() {
+  Object.keys(answers).forEach(k => { if (k !== 'age') delete answers[k]; });
+  answers.interests = [];
+  answers.age = 18;
+  currentQ = 1;
+  document.getElementById('results-section').classList.remove('visible');
+  document.getElementById('quiz-section').style.display = 'block';
+  document.querySelectorAll('.option-btn, .tag-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('age-slider').value = 18;
+  document.getElementById('age-val').textContent = '18';
+  showQuestion(1);
+  document.getElementById('quiz-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Init
+updateAgeCategory();
+updateProgress();
+</script>
 </body>
 </html>
