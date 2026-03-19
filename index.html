@@ -1,1439 +1,1643 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zoot – המצפן שלך במסלול</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --sky: #38bdf8;
-      --navy: #1e3a5f;
-      --white: #ffffff;
-      --light-bg: #f0f8ff;
-      --card-bg: #ffffff;
-      --text-main: #1e3a5f;
-      --text-sub: #5a7a9a;
-      --border: #c8e6fa;
-      --accent-gold: #f59e0b;
-      --accent-mint: #10b981;
-      --sidebar-bg: #e8f5fe;
-      --shadow: 0 4px 24px rgba(56,189,248,0.13);
-    }
-
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: var(--light-bg);
-      color: var(--text-main);
-      min-height: 100vh;
-    }
-
-    /* ========== AUTH SCREEN ========== */
-    #auth-screen {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .auth-card {
-      background: white;
-      border-radius: 24px;
-      padding: 48px 40px;
-      max-width: 420px;
-      width: 100%;
-      box-shadow: 0 20px 60px rgba(56,189,248,0.2);
-      text-align: center;
-    }
-
-    .auth-logo {
-      margin-bottom: 24px;
-    }
-
-    .auth-logo img {
-      width: 100px;
-      height: 100px;
-      object-fit: contain;
-      border-radius: 20px;
-    }
-
-    .auth-logo-svg {
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 8px auto;
-      display: block;
-    }
-
-    .brand-name {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--navy);
-      letter-spacing: 2px;
-    }
-
-    .brand-tagline {
-      font-size: 0.9rem;
-      color: var(--text-sub);
-      margin-top: 4px;
-      margin-bottom: 32px;
-    }
-
-    .auth-tabs {
-      display: flex;
-      background: var(--light-bg);
-      border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 28px;
-      gap: 4px;
-    }
-
-    .auth-tab {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      background: transparent;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      color: var(--text-sub);
-      transition: all 0.2s;
-    }
-
-    .auth-tab.active {
-      background: white;
-      color: var(--navy);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .auth-form { display: flex; flex-direction: column; gap: 16px; }
-
-    .form-group {
-      text-align: right;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-sub);
-      margin-bottom: 6px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      font-size: 1rem;
-      color: var(--text-main);
-      outline: none;
-      transition: border-color 0.2s;
-      background: var(--light-bg);
-      direction: rtl;
-    }
-
-    .form-group input:focus {
-      border-color: var(--sky);
-      background: white;
-    }
-
-    .auth-btn {
-      margin-top: 8px;
-      padding: 14px;
-      background: linear-gradient(135deg, var(--sky), var(--navy));
-      color: white;
-      border: none;
-      border-radius: 14px;
-      font-size: 1.05rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
-      letter-spacing: 0.5px;
-    }
-
-    .auth-btn:hover { opacity: 0.92; transform: translateY(-1px); }
-
-    .auth-error {
-      color: #ef4444;
-      font-size: 0.85rem;
-      background: #fef2f2;
-      border-radius: 8px;
-      padding: 10px;
-      display: none;
-    }
-
-    /* ========== MAIN APP ========== */
-    #app-screen { display: none; min-height: 100vh; flex-direction: column; }
-
-    /* NAVBAR */
-    .navbar {
-      background: white;
-      border-bottom: 2px solid var(--border);
-      padding: 0 32px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 12px rgba(56,189,248,0.1);
-    }
-
-    .navbar-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .navbar-logo-svg {
-      width: 40px;
-      height: 40px;
-    }
-
-    .navbar-brand {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--navy);
-      letter-spacing: 1px;
-    }
-
-    .navbar-tagline {
-      font-size: 0.75rem;
-      color: var(--sky);
-      font-weight: 600;
-    }
-
-    .navbar-user {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .user-greeting {
-      font-size: 0.9rem;
-      color: var(--text-sub);
-    }
-
-    .user-greeting span {
-      font-weight: 700;
-      color: var(--navy);
-    }
-
-    .logout-btn {
-      padding: 8px 16px;
-      background: var(--light-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 0.85rem;
-      color: var(--text-sub);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .logout-btn:hover { background: var(--border); color: var(--navy); }
-
-    /* LAYOUT */
-    .app-layout {
-      display: flex;
-      flex: 1;
-      min-height: calc(100vh - 64px);
-    }
-
-    /* SIDEBAR */
-    .sidebar {
-      width: 340px;
-      background: white;
-      border-left: 2px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: sticky;
-      top: 64px;
-      height: calc(100vh - 64px);
-      overflow-y: auto;
-      flex-shrink: 0;
-    }
-
-    .sidebar-header {
-      background: linear-gradient(135deg, var(--navy), #2563eb);
-      color: white;
-      padding: 24px 20px 20px;
-      text-align: center;
-    }
-
-    .sidebar-header h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .sidebar-header p {
-      font-size: 0.8rem;
-      opacity: 0.8;
-    }
-
-    .progress-bar-wrap {
-      background: rgba(255,255,255,0.2);
-      border-radius: 10px;
-      height: 6px;
-      margin-top: 14px;
-    }
-
-    .progress-bar-fill {
-      background: var(--sky);
-      height: 100%;
-      border-radius: 10px;
-      transition: width 0.4s ease;
-    }
-
-    .progress-label {
-      font-size: 0.75rem;
-      opacity: 0.8;
-      margin-top: 6px;
-    }
-
-    .sidebar-body { padding: 20px; flex: 1; }
-
-    .question-block { display: none; }
-    .question-block.active { display: block; }
-
-    .question-text {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
-
-    .options-list { display: flex; flex-direction: column; gap: 10px; }
-
-    .option-btn {
-      padding: 12px 16px;
-      background: var(--light-bg);
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      font-size: 0.9rem;
-      color: var(--text-main);
-      cursor: pointer;
-      text-align: right;
-      transition: all 0.2s;
-      font-weight: 500;
-    }
-
-    .option-btn:hover { border-color: var(--sky); background: #e0f2fe; }
-    .option-btn.selected {
-      background: linear-gradient(135deg, #e0f2fe, #bae6fd);
-      border-color: var(--sky);
-      color: var(--navy);
-      font-weight: 700;
-    }
-
-    .sidebar-nav {
-      display: flex;
-      gap: 10px;
-      padding: 16px 20px;
-      border-top: 1px solid var(--border);
-    }
-
-    .nav-btn {
-      flex: 1;
-      padding: 11px;
-      border: none;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-prev {
-      background: var(--light-bg);
-      color: var(--text-sub);
-      border: 1px solid var(--border);
-    }
-
-    .btn-next {
-      background: linear-gradient(135deg, var(--sky), #0ea5e9);
-      color: white;
-    }
-
-    .btn-prev:hover { background: var(--border); }
-    .btn-next:hover { opacity: 0.9; transform: translateY(-1px); }
-    .btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    /* MAIN CONTENT */
-    .main-content {
-      flex: 1;
-      padding: 32px;
-      overflow-y: auto;
-    }
-
-    /* WELCOME STATE */
-    #welcome-state { text-align: center; padding: 60px 20px; }
-
-    .welcome-icon {
-      font-size: 4rem;
-      margin-bottom: 20px;
-    }
-
-    #welcome-state h2 {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 12px;
-    }
-
-    #welcome-state p {
-      font-size: 1.05rem;
-      color: var(--text-sub);
-      max-width: 500px;
-      margin: 0 auto;
-      line-height: 1.7;
-    }
-
-    .welcome-steps {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      margin-top: 40px;
-      flex-wrap: wrap;
-    }
-
-    .step-card {
-      background: white;
-      border: 2px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      width: 160px;
-      text-align: center;
-      box-shadow: var(--shadow);
-    }
-
-    .step-card .step-icon { font-size: 2rem; margin-bottom: 8px; }
-    .step-card h4 { font-size: 0.85rem; font-weight: 700; color: var(--navy); }
-
-    /* DASHBOARD */
-    #dashboard-state { display: none; }
-
-    .dashboard-greeting {
-      margin-bottom: 28px;
-    }
-
-    .dashboard-greeting h2 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--navy);
-    }
-
-    .dashboard-greeting p {
-      color: var(--text-sub);
-      margin-top: 4px;
-      font-size: 0.95rem;
-    }
-
-    .section-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .rights-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-      margin-bottom: 40px;
-    }
-
-    .right-card {
-      background: white;
-      border-radius: 18px;
-      border: 2px solid var(--border);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .right-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(56,189,248,0.2);
-    }
-
-    .right-card-header {
-      padding: 18px 20px 14px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: linear-gradient(135deg, #f0f8ff, #e0f2fe);
-    }
-
-    .right-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      flex-shrink: 0;
-    }
-
-    .right-card-title { font-size: 1rem; font-weight: 700; color: var(--navy); }
-    .right-card-sub { font-size: 0.8rem; color: var(--text-sub); margin-top: 2px; }
-
-    .right-card-body { padding: 16px 20px; }
-
-    .right-description {
-      font-size: 0.88rem;
-      color: var(--text-sub);
-      line-height: 1.6;
-      margin-bottom: 14px;
-    }
-
-    .right-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-
-    .tag {
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      background: #e0f2fe;
-      color: var(--navy);
-    }
-
-    .right-card-footer {
-      padding: 14px 20px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .expand-btn {
-      padding: 8px 16px;
-      background: linear-gradient(135deg, var(--sky), #0ea5e9);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-
-    .expand-btn:hover { opacity: 0.88; }
-
-    .gov-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: var(--sky);
-      font-size: 0.82rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .gov-link:hover { color: var(--navy); }
-
-    /* MODAL */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 20px;
-    }
-
-    .modal-overlay.open { display: flex; }
-
-    .modal {
-      background: white;
-      border-radius: 24px;
-      max-width: 600px;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.2);
-    }
-
-    .modal-header {
-      background: linear-gradient(135deg, var(--navy), #2563eb);
-      color: white;
-      padding: 24px 28px;
-      border-radius: 24px 24px 0 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .modal-header h3 { font-size: 1.2rem; font-weight: 700; }
-
-    .modal-close {
-      background: rgba(255,255,255,0.2);
-      border: none;
-      color: white;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
-    .modal-close:hover { background: rgba(255,255,255,0.35); }
-
-    .modal-body { padding: 28px; }
-
-    .modal-section {
-      margin-bottom: 24px;
-    }
-
-    .modal-section h4 {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .modal-section p, .modal-section li {
-      font-size: 0.88rem;
-      color: var(--text-sub);
-      line-height: 1.7;
-    }
-
-    .modal-section ul { padding-right: 20px; }
-    .modal-section li { margin-bottom: 4px; }
-
-    .action-steps {
-      counter-reset: steps;
-      list-style: none;
-      padding: 0;
-    }
-
-    .action-steps li {
-      counter-increment: steps;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .action-steps li:last-child { border-bottom: none; }
-
-    .step-num {
-      background: linear-gradient(135deg, var(--sky), #0ea5e9);
-      color: white;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .links-list { display: flex; flex-direction: column; gap: 10px; }
-
-    .link-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      background: var(--light-bg);
-      border-radius: 12px;
-      text-decoration: none;
-      border: 1px solid var(--border);
-      transition: all 0.2s;
-    }
-
-    .link-item:hover { background: #e0f2fe; border-color: var(--sky); }
-
-    .link-item-icon {
-      font-size: 1.3rem;
-    }
-
-    .link-item-text { flex: 1; }
-    .link-item-text strong { display: block; font-size: 0.88rem; color: var(--navy); }
-    .link-item-text span { font-size: 0.78rem; color: var(--text-sub); }
-    .link-arrow { color: var(--sky); font-size: 0.9rem; }
-
-    /* Profile summary */
-    .profile-summary {
-      background: linear-gradient(135deg, #e0f2fe, #bae6fd);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 28px;
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .profile-chip {
-      background: white;
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--navy);
-      box-shadow: 0 2px 6px rgba(56,189,248,0.15);
-    }
-
-    .badge-new {
-      background: var(--accent-gold);
-      color: white;
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-weight: 700;
-    }
-
-    @media (max-width: 768px) {
-      .app-layout { flex-direction: column; }
-      .sidebar {
-        width: 100%;
-        position: static;
-        height: auto;
-        border-left: none;
-        border-bottom: 2px solid var(--border);
-      }
-      .main-content { padding: 20px; }
-      .navbar { padding: 0 16px; }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zoot — המצפן שלך במסלול</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --primary: #2EB8E6;
+    --primary-dark: #1a9fd0;
+    --primary-light: #e8f7fd;
+    --primary-mid: #b3e5f7;
+    --white: #ffffff;
+    --gray-100: #f7f9fc;
+    --gray-200: #eef2f7;
+    --gray-300: #dde4ef;
+    --gray-400: #b0bac9;
+    --gray-500: #7a8699;
+    --gray-700: #3d4a5c;
+    --gray-900: #1a2233;
+    --accent-green: #2ecc8e;
+    --accent-orange: #f5a623;
+    --accent-pink: #e84393;
+    --shadow-sm: 0 2px 8px rgba(46,184,230,0.08);
+    --shadow-md: 0 4px 20px rgba(46,184,230,0.13);
+    --shadow-lg: 0 8px 40px rgba(46,184,230,0.18);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-lg: 24px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-900);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ===== SCREEN MANAGER ===== */
+  .screen { display: none; }
+  .screen.active { display: flex; }
+
+  /* ===== AUTH SCREEN ===== */
+  #authScreen {
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e8f7fd 0%, #ffffff 50%, #b3e5f7 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  #authScreen::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(46,184,230,0.12) 0%, transparent 70%);
+    top: -150px; left: -150px;
+    pointer-events: none;
+  }
+  #authScreen::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(46,184,230,0.10) 0%, transparent 70%);
+    bottom: -100px; right: -100px;
+    pointer-events: none;
+  }
+  .auth-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 0.6s ease;
+  }
+  .auth-logo {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .auth-logo svg { width: 80px; height: 80px; }
+  .auth-logo h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: -1px;
+    margin-top: 8px;
+  }
+  .auth-logo p {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    margin-top: 4px;
+  }
+  .auth-tabs {
+    display: flex;
+    background: var(--gray-100);
+    border-radius: var(--radius-sm);
+    padding: 4px;
+    margin-bottom: 28px;
+  }
+  .auth-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.25s;
+    color: var(--gray-500);
+    border: none;
+    background: transparent;
+    font-family: 'Heebo', sans-serif;
+  }
+  .auth-tab.active {
+    background: var(--white);
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+  }
+  .auth-form { display: none; }
+  .auth-form.active { display: block; }
+  .form-group { margin-bottom: 18px; }
+  .form-group label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 7px;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-family: 'Heebo', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    color: var(--gray-900);
+  }
+  .form-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(46,184,230,0.15);
+  }
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Heebo', sans-serif;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(46,184,230,0.35);
+  }
+  .btn-primary:active { transform: translateY(0); }
+  .auth-error {
+    background: #fff0f3;
+    border: 1px solid #ffc0cb;
+    color: #c0392b;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    margin-bottom: 14px;
+    display: none;
+  }
+
+  /* ===== MAIN APP ===== */
+  #appScreen {
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--white);
+    border-bottom: 2px solid var(--gray-200);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topbar-logo svg { width: 36px; height: 36px; }
+  .topbar-logo span {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+  }
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .topbar-nav button {
+    padding: 8px 16px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    color: var(--gray-500);
+  }
+  .topbar-nav button.active, .topbar-nav button:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-color: var(--primary-mid);
+  }
+  .topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .user-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .user-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-700);
+  }
+  .btn-logout {
+    padding: 7px 14px;
+    border: 2px solid var(--gray-300);
+    border-radius: 8px;
+    background: transparent;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-logout:hover { border-color: #e74c3c; color: #e74c3c; }
+
+  /* APP BODY */
+  .app-body {
+    display: flex;
+    flex: 1;
+    min-height: calc(100vh - 64px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 300px;
+    background: var(--white);
+    border-left: 2px solid var(--gray-200);
+    padding: 24px 20px;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .sidebar-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-700);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sidebar-title span { font-size: 1.2rem; }
+
+  /* QUESTIONNAIRE */
+  .q-progress-bar {
+    background: var(--gray-200);
+    border-radius: 99px;
+    height: 6px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .q-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+  .q-step { display: none; animation: fadeInUp 0.3s ease; }
+  .q-step.active { display: block; }
+  .q-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+  .q-text {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .q-options { display: flex; flex-direction: column; gap: 8px; }
+  .q-option {
+    padding: 10px 14px;
+    border: 2px solid var(--gray-300);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    transition: all 0.2s;
+    background: var(--white);
+    text-align: right;
+    font-family: 'Heebo', sans-serif;
+  }
+  .q-option:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+  .q-option.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 700; }
+  .q-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+    gap: 8px;
+  }
+  .q-nav button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 9px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid var(--gray-300);
+    background: var(--white);
+    color: var(--gray-500);
+  }
+  .q-nav .q-next {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-color: transparent;
+    color: white;
+  }
+  .q-nav .q-next:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(46,184,230,0.3); }
+  .q-nav .q-prev:hover { border-color: var(--primary); color: var(--primary); }
+  .q-done {
+    background: linear-gradient(135deg, var(--accent-green) 0%, #27ae60 100%);
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    width: 100%;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: all 0.2s;
+  }
+  .q-done:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(46,204,142,0.35); }
+  .q-completed {
+    text-align: center;
+    padding: 20px 10px;
+  }
+  .q-completed .check-icon {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, var(--accent-green), #27ae60);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    font-size: 1.6rem;
+  }
+  .q-completed h3 { font-size: 1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
+  .q-completed p { font-size: 0.82rem; color: var(--gray-500); line-height: 1.5; }
+  .btn-redo {
+    margin-top: 14px;
+    padding: 9px 18px;
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--primary);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-redo:hover { background: var(--primary); color: white; }
+
+  /* SIDEBAR MENU */
+  .sidebar-menu { margin-top: 20px; }
+  .sidebar-menu-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .sidebar-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    transition: all 0.2s;
+    margin-bottom: 4px;
+    border: 2px solid transparent;
+  }
+  .sidebar-menu-item:hover { background: var(--primary-light); color: var(--primary); }
+  .sidebar-menu-item.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary-mid); }
+  .sidebar-menu-item .menu-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .menu-badge {
+    margin-right: auto;
+    background: var(--primary);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 99px;
+  }
+  .menu-badge.soon {
+    background: var(--gray-300);
+    color: var(--gray-500);
+  }
+
+  /* MAIN CONTENT */
+  .main-content {
+    flex: 1;
+    padding: 32px;
+    overflow-y: auto;
+  }
+
+  /* SECTION */
+  .content-section { display: none; }
+  .content-section.active { display: block; animation: fadeInUp 0.4s ease; }
+
+  /* HOME SECTION */
+  .welcome-banner {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: var(--radius-lg);
+    padding: 36px 40px;
+    color: white;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .welcome-banner::after {
+    content: '🧭';
+    position: absolute;
+    font-size: 8rem;
+    opacity: 0.12;
+    left: 20px;
+    top: -10px;
+    pointer-events: none;
+  }
+  .welcome-banner h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; }
+  .welcome-banner p { font-size: 1rem; opacity: 0.85; max-width: 500px; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--gray-200);
+    text-align: center;
+    transition: all 0.25s;
+  }
+  .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .stat-card .stat-icon { font-size: 2rem; margin-bottom: 8px; }
+  .stat-card .stat-num { font-size: 2rem; font-weight: 900; color: var(--primary); }
+  .stat-card .stat-label { font-size: 0.82rem; color: var(--gray-500); font-weight: 500; margin-top: 3px; }
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .module-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--gray-200);
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .module-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--primary-mid); }
+  .module-card .mod-icon { font-size: 2.2rem; margin-bottom: 12px; }
+  .module-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
+  .module-card p { font-size: 0.85rem; color: var(--gray-500); line-height: 1.5; }
+  .module-card .mod-tag {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--primary-mid);
+  }
+  .module-card .mod-tag.soon {
+    background: var(--gray-200);
+    color: var(--gray-500);
+    border-color: var(--gray-300);
+  }
+  .section-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* RIGHTS SECTION */
+  .rights-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .right-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--gray-200);
+    transition: all 0.25s;
+  }
+  .right-card:hover { border-color: var(--primary-mid); box-shadow: var(--shadow-md); }
+  .right-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .right-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .right-card h3 { font-size: 1rem; font-weight: 700; color: var(--gray-900); }
+  .right-card p { font-size: 0.85rem; color: var(--gray-500); line-height: 1.6; margin-bottom: 14px; }
+  .right-amount {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+  .btn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--primary-light);
+    border: 2px solid var(--primary-mid);
+    border-radius: 8px;
+    color: var(--primary);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-family: 'Heebo', sans-serif;
+    cursor: pointer;
+  }
+  .btn-link:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+  /* UNIVERSITIES SECTION */
+  .uni-search-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    align-items: center;
+  }
+  .uni-search-input {
+    flex: 1;
+    padding: 13px 18px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-family: 'Heebo', sans-serif;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: var(--white);
+    color: var(--gray-900);
+  }
+  .uni-search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(46,184,230,0.15); }
+  .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .chip {
+    padding: 7px 16px;
+    border: 2px solid var(--gray-300);
+    border-radius: 99px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--white);
+    color: var(--gray-500);
+    font-family: 'Heebo', sans-serif;
+  }
+  .chip:hover, .chip.active { background: var(--primary); border-color: var(--primary); color: white; }
+  .uni-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .uni-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--gray-200);
+    transition: all 0.25s;
+    cursor: pointer;
+  }
+  .uni-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary-mid); }
+  .uni-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+  .uni-logo-circle {
+    width: 50px; height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .uni-match-badge {
+    background: linear-gradient(135deg, var(--accent-green), #27ae60);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 99px;
+  }
+  .uni-card h3 { font-size: 1rem; font-weight: 800; color: var(--gray-900); margin-bottom: 4px; }
+  .uni-card .uni-location { font-size: 0.8rem; color: var(--gray-400); margin-bottom: 12px; display: flex; align-items: center; gap: 4px; }
+  .uni-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .uni-tag {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--primary-mid);
+  }
+  .uni-stats { display: flex; gap: 14px; margin-bottom: 14px; }
+  .uni-stat { text-align: center; }
+  .uni-stat .val { font-size: 0.95rem; font-weight: 800; color: var(--primary); }
+  .uni-stat .lbl { font-size: 0.7rem; color: var(--gray-400); }
+  .btn-uni-more {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--primary);
+    border-radius: 9px;
+    background: transparent;
+    color: var(--primary);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .btn-uni-more:hover { background: var(--primary); color: white; }
+
+  /* UNI MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,34,51,0.55);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    width: 90%;
+    max-width: 560px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: fadeInUp 0.3s ease;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--gray-300);
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--gray-500);
+    transition: all 0.2s;
+  }
+  .modal-close:hover { background: #fff0f0; border-color: #e74c3c; color: #e74c3c; }
+  .modal-header { margin-bottom: 20px; }
+  .modal-header h2 { font-size: 1.4rem; font-weight: 900; color: var(--gray-900); }
+  .modal-header p { color: var(--gray-500); font-size: 0.88rem; margin-top: 4px; }
+  .modal-section { margin-bottom: 18px; }
+  .modal-section h4 { font-size: 0.9rem; font-weight: 700; color: var(--gray-700); margin-bottom: 8px; border-bottom: 1px solid var(--gray-200); padding-bottom: 6px; }
+  .modal-section p { font-size: 0.88rem; color: var(--gray-500); line-height: 1.7; }
+  .modal-section ul { padding-right: 16px; }
+  .modal-section ul li { font-size: 0.88rem; color: var(--gray-500); line-height: 1.9; }
+  .modal-links { display: flex; flex-direction: column; gap: 8px; }
+  .modal-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--primary-light);
+    border: 2px solid var(--primary-mid);
+    border-radius: 10px;
+    color: var(--primary);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .modal-link:hover { background: var(--primary); color: white; }
+
+  /* PERSONAL MATCH SECTION */
+  .match-result-card {
+    background: linear-gradient(135deg, var(--primary-light) 0%, #fff 100%);
+    border: 2px solid var(--primary-mid);
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .match-circle {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 1.6rem;
+    font-weight: 900;
+    box-shadow: 0 8px 24px rgba(46,184,230,0.35);
+  }
+  .match-text h3 { font-size: 1.2rem; font-weight: 800; color: var(--gray-900); margin-bottom: 6px; }
+  .match-text p { font-size: 0.88rem; color: var(--gray-500); line-height: 1.6; }
+
+  /* ANIMATIONS */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .sidebar { width: 240px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .rights-grid { grid-template-columns: 1fr; }
+    .modules-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 700px) {
+    .app-body { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: static; border-left: none; border-bottom: 2px solid var(--gray-200); }
+    .main-content { padding: 20px 16px; }
+    .topbar { padding: 0 16px; }
+    .topbar-nav { display: none; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .welcome-banner { padding: 24px 20px; }
+    .welcome-banner h2 { font-size: 1.4rem; }
+  }
+</style>
 </head>
 <body>
 
 <!-- ==================== AUTH SCREEN ==================== -->
-<div id="auth-screen">
+<div id="authScreen" class="screen active">
   <div class="auth-card">
     <div class="auth-logo">
-      <!-- LOGO SVG - מדמה את הלוגו של Zoot -->
-      <svg class="auth-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="22" fill="white" stroke="#c8e6fa" stroke-width="2"/>
-        <!-- מצפן - עיגול חיצוני -->
-        <circle cx="45" cy="50" r="34" fill="none" stroke="#1e3a5f" stroke-width="3"/>
-        <circle cx="45" cy="50" r="28" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
-        <!-- כוכב מצפן -->
-        <polygon points="45,20 48,44 45,48 42,44" fill="#1e3a5f"/>
-        <polygon points="45,80 48,56 45,52 42,56" fill="#1e3a5f"/>
-        <polygon points="15,50 39,47 43,50 39,53" fill="#1e3a5f"/>
-        <polygon points="75,50 51,47 47,50 51,53" fill="#1e3a5f"/>
-        <polygon points="45,20 51,40 45,48 39,40" fill="#38bdf8" opacity="0.7"/>
-        <circle cx="45" cy="50" r="5" fill="#38bdf8"/>
-        <circle cx="45" cy="50" r="2.5" fill="#1e3a5f"/>
-        <!-- מפת ישראל (פשוטה) -->
-        <path d="M62,18 L68,22 L70,28 L67,35 L70,42 L68,50 L64,58 L60,65 L56,72 L53,68 L58,60 L62,52 L60,44 L63,36 L61,28 L58,22 Z" fill="#38bdf8" opacity="0.9"/>
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" fill="#e8f7fd" stroke="#2EB8E6" stroke-width="4"/>
+        <circle cx="50" cy="50" r="32" fill="none" stroke="#2EB8E6" stroke-width="2" stroke-dasharray="5,3" opacity="0.5"/>
+        <circle cx="50" cy="50" r="6" fill="#2EB8E6"/>
+        <line x1="50" y1="50" x2="50" y2="18" stroke="#2EB8E6" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="50,10 46,22 54,22" fill="#1a9fd0"/>
+        <line x1="50" y1="50" x2="74" y2="63" stroke="#7a8699" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+        <text x="50" y="90" text-anchor="middle" font-family="Heebo,sans-serif" font-size="10" font-weight="900" fill="#2EB8E6">ZOOT</text>
       </svg>
+      <h1>Zoot</h1>
+      <p>המצפן שלך במסלול</p>
     </div>
-    <div class="brand-name">zoot</div>
-    <div class="brand-tagline">המצפן שלך במסלול</div>
-
     <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('login')">כניסה</button>
+      <button class="auth-tab active" onclick="switchTab('login')">התחברות</button>
       <button class="auth-tab" onclick="switchTab('register')">הרשמה</button>
     </div>
-
     <!-- LOGIN -->
-    <div id="login-form" class="auth-form">
+    <div class="auth-form active" id="loginForm">
+      <div class="auth-error" id="loginError">שם משתמש או סיסמה שגויים</div>
       <div class="form-group">
         <label>שם משתמש</label>
-        <input type="text" id="login-username" placeholder="הכנס שם משתמש" />
+        <input type="text" id="loginUser" placeholder="הכנס שם משתמש"/>
       </div>
       <div class="form-group">
         <label>סיסמה</label>
-        <input type="password" id="login-password" placeholder="הכנס סיסמה" />
+        <input type="password" id="loginPass" placeholder="הכנס סיסמה"/>
       </div>
-      <div class="auth-error" id="login-error">שם משתמש או סיסמה שגויים</div>
-      <button class="auth-btn" onclick="doLogin()">כניסה לחשבון</button>
+      <button class="btn-primary" onclick="doLogin()">כניסה 🚀</button>
     </div>
-
     <!-- REGISTER -->
-    <div id="register-form" class="auth-form" style="display:none;">
+    <div class="auth-form" id="registerForm">
+      <div class="auth-error" id="regError"></div>
       <div class="form-group">
         <label>שם מלא</label>
-        <input type="text" id="reg-name" placeholder="השם שלך" />
+        <input type="text" id="regName" placeholder="שם ומשפחה"/>
       </div>
       <div class="form-group">
         <label>שם משתמש</label>
-        <input type="text" id="reg-username" placeholder="בחר שם משתמש" />
+        <input type="text" id="regUser" placeholder="בחר שם משתמש"/>
       </div>
       <div class="form-group">
         <label>סיסמה</label>
-        <input type="password" id="reg-password" placeholder="בחר סיסמה (6+ תווים)" />
+        <input type="password" id="regPass" placeholder="לפחות 6 תווים"/>
       </div>
-      <div class="auth-error" id="reg-error"></div>
-      <button class="auth-btn" onclick="doRegister()">יצירת חשבון חינמי</button>
+      <div class="form-group">
+        <label>אימות סיסמה</label>
+        <input type="password" id="regPass2" placeholder="חזור על הסיסמה"/>
+      </div>
+      <button class="btn-primary" onclick="doRegister()">יצירת חשבון ✨</button>
     </div>
   </div>
 </div>
 
-<!-- ==================== MAIN APP ==================== -->
-<div id="app-screen">
-
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="navbar-logo">
-      <svg class="navbar-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="22" fill="white" stroke="#c8e6fa" stroke-width="3"/>
-        <circle cx="45" cy="50" r="34" fill="none" stroke="#1e3a5f" stroke-width="4"/>
-        <circle cx="45" cy="50" r="28" fill="none" stroke="#38bdf8" stroke-width="2"/>
-        <polygon points="45,20 48,44 45,48 42,44" fill="#1e3a5f"/>
-        <polygon points="45,80 48,56 45,52 42,56" fill="#1e3a5f"/>
-        <polygon points="15,50 39,47 43,50 39,53" fill="#1e3a5f"/>
-        <polygon points="75,50 51,47 47,50 51,53" fill="#1e3a5f"/>
-        <polygon points="45,20 51,40 45,48 39,40" fill="#38bdf8" opacity="0.7"/>
-        <circle cx="45" cy="50" r="5" fill="#38bdf8"/>
-        <circle cx="45" cy="50" r="2.5" fill="#1e3a5f"/>
-        <path d="M62,18 L68,22 L70,28 L67,35 L70,42 L68,50 L64,58 L60,65 L56,72 L53,68 L58,60 L62,52 L60,44 L63,36 L61,28 L58,22 Z" fill="#38bdf8" opacity="0.9"/>
+<!-- ==================== APP SCREEN ==================== -->
+<div id="appScreen" class="screen">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" fill="#e8f7fd" stroke="#2EB8E6" stroke-width="4"/>
+        <circle cx="50" cy="50" r="6" fill="#2EB8E6"/>
+        <line x1="50" y1="50" x2="50" y2="18" stroke="#2EB8E6" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="50,10 46,22 54,22" fill="#1a9fd0"/>
+        <line x1="50" y1="50" x2="74" y2="63" stroke="#7a8699" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
       </svg>
-      <div>
-        <div class="navbar-brand">zoot</div>
-        <div class="navbar-tagline">המצפן שלך במסלול</div>
-      </div>
+      <span>Zoot</span>
     </div>
-    <div class="navbar-user">
-      <div class="user-greeting">שלום, <span id="nav-username"></span> 👋</div>
-      <button class="logout-btn" onclick="doLogout()">יציאה</button>
+    <div class="topbar-nav">
+      <button onclick="showSection('home')" id="nav-home" class="active">🏠 בית</button>
+      <button onclick="showSection('rights')" id="nav-rights">📜 זכויות שלי</button>
+      <button onclick="showSection('universities')" id="nav-universities">🎓 אוניברסיטאות</button>
     </div>
-  </nav>
+    <div class="topbar-user">
+      <div class="user-avatar" id="userAvatarTop">R</div>
+      <div class="user-name" id="userNameTop">משתמש</div>
+      <button class="btn-logout" onclick="doLogout()">יציאה</button>
+    </div>
+  </div>
 
-  <div class="app-layout">
-
-    <!-- SIDEBAR - QUESTIONNAIRE -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <h3>🧭 בניית מסלול אישי</h3>
-        <p>ענה על 7 שאלות — נמצא את הזכויות שלך</p>
-        <div class="progress-bar-wrap">
-          <div class="progress-bar-fill" id="progress-fill" style="width:14%"></div>
-        </div>
-        <div class="progress-label" id="progress-label">שאלה 1 מתוך 7</div>
-      </div>
-
-      <div class="sidebar-body">
+  <div class="app-body">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-title"><span>📋</span> השאלון שלי</div>
+      <!-- QUESTIONNAIRE -->
+      <div id="questionnaireArea">
+        <div class="q-progress-bar"><div class="q-progress-fill" id="qProgress" style="width:14%"></div></div>
 
         <!-- Q1 -->
-        <div class="question-block active" id="q1">
-          <div class="question-text">מה הגיל שלך?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(this, 'age', 'teen')">14–17 (תיכוניסט)</button>
-            <button class="option-btn" onclick="selectOption(this, 'age', 'young')">18–21 (צעיר)</button>
-            <button class="option-btn" onclick="selectOption(this, 'age', 'adult')">22–25 (מבוגר צעיר)</button>
-            <button class="option-btn" onclick="selectOption(this, 'age', 'adult25')">25+ </button>
+        <div class="q-step active" id="qStep1">
+          <div class="q-num">שאלה 1 מתוך 7</div>
+          <div class="q-text">מה הגיל שלך?</div>
+          <div class="q-options">
+            <button class="q-option" onclick="selectOption(this,'age','14-17')">14–17</button>
+            <button class="q-option" onclick="selectOption(this,'age','18-21')">18–21</button>
+            <button class="q-option" onclick="selectOption(this,'age','22-25')">22–25</button>
+            <button class="q-option" onclick="selectOption(this,'age','26+')">26+</button>
           </div>
+          <div class="q-nav"><button class="q-next" onclick="qNext(1)">הבא ←</button></div>
         </div>
 
         <!-- Q2 -->
-        <div class="question-block" id="q2">
-          <div class="question-text">מה הסטטוס התעסוקתי שלך?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(this, 'status', 'student')">🎓 סטודנט / תלמיד</button>
-            <button class="option-btn" onclick="selectOption(this, 'status', 'employed')">💼 עובד שכיר</button>
-            <button class="option-btn" onclick="selectOption(this, 'status', 'selfemployed')">🏢 עצמאי</button>
-            <button class="option-btn" onclick="selectOption(this, 'status', 'unemployed')">🔍 מחפש עבודה</button>
-            <button class="option-btn" onclick="selectOption(this, 'status', 'army')">🪖 צבא / שירות לאומי</button>
+        <div class="q-step" id="qStep2">
+          <div class="q-num">שאלה 2 מתוך 7</div>
+          <div class="q-text">מה הסטטוס התעסוקתי שלך?</div>
+          <div class="q-options">
+            <button class="q-option" onclick="selectOption(this,'status','student')">סטודנט/תלמיד</button>
+            <button class="q-option" onclick="selectOption(this,'status','employed')">עובד</button>
+            <button class="q-option" onclick="selectOption(this,'status','unemployed')">מחפש עבודה</button>
+            <button class="q-option" onclick="selectOption(this,'status','military')">שירות צבאי</button>
+          </div>
+          <div class="q-nav">
+            <button class="q-prev" onclick="qPrev(2)">→ הקודם</button>
+            <button class="q-next" onclick="qNext(2)">הבא ←</button>
           </div>
         </div>
 
         <!-- Q3 -->
-        <div class="question-block" id="q3">
-          <div class="question-text">מה טווח ההכנסה החודשית שלך (ברוטו)?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(this, 'income', 'none')">אין הכנסה</button>
-            <button class="option-btn" onclick="selectOption(this, 'income', 'low')">עד ₪4,000</button>
-            <button class="option-btn" onclick="selectOption(this, 'income', 'medium')">₪4,000 – ₪8,000</button>
-            <button class="option-btn" onclick="selectOption(this, 'income', 'high')">₪8,000+</button>
+        <div class="q-step" id="qStep3">
+          <div class="q-num">שאלה 3 מתוך 7</div>
+          <div class="q-text">מה רמת ההכנסה החודשית שלך/משפחתך?</div>
+          <div class="q-options">
+            <button class="q-option" onclick="selectOption(this,'income','low')">נמוכה (עד 5,000 ₪)</button>
+            <button class="q-option" onclick="selectOption(this,'income','medium')">בינונית (5,000–12,000)</button>
+            <button class="q-option" onclick="selectOption(this,'income','high')">גבוהה (מעל 12,000)</button>
+            <button class="q-option" onclick="selectOption(this,'income','unknown')">לא יודע/ת</button>
+          </div>
+          <div class="q-nav">
+            <button class="q-prev" onclick="qPrev(3)">→ הקודם</button>
+            <button class="q-next" onclick="qNext(3)">הבא ←</button>
           </div>
         </div>
 
         <!-- Q4 -->
-        <div class="question-block" id="q4">
-          <div class="question-text">האם אתה בתקופת מעבר בחיים כרגע?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(this, 'transition', 'afterarmy')">שחרור מהצבא</button>
-            <button class="option-btn" onclick="selectOption(this, 'transition', 'newjob')">התחלת עבודה חדשה</button>
-            <button class="option-btn" onclick="selectOption(this, 'transition', 'moving')">מעבר דירה / עצמאות</button>
-            <button class="option-btn" onclick="selectOption(this, 'transition', 'studies')">פתיחת לימודים</button>
-            <button class="option-btn" onclick="selectOption(this, 'transition', 'none')">לא כרגע</button>
+        <div class="q-step" id="qStep4">
+          <div class="q-num">שאלה 4 מתוך 7</div>
+          <div class="q-text">האם עברת לאחרונה מעבר חיים משמעותי?</div>
+          <div class="q-options">
+            <button class="q-option" onclick="selectOption(this,'transition','military_done')">שחרור מהצבא</button>
+            <button class="q-option" onclick="selectOption(this,'transition','moved')">עברתי דירה</button>
+            <button class="q-option" onclick="selectOption(this,'transition','graduated')">סיום לימודים</button>
+            <button class="q-option" onclick="selectOption(this,'transition','none')">לא ממש</button>
+          </div>
+          <div class="q-nav">
+            <button class="q-prev" onclick="qPrev(4)">→ הקודם</button>
+            <button class="q-next" onclick="qNext(4)">הבא ←</button>
           </div>
         </div>
 
         <!-- Q5 -->
-        <div class="question-block" id="q5">
-          <div class="question-text">מה מטרדים אותך הכי הרבה כרגע?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(this, 'concern', 'housing')">🏠 דיור / שכירות</button>
-            <button class="option-btn" onclick="selectOption(this, 'concern', 'money')">💰 כסף / חובות</button>
-            <button class="option-btn" onclick="selectOption(this, 'concern', 'work')">💼 מציאת עבודה</button>
-            <button class="option-btn" onclick="selectOption(this, 'concern', 'health')">❤️ בריאות / נפש</button>
-            <button class="option-btn" onclick="selectOption(this, 'concern', 'education')">📚 לימודים / עתיד</button>
+        <div class="q-step" id="qStep5">
+          <div class="q-num">שאלה 5 מתוך 7</div>
+          <div class="q-text">מה תחום העניין שלך?</div>
+          <div class="q-options">
+            <button class="q-option" onclick="selectOption(this,'interest','tech')">טכנולוגיה ומדעים</button>
+            <button class="q-option" onclick="selectOption(this,'interest','arts')">אמנות ועיצוב</button>
+            <button class="q-option" onclick="selectOption(this,'interest','business')">עסקים וכלכלה</button>
+            <button class="q-option" onclick="selectOption(this,'interest','social')">מדעי חברה ומשפטים</button>
+          </div>
+          <div class="q-nav">
+            <button class="q-prev" onclick="qPrev(5)">→ הקודם</button>
+            <button class="q-next" onclick="qNext(5)">הבא ←</button>
           </div>
         </div>
 
         <!-- Q6 -->
-        <div class="question-block" id="q6">
-          <div class="question-text">האם אתה גר עם הורים?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(this, 'living', 'parents')">כן, עם ההורים</button>
-            <button class="option-btn" onclick="selectOption(this, 'living', 'alone')">לא, גר לבד</button>
-            <button class="option-btn" onclick="selectOption(this, 'living', 'shared')">שותפים לדירה</button>
-            <button class="option-btn" onclick="selectOption(this, 'living', 'partner')">עם בן/בת זוג</button>
+        <div class="q-step" id="qStep6">
+          <div class="q-num">שאלה 6 מתוך 7</div>
+          <div class="q-text">האם יש לך מוגבלות או צרכים מיוחדים?</div>
+          <div class="q-options">
+            <button class="q-option" onclick="selectOption(this,'disability','yes')">כן</button>
+            <button class="q-option" onclick="selectOption(this,'disability','no')">לא</button>
+            <button class="q-option" onclick="selectOption(this,'disability','prefer')">מעדיף/ת לא לציין</button>
+          </div>
+          <div class="q-nav">
+            <button class="q-prev" onclick="qPrev(6)">→ הקודם</button>
+            <button class="q-next" onclick="qNext(6)">הבא ←</button>
           </div>
         </div>
 
         <!-- Q7 -->
-        <div class="question-block" id="q7">
-          <div class="question-text">מה תחומי העניין / המטרות שלך?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(this, 'goal', 'career')">🚀 קריירה וצמיחה</button>
-            <button class="option-btn" onclick="selectOption(this, 'goal', 'stability')">🏡 יציבות כלכלית</button>
-            <button class="option-btn" onclick="selectOption(this, 'goal', 'education')">🎓 השכלה גבוהה</button>
-            <button class="option-btn" onclick="selectOption(this, 'goal', 'entrepreneur')">💡 יזמות / עסק</button>
-            <button class="option-btn" onclick="selectOption(this, 'goal', 'balance')">⚖️ איזון חיים</button>
+        <div class="q-step" id="qStep7">
+          <div class="q-num">שאלה 7 מתוך 7</div>
+          <div class="q-text">מה המטרה העיקרית שלך כרגע?</div>
+          <div class="q-options">
+            <button class="q-option" onclick="selectOption(this,'goal','study')">ללמוד תואר</button>
+            <button class="q-option" onclick="selectOption(this,'goal','work')">למצוא עבודה</button>
+            <button class="q-option" onclick="selectOption(this,'goal','rights')">להבין זכויות</button>
+            <button class="q-option" onclick="selectOption(this,'goal','all')">כל האפשרויות</button>
           </div>
+          <div class="q-nav">
+            <button class="q-prev" onclick="qPrev(7)">→ הקודם</button>
+          </div>
+          <button class="q-done" onclick="completeQuestionnaire()">✅ סיים את השאלון!</button>
         </div>
 
+        <!-- COMPLETED -->
+        <div class="q-step" id="qCompleted">
+          <div class="q-completed">
+            <div class="check-icon">✅</div>
+            <h3>השאלון הושלם!</h3>
+            <p>המלצות מותאמות אישית מחכות לך בכל אחד מהמודולים.</p>
+            <button class="btn-redo" onclick="redoQuestionnaire()">🔄 ענה שוב</button>
+          </div>
+        </div>
       </div>
 
-      <div class="sidebar-nav">
-        <button class="nav-btn btn-prev" id="prev-btn" onclick="prevQ()" style="display:none">→ חזרה</button>
-        <button class="nav-btn btn-next" id="next-btn" onclick="nextQ()" disabled>הבא ←</button>
+      <!-- SIDEBAR MENU -->
+      <div class="sidebar-menu">
+        <div class="sidebar-menu-title">ניווט מהיר</div>
+        <div class="sidebar-menu-item active" onclick="showSection('home')">
+          <span class="menu-icon">🏠</span> דף הבית
+        </div>
+        <div class="sidebar-menu-item" onclick="showSection('rights')">
+          <span class="menu-icon">📜</span> זכויות שלי
+          <span class="menu-badge">4</span>
+        </div>
+        <div class="sidebar-menu-item" onclick="showSection('universities')">
+          <span class="menu-icon">🎓</span> אוניברסיטאות
+        </div>
+        <div class="sidebar-menu-item" style="cursor:default;opacity:0.6">
+          <span class="menu-icon">💼</span> תעסוקה
+          <span class="menu-badge soon">בקרוב</span>
+        </div>
+        <div class="sidebar-menu-item" style="cursor:default;opacity:0.6">
+          <span class="menu-icon">🏥</span> בריאות
+          <span class="menu-badge soon">בקרוב</span>
+        </div>
+        <div class="sidebar-menu-item" style="cursor:default;opacity:0.6">
+          <span class="menu-icon">🏠</span> דיור
+          <span class="menu-badge soon">בקרוב</span>
+        </div>
       </div>
-    </aside>
+    </div>
 
     <!-- MAIN CONTENT -->
-    <main class="main-content">
-
-      <!-- WELCOME -->
-      <div id="welcome-state">
-        <div class="welcome-icon">🧭</div>
-        <h2>ברוך הבא למסלול שלך</h2>
-        <p>ענה על 7 שאלות בסרגל הצד כדי שנוכל לבנות עבורך תמונה אישית של הזכויות, ההטבות וההזדמנויות הרלוונטיות לך עכשיו.</p>
-        <div class="welcome-steps">
-          <div class="step-card">
-            <div class="step-icon">📝</div>
-            <h4>ענה על השאלון</h4>
+    <div class="main-content">
+      <!-- HOME -->
+      <div class="content-section active" id="section-home">
+        <div class="welcome-banner">
+          <h2>שלום, <span id="welcomeName">משתמש</span>! 👋</h2>
+          <p>ברוך הבא ל-Zoot — המצפן שלך במסלול החיים. ענה על השאלון כדי לקבל המלצות אישיות.</p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-icon">📜</div><div class="stat-num">4</div><div class="stat-label">זכויות זמינות</div></div>
+          <div class="stat-card"><div class="stat-icon">🎓</div><div class="stat-num">11</div><div class="stat-label">מוסדות אקדמיים</div></div>
+          <div class="stat-card"><div class="stat-icon">🚀</div><div class="stat-num">3</div><div class="stat-label">מודולים פעילים</div></div>
+        </div>
+        <h2 class="section-title">🗺️ מודולי Zoot</h2>
+        <div class="modules-grid">
+          <div class="module-card" onclick="showSection('rights')">
+            <div class="mod-tag">פעיל</div>
+            <div class="mod-icon">📜</div>
+            <h3>הזכויות שלי</h3>
+            <p>גלה את כל הזכויות, הקצבאות והסיוע הממשלתי שמגיע לך.</p>
           </div>
-          <div class="step-card">
-            <div class="step-icon">🔍</div>
-            <h4>נמצא את הזכויות שלך</h4>
+          <div class="module-card" onclick="showSection('universities')">
+            <div class="mod-tag">פעיל</div>
+            <div class="mod-icon">🎓</div>
+            <h3>אוניברסיטאות ומכללות</h3>
+            <p>חקור מוסדות אקדמיים ומצא את המסלול המתאים לך ביותר.</p>
           </div>
-          <div class="step-card">
-            <div class="step-icon">🚀</div>
-            <h4>קבל תוכנית פעולה</h4>
+          <div class="module-card" style="opacity:0.6;cursor:default">
+            <div class="mod-tag soon">בקרוב</div>
+            <div class="mod-icon">💼</div>
+            <h3>תעסוקה ועבודה</h3>
+            <p>הזדמנויות עבודה, התמחויות ותוכניות הכשרה מקצועית.</p>
+          </div>
+          <div class="module-card" style="opacity:0.6;cursor:default">
+            <div class="mod-tag soon">בקרוב</div>
+            <div class="mod-icon">🏥</div>
+            <h3>בריאות ורווחה</h3>
+            <p>מידע על ביטוח בריאות, שירותי בריאות נפש וסיוע רפואי.</p>
           </div>
         </div>
       </div>
 
-      <!-- DASHBOARD -->
-      <div id="dashboard-state">
-        <div class="dashboard-greeting">
-          <h2>המסלול האישי שלך 🗺️</h2>
-          <p>בהתבסס על תשובותיך, אלו הזכויות וההזדמנויות הרלוונטיות ביותר עבורך:</p>
+      <!-- RIGHTS -->
+      <div class="content-section" id="section-rights">
+        <h2 class="section-title">📜 הזכויות שלי</h2>
+        <div class="match-result-card" id="rightsMatchCard">
+          <div class="match-circle" id="rightsMatchPct">?</div>
+          <div class="match-text">
+            <h3 id="rightsMatchTitle">ענה על השאלון לקבלת המלצות</h3>
+            <p id="rightsMatchDesc">לאחר השלמת השאלון נוכל להתאים לך את הזכויות הרלוונטיות ביותר.</p>
+          </div>
         </div>
-
-        <div class="profile-summary" id="profile-chips"></div>
-
-        <div class="section-title">⭐ הזכויות המומלצות עבורך</div>
-        <div class="rights-grid" id="rights-grid"></div>
+        <div class="rights-grid">
+          <div class="right-card">
+            <div class="right-card-header">
+              <div class="right-icon" style="background:#e8f7fd">💰</div>
+              <h3>קצבת נכות כללית</h3>
+            </div>
+            <p>תמיכה כספית לאנשים עם מוגבלות המתקשים לעבוד. מגיעה מהביטוח הלאומי.</p>
+            <div class="right-amount">עד ₪3,285 לחודש</div>
+            <a href="https://www.btl.gov.il/benefits/Disability/Pages/default.aspx" target="_blank" class="btn-link">🔗 לאתר הביטוח הלאומי</a>
+          </div>
+          <div class="right-card">
+            <div class="right-card-header">
+              <div class="right-icon" style="background:#e8fdf4">📚</div>
+              <h3>מלגות לסטודנטים</h3>
+            </div>
+            <p>מגוון מלגות ממשלתיות ופרטיות לסטודנטים הזכאים על בסיס כלכלי, אקדמי ואישי.</p>
+            <div class="right-amount">עד ₪20,000 לשנה</div>
+            <a href="https://www.studentauthority.co.il/" target="_blank" class="btn-link">🔗 רשות הסטודנטים</a>
+          </div>
+          <div class="right-card">
+            <div class="right-card-header">
+              <div class="right-icon" style="background:#fff8e8">🏠</div>
+              <h3>סיוע בדיור לצעירים</h3>
+            </div>
+            <p>תוכניות סיוע בשכר דירה ורכישת דירה ראשונה לצעירים ולמשפחות צעירות.</p>
+            <div class="right-amount">עד ₪800 לחודש</div>
+            <a href="https://www.gov.il/he/departments/ministry_of_construction_and_housing" target="_blank" class="btn-link">🔗 משרד השיכון</a>
+          </div>
+          <div class="right-card">
+            <div class="right-card-header">
+              <div class="right-icon" style="background:#fdf0f8">💼</div>
+              <h3>דמי אבטלה</h3>
+            </div>
+            <p>תגמול לעובדים שאיבדו את עבודתם, בהתאם לוותק ולשכר הקודם.</p>
+            <div class="right-amount">עד 80% מהשכר</div>
+            <a href="https://www.btl.gov.il/benefits/Unemployment/Pages/default.aspx" target="_blank" class="btn-link">🔗 הביטוח הלאומי</a>
+          </div>
+        </div>
       </div>
 
-    </main>
+      <!-- UNIVERSITIES -->
+      <div class="content-section" id="section-universities">
+        <h2 class="section-title">🎓 אוניברסיטאות ומכללות בישראל</h2>
+        <div class="match-result-card" id="uniMatchCard">
+          <div class="match-circle" id="uniMatchPct">?</div>
+          <div class="match-text">
+            <h3 id="uniMatchTitle">ענה על השאלון לקבלת התאמה אישית</h3>
+            <p id="uniMatchDesc">השאלון יעזור לנו להמליץ על מוסדות המתאימים ביותר לפרופיל שלך.</p>
+          </div>
+        </div>
+        <div class="uni-search-bar">
+          <input type="text" class="uni-search-input" placeholder="🔍  חפש מוסד..." oninput="filterUnis(this.value)" id="uniSearch"/>
+        </div>
+        <div class="filter-chips">
+          <button class="chip active" onclick="filterByType('all',this)">הכל</button>
+          <button class="chip" onclick="filterByType('university',this)">אוניברסיטאות</button>
+          <button class="chip" onclick="filterByType('college',this)">מכללות</button>
+          <button class="chip" onclick="filterByType('tech',this)">טכנולוגיה</button>
+          <button class="chip" onclick="filterByType('arts',this)">אמנות</button>
+          <button class="chip" onclick="filterByType('north',this)">צפון</button>
+          <button class="chip" onclick="filterByType('center',this)">מרכז</button>
+          <button class="chip" onclick="filterByType('south',this)">דרום</button>
+        </div>
+        <div class="uni-grid" id="uniGrid"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal" id="modal-content">
-    <div class="modal-header">
-      <h3 id="modal-title">פרטים מלאים</h3>
-      <button class="modal-close" onclick="closeModalBtn()">✕</button>
-    </div>
-    <div class="modal-body" id="modal-body"></div>
+<!-- UNI MODAL -->
+<div class="modal-overlay" id="uniModal">
+  <div class="modal-box" id="uniModalBox">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="uniModalContent"></div>
   </div>
 </div>
 
 <script>
-// ==================== DATA ====================
-const usersDB = JSON.parse(localStorage.getItem('zoot_users') || '{}');
-let currentUser = null;
-let currentQ = 1;
-const totalQ = 7;
-const answers = {};
+// ===== DATA =====
+const USERS_KEY = 'zoot_users';
+const SESSION_KEY = 'zoot_session';
 
-// ==================== RIGHTS DATA ====================
-const allRights = [
-  {
-    id: 'unemployment',
-    icon: '💼',
-    iconBg: '#dbeafe',
-    title: 'דמי אבטלה',
-    subtitle: 'ביטוח לאומי',
-    description: 'אם פוטרת מעבודתך או פרשת בנסיבות מסוימות, מגיע לך קצבת אבטלה חודשית.',
-    tags: ['אבטלה', 'הכנסה', 'ביטוח לאומי'],
-    relevance: (a) => a.status === 'unemployed',
-    detailInfo: 'דמי אבטלה הם קצבה שמשולמת על ידי המוסד לביטוח לאומי למי שאיבד את עבודתו ועומד בתנאי הזכאות. הגמלה מחושבת לפי שכרך הממוצע ב-12 החודשים האחרונים.',
-    steps: [
-      'הירשם כמחוסר עבודה בלשכת התעסוקה תוך 7 ימים מיום הפיטורים',
-      'המתן תקופת אכשרה (אם נדרש)',
-      'הגש תביעה אלקטרונית באתר ביטוח לאומי',
-      'הגע לראיון בלשכת התעסוקה',
-      'קבל אישור ותשלום ראשון תוך 30 ימים'
-    ],
-    links: [
-      { icon: '🏛️', text: 'ביטוח לאומי – דמי אבטלה', sub: 'btl.gov.il', url: 'https://www.btl.gov.il/Benefits/Unemployment/Pages/default.aspx' },
-      { icon: '📋', text: 'כל זכות – אבטלה', sub: 'kolzchut.org.il', url: 'https://www.kolzchut.org.il/he/%D7%93%D7%9E%D7%99_%D7%90%D7%91%D7%98%D7%9C%D7%94' },
-      { icon: '💻', text: 'הגשת תביעה אונליין', sub: 'btl.gov.il', url: 'https://www.btl.gov.il/Online%20Services/UnemploymentInsurance/Pages/default.aspx' }
-    ]
-  },
-  {
-    id: 'housing',
-    icon: '🏠',
-    iconBg: '#d1fae5',
-    title: 'סיוע בדיור לצעירים',
-    subtitle: 'משרד השיכון',
-    description: 'תכניות מגוונות לסיוע בשכירות, מחיר למשתכן ומענקים לרכישת דירה ראשונה.',
-    tags: ['דיור', 'שכירות', 'צעירים'],
-    relevance: (a) => a.concern === 'housing' || a.living === 'alone' || a.living === 'shared',
-    detailInfo: 'משרד השיכון מציע מגוון תכניות סיוע לצעירים: סיוע בשכר דירה, תכנית מחיר למשתכן ומענק לרכישת דירה ראשונה. הזכאות תלויה בגיל, הכנסה ומצב משפחתי.',
-    steps: [
-      'בדוק זכאות באתר משרד השיכון',
-      'הגש בקשה אלקטרונית עם מסמכים נדרשים',
-      'קבל אישור זכאות (תהליך של 2-4 שבועות)',
-      'חפש דירה מתאימה',
-      'קבל את הסיוע הכספי ישירות'
-    ],
-    links: [
-      { icon: '🏛️', text: 'משרד השיכון', sub: 'moch.gov.il', url: 'https://www.moch.gov.il' },
-      { icon: '📋', text: 'כל זכות – סיוע בדיור', sub: 'kolzchut.org.il', url: 'https://www.kolzchut.org.il/he/%D7%A1%D7%99%D7%95%D7%A2_%D7%91%D7%93%D7%99%D7%95%D7%A8' },
-      { icon: '🏠', text: 'מחיר למשתכן', sub: 'moch.gov.il', url: 'https://www.moch.gov.il/MachirLamshtaken' }
-    ]
-  },
-  {
-    id: 'grants',
-    icon: '🎓',
-    iconBg: '#ede9fe',
-    title: 'מלגות ומענקי לימודים',
-    subtitle: 'ות"ת ואוניברסיטאות',
-    description: 'מלגות הצטיינות, מלגות צורך וקרנות מיוחדות לסטודנטים מכל הרקעים.',
-    tags: ['לימודים', 'מלגה', 'סטודנטים'],
-    relevance: (a) => a.status === 'student' || a.goal === 'education',
-    detailInfo: 'מלגות לימודים ניתנות על בסיס הצטיינות אקדמית, מצב סוציו-אקונומי, שירות צבאי ועוד. ניתן לקבל מלגות מהאוניברסיטה, קרנות פרטיות וגורמים ממשלתיים.',
-    steps: [
-      'בדוק בדף המלגות של מוסד הלימודים שלך',
-      'הגש בקשה לקרן מלגות ות"ת (ועדת התכנון והתקצוב)',
-      'אסוף אישורים נדרשים (הכנסה, ציונים)',
-      'פנה גם לרשויות המקומיות לקרנות מקומיות',
-      'שלח בקשות לקרנות פרטיות (משרד עו"ד וכו\')'
-    ],
-    links: [
-      { icon: '🎓', text: 'ות"ת – מלגות סטודנטים', sub: 'che.org.il', url: 'https://www.che.org.il/he/students/scholarships/' },
-      { icon: '📋', text: 'כל זכות – מלגות', sub: 'kolzchut.org.il', url: 'https://www.kolzchut.org.il/he/%D7%9E%D7%9C%D7%92%D7%95%D7%AA_%D7%9C%D7%A1%D7%98%D7%95%D7%93%D7%A0%D7%98%D7%99%D7%9D' },
-      { icon: '💡', text: 'מלגות ישראל', sub: 'melavot.co.il', url: 'https://www.melavot.co.il' }
-    ]
-  },
-  {
-    id: 'afterarmy',
-    icon: '🪖',
-    iconBg: '#fef3c7',
-    title: 'זכויות שחרור מהצבא',
-    subtitle: 'משרד הביטחון',
-    description: 'מענק שחרור, מלגות לחיילים משוחררים ותכניות ייחודיות להתחלה חדשה.',
-    tags: ['צבא', 'שחרור', 'מענק'],
-    relevance: (a) => a.status === 'army' || a.transition === 'afterarmy',
-    detailInfo: 'חיילים משוחררים זכאים למענק שחרור, מלגות לימודים ייחודיות, הנחות במיסים בשנה הראשונה ועוד. חשוב לדעת את כל הזכויות לפני השחרור.',
-    steps: [
-      'פנה לקצין הסיוע שלך לפני השחרור',
-      'הגש תביעה למענק שחרור בביטוח לאומי',
-      'בדוק זכאות למלגת "פריסה" של וות"ת',
-      'רשום עצמך במרכז לחיילים משוחררים',
-      'בדוק הנחות ייחודיות (מס הכנסה, דיור)'
-    ],
-    links: [
-      { icon: '🏛️', text: 'אגף השיקום – משרד הביטחון', sub: 'idf.gov.il', url: 'https://www.idf.il/minhal/hr/rehabilitation/' },
-      { icon: '📋', text: 'כל זכות – חיילים משוחררים', sub: 'kolzchut.org.il', url: 'https://www.kolzchut.org.il/he/%D7%97%D7%99%D7%99%D7%9C%D7%99%D7%9D_%D7%9E%D7%A9%D7%95%D7%97%D7%A8%D7%A8%D7%99%D7%9D' },
-      { icon: '💰', text: 'מענק שחרור', sub: 'btl.gov.il', url: 'https://www.btl.gov.il/Benefits/reserve_soldiers/Pages/default.aspx' }
-    ]
-  },
-  {
-    id: 'income_support',
-    icon: '💰',
-    iconBg: '#fee2e2',
-    title: 'הבטחת הכנסה',
-    subtitle: 'ביטוח לאומי',
-    description: 'אם הכנסתך נמוכה, מגיע לך השלמת הכנסה חודשית מהמדינה.',
-    tags: ['הכנסה נמוכה', 'קצבה', 'סיוע'],
-    relevance: (a) => a.income === 'none' || a.income === 'low',
-    detailInfo: 'הבטחת הכנסה היא קצבה שניתנת למי שהכנסתו נמוכה מסף מינימלי שקובע החוק. הסכום משתנה לפי הרכב המשפחה וגיל.',
-    steps: [
-      'בדוק זכאות באתר ביטוח לאומי',
-      'אסוף מסמכים: תלושי שכר, חשבון בנק',
-      'הגש תביעה בסניף ביטוח לאומי הקרוב',
-      'המתן לביקור בית (אם נדרש)',
-      'קבל תשלום רטרואקטיבי מיום הגשת התביעה'
-    ],
-    links: [
-      { icon: '🏛️', text: 'ביטוח לאומי – הבטחת הכנסה', sub: 'btl.gov.il', url: 'https://www.btl.gov.il/Benefits/Habitachon_hachnasa/Pages/default.aspx' },
-      { icon: '📋', text: 'כל זכות – הבטחת הכנסה', sub: 'kolzchut.org.il', url: 'https://www.kolzchut.org.il/he/%D7%94%D7%91%D7%98%D7%97%D7%AA_%D7%94%D7%9B%D7%A0%D7%A1%D7%94' }
-    ]
-  },
-  {
-    id: 'mental_health',
-    icon: '❤️',
-    iconBg: '#fce7f3',
-    title: 'בריאות הנפש לצעירים',
-    subtitle: 'משרד הבריאות',
-    description: 'זכות לטיפול נפשי מסובסד, קווי סיוע חינמיים ומרכזי בריאות הנפש.',
-    tags: ['בריאות נפש', 'סיוע', 'חינמי'],
-    relevance: (a) => a.concern === 'health',
-    detailInfo: 'כל אזרח ישראלי זכאי לטיפול נפשי במסגרת סל הבריאות. ישנם קווי סיוע חינמיים, מרכזי בריאות נפש קהילתיים ותכניות ייחודיות לצעירים.',
-    steps: [
-      'פנה לרופא המשפחה לקבלת הפנייה',
-      'בדוק מרכזי בריאות נפש קהילתיים קרובים',
-      'התקשר לקו ער"ן: 1201 (24/7, חינם)',
-      'פנה לקופת חולים לתיאום טיפול מסובסד',
-      'שקול אפליקציות דיגיטליות לתמיכה נפשית'
-    ],
-    links: [
-      { icon: '📞', text: 'ער"ן – קו חירום נפשי', sub: 'eran.org.il', url: 'https://www.eran.org.il' },
-      { icon: '🏛️', text: 'משרד הבריאות – בריאות הנפש', sub: 'health.gov.il', url: 'https://www.health.gov.il/Subjects/mental_health/Pages/default.aspx' },
-      { icon: '📋', text: 'כל זכות – בריאות נפש', sub: 'kolzchut.org.il', url: 'https://www.kolzchut.org.il/he/%D7%91%D7%A8%D7%99%D7%90%D7%95%D7%AA_%D7%94%D7%A0%D7%A4%D7%A9' }
-    ]
-  },
-  {
-    id: 'employment_rights',
-    icon: '⚖️',
-    iconBg: '#e0e7ff',
-    title: 'זכויות עובד בסיסיות',
-    subtitle: 'משרד העבודה',
-    description: 'שכר מינימום, תנאים סוציאליים, פיצויים וזכויות שכל עובד חייב להכיר.',
-    tags: ['עבודה', 'זכויות', 'שכר'],
-    relevance: (a) => a.status === 'employed' || a.status === 'selfemployed',
-    detailInfo: 'כל עובד בישראל זכאי לשכר מינימום (₪5,880 נכון ל-2024), קרן פנסיה, ימי חופשה, דמי מחלה ופיצויי פיטורים. חשוב להכיר את הזכויות שלך.',
-    steps: [
-      'וודא שאתה מקבל לפחות שכר מינימום',
-      'בדוק שמעסיקך מפריש לפנסיה (6% לפחות)',
-      'שמור כל תלוש שכר בקובץ דיגיטלי',
-      'בקשת חוזה עבודה בכתב אם אין לך',
-      'פנה לממונה על שכר מינימום בכל חשד להפרה'
-    ],
-    links: [
-      { icon: '🏛️', text: 'משרד העבודה', sub: 'gov.il', url: 'https://www.gov.il/he/departments/ministry_of_labor' },
-      { icon: '📋', text: 'כל זכות – זכויות עובד', sub: 'kolzchut.org.il', url: 'https://www.kolzchut.org.il/he/%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA_%D7%A2%D7%95%D7%91%D7%93' },
-      { icon: '⚖️', text: 'ממונה על שכר מינימום', sub: 'gov.il', url: 'https://www.gov.il/he/service/minimum-wage-complaint' }
-    ]
-  },
-  {
-    id: 'young_entrepreneur',
-    icon: '💡',
-    iconBg: '#fef9c3',
-    title: 'תמיכה ביזמים צעירים',
-    subtitle: 'רשות החדשנות ועמותות',
-    description: 'מענקים, הכשרות ומסלולי ייעוץ לצעירים שרוצים להקים עסק.',
-    tags: ['יזמות', 'עסק', 'מענק'],
-    relevance: (a) => a.goal === 'entrepreneur' || a.status === 'selfemployed',
-    detailInfo: 'רשות החדשנות ואחרים מציעים מסלולי מענקים לצעירים יזמים, הכשרות ופרוגרמות אקסלרטור. גם עמותות כמו "מפעל הפיס" מעניקות תמיכה.',
-    steps: [
-      'הגדר את הרעיון העסקי שלך בכתב',
-      'פנה לרשות החדשנות לבדיקת זכאות למענק',
-      'הצטרף לתכנית אקסלרטור (Hub, Gav-Yam וכו\')',
-      'פתח תיק עסק ברשויות המס',
-      'שקול הצטרפות לקרן הון-סיכון לצעירים'
-    ],
-    links: [
-      { icon: '💡', text: 'רשות החדשנות', sub: 'innovationisrael.org.il', url: 'https://www.innovationisrael.org.il' },
-      { icon: '🏛️', text: 'רשות המסים – פתיחת עסק', sub: 'taxes.gov.il', url: 'https://www.taxes.gov.il' },
-      { icon: '📋', text: 'כל זכות – עצמאים', sub: 'kolzchut.org.il', url: 'https://www.kolzchut.org.il/he/%D7%A2%D7%A6%D7%9E%D7%90%D7%99%D7%99%D7%9D' }
-    ]
-  },
-  {
-    id: 'tax_refund',
-    icon: '💸',
-    iconBg: '#d1fae5',
-    title: 'החזר מס הכנסה',
-    subtitle: 'רשות המסים',
-    description: 'אם שילמת מס הכנסה, ייתכן שמגיע לך החזר — בממוצע ₪2,500–₪6,000.',
-    tags: ['מס', 'החזר', 'הכנסה'],
-    relevance: (a) => a.status === 'employed' || a.income === 'medium' || a.income === 'high',
-    detailInfo: 'מדי שנה מחזירה המדינה מאות מיליוני שקלים למי שלא תבע את ההחזר המגיע לו. ניתן לתבוע עד 6 שנים אחורה!',
-    steps: [
-      'אסוף טופסי 106 מהמעסיקים שלך',
-      'כנס לאתר רשות המסים ופתח תיק',
-      'הגש דוח שנתי (טופס 135)',
-      'המתן לחישוב האוטומטי',
-      'קבל את הכסף לחשבון הבנק תוך 90 ימים'
-    ],
-    links: [
-      { icon: '💸', text: 'רשות המסים – החזר מס', sub: 'taxes.gov.il', url: 'https://www.taxes.gov.il/incometax/pages/returntax.aspx' },
-      { icon: '📋', text: 'כל זכות – החזר מס', sub: 'kolzchut.org.il', url: 'https://www.kolzchut.org.il/he/%D7%94%D7%97%D7%96%D7%A8_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94' },
-      { icon: '💻', text: 'הגשת דוח אונליין', sub: 'taxes.gov.il', url: 'https://www.taxes.gov.il' }
-    ]
-  }
-];
-
-// ==================== AUTH LOGIC ====================
-function switchTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach((t, i) => {
-    t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
-  });
-  document.getElementById('login-form').style.display = tab === 'login' ? 'flex' : 'none';
-  document.getElementById('register-form').style.display = tab === 'register' ? 'flex' : 'none';
+function getUsers() {
+  return JSON.parse(localStorage.getItem(USERS_KEY) || '{}');
+}
+function saveUsers(u) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(u));
+}
+function getSession() {
+  return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+}
+function saveSession(s) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify(s));
 }
 
-function doRegister() {
-  const name = document.getElementById('reg-name').value.trim();
-  const username = document.getElementById('reg-username').value.trim();
-  const password = document.getElementById('reg-password').value;
-  const errEl = document.getElementById('reg-error');
+// ===== AUTH =====
+let currentUser = null;
 
-  if (!name || !username || !password) {
-    showAuthError('reg-error', 'יש למלא את כל השדות');
-    return;
-  }
-  if (password.length < 6) {
-    showAuthError('reg-error', 'הסיסמה חייבת להכיל לפחות 6 תווים');
-    return;
-  }
-  if (usersDB[username]) {
-    showAuthError('reg-error', 'שם המשתמש כבר תפוס');
-    return;
-  }
-
-  usersDB[username] = { name, password, answers: {} };
-  localStorage.setItem('zoot_users', JSON.stringify(usersDB));
-  loginUser(username);
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register'));
+  });
+  document.getElementById('loginForm').classList.toggle('active', tab==='login');
+  document.getElementById('registerForm').classList.toggle('active', tab==='register');
 }
 
 function doLogin() {
-  const username = document.getElementById('login-username').value.trim();
-  const password = document.getElementById('login-password').value;
-
-  if (!usersDB[username] || usersDB[username].password !== password) {
-    showAuthError('login-error', 'שם משתמש או סיסמה שגויים');
-    return;
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const users = getUsers();
+  const err = document.getElementById('loginError');
+  if (!user || !pass) { err.textContent='יש למלא את כל השדות'; err.style.display='block'; return; }
+  if (!users[user] || users[user].password !== pass) {
+    err.style.display='block'; return;
   }
-  loginUser(username);
+  err.style.display='none';
+  currentUser = { username: user, name: users[user].name };
+  saveSession(currentUser);
+  loadApp();
 }
 
-function showAuthError(id, msg) {
-  const el = document.getElementById(id);
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-function loginUser(username) {
-  currentUser = username;
-  localStorage.setItem('zoot_current', username);
-  document.getElementById('nav-username').textContent = usersDB[username].name;
-  document.getElementById('auth-screen').style.display = 'none';
-  document.getElementById('app-screen').style.display = 'flex';
-
-  // אם יש תשובות שמורות — הצג דשבורד ישירות
-  if (Object.keys(usersDB[username].answers || {}).length === totalQ) {
-    Object.assign(answers, usersDB[username].answers);
-    showDashboard();
-  }
+function doRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const user = document.getElementById('regUser').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const pass2 = document.getElementById('regPass2').value;
+  const err = document.getElementById('regError');
+  if (!name||!user||!pass||!pass2) { err.textContent='יש למלא את כל השדות'; err.style.display='block'; return; }
+  if (pass !== pass2) { err.textContent='הסיסמאות אינן תואמות'; err.style.display='block'; return; }
+  if (pass.length < 6) { err.textContent='הסיסמה חייבת להיות לפחות 6 תווים'; err.style.display='block'; return; }
+  const users = getUsers();
+  if (users[user]) { err.textContent='שם המשתמש כבר קיים'; err.style.display='block'; return; }
+  users[user] = { name, password: pass, answers: {}, questionnaireCompleted: false };
+  saveUsers(users);
+  err.style.display='none';
+  currentUser = { username: user, name };
+  saveSession(currentUser);
+  loadApp();
 }
 
 function doLogout() {
+  localStorage.removeItem(SESSION_KEY);
   currentUser = null;
-  localStorage.removeItem('zoot_current');
-  location.reload();
+  document.getElementById('authScreen').classList.add('active');
+  document.getElementById('appScreen').classList.remove('active');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
 }
 
-// ==================== QUESTIONNAIRE ====================
+function loadApp() {
+  document.getElementById('authScreen').classList.remove('active');
+  document.getElementById('appScreen').classList.add('active');
+  const n = currentUser.name || currentUser.username;
+  document.getElementById('welcomeName').textContent = n;
+  document.getElementById('userNameTop').textContent = n;
+  document.getElementById('userAvatarTop').textContent = n.charAt(0).toUpperCase();
+  renderUnis();
+  const users = getUsers();
+  const userData = users[currentUser.username];
+  if (userData && userData.questionnaireCompleted) {
+    showCompletedState();
+    updateMatchCards();
+  }
+  showSection('home');
+}
+
+// ===== CHECK SESSION =====
+(function() {
+  const s = getSession();
+  if (s) {
+    currentUser = s;
+    loadApp();
+  }
+})();
+
+// ===== QUESTIONNAIRE =====
+let qAnswers = {};
+let currentStep = 1;
+const totalSteps = 7;
+
 function selectOption(btn, key, val) {
-  btn.closest('.options-list').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  const parent = btn.closest('.q-options');
+  parent.querySelectorAll('.q-option').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  answers[key] = val;
-  document.getElementById('next-btn').disabled = false;
+  qAnswers[key] = val;
 }
 
-function nextQ() {
-  if (currentQ < totalQ) {
-    document.getElementById('q' + currentQ).classList.remove('active');
-    currentQ++;
-    document.getElementById('q' + currentQ).classList.add('active');
-    updateProgress();
-    document.getElementById('prev-btn').style.display = 'block';
+function qNext(step) {
+  const keys = ['age','status','income','transition','interest','disability','goal'];
+  if (!qAnswers[keys[step-1]]) { alert('אנא בחר תשובה לפני המעבר הבא.'); return; }
+  document.getElementById('qStep'+step).classList.remove('active');
+  currentStep = step + 1;
+  document.getElementById('qStep'+currentStep).classList.add('active');
+  const pct = (currentStep/totalSteps)*100;
+  document.getElementById('qProgress').style.width = pct + '%';
+}
 
-    // Reset next button if no answer yet for this question
-    const qKeys = ['age','status','income','transition','concern','living','goal'];
-    document.getElementById('next-btn').disabled = !answers[qKeys[currentQ - 1]];
+function qPrev(step) {
+  document.getElementById('qStep'+step).classList.remove('active');
+  currentStep = step - 1;
+  document.getElementById('qStep'+currentStep).classList.add('active');
+  const pct = (currentStep/totalSteps)*100;
+  document.getElementById('qProgress').style.width = pct + '%';
+}
 
-    if (currentQ === totalQ) {
-      document.getElementById('next-btn').textContent = 'סיום ←';
-    }
-  } else {
-    // Done!
-    saveAnswers();
-    showDashboard();
+function completeQuestionnaire() {
+  if (!qAnswers['goal']) { alert('אנא בחר תשובה לפני הסיום.'); return; }
+  const users = getUsers();
+  if (users[currentUser.username]) {
+    users[currentUser.username].answers = qAnswers;
+    users[currentUser.username].questionnaireCompleted = true;
+    saveUsers(users);
   }
+  document.getElementById('qStep7').classList.remove('active');
+  showCompletedState();
+  document.getElementById('qProgress').style.width = '100%';
+  updateMatchCards();
+  renderUnis();
 }
 
-function prevQ() {
-  if (currentQ > 1) {
-    document.getElementById('q' + currentQ).classList.remove('active');
-    currentQ--;
-    document.getElementById('q' + currentQ).classList.add('active');
-    updateProgress();
-    document.getElementById('next-btn').disabled = false;
-    document.getElementById('next-btn').textContent = currentQ === totalQ ? 'סיום ←' : 'הבא ←';
-    if (currentQ === 1) document.getElementById('prev-btn').style.display = 'none';
+function showCompletedState() {
+  document.querySelectorAll('.q-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('qCompleted').classList.add('active');
+}
+
+function redoQuestionnaire() {
+  qAnswers = {};
+  currentStep = 1;
+  document.getElementById('qCompleted').classList.remove('active');
+  document.getElementById('qStep1').classList.add('active');
+  document.getElementById('qProgress').style.width = '14%';
+  document.querySelectorAll('.q-option').forEach(o => o.classList.remove('selected'));
+}
+
+function updateMatchCards() {
+  const u = getUsers()[currentUser.username];
+  if (!u || !u.questionnaireCompleted) return;
+  const a = u.answers;
+  let score = 72;
+  if (a.income === 'low') score += 10;
+  if (a.age === '18-21') score += 8;
+  if (a.status === 'student') score += 5;
+  score = Math.min(score, 98);
+
+  document.getElementById('rightsMatchPct').textContent = score + '%';
+  document.getElementById('rightsMatchTitle').textContent = `${score}% מהזכויות רלוונטיות לך`;
+  document.getElementById('rightsMatchDesc').textContent = 'בהתבסס על הפרופיל שלך, מצאנו זכויות מותאמות אישית.';
+
+  const uniPct = a.interest === 'tech' ? 88 : a.interest === 'arts' ? 82 : 75;
+  document.getElementById('uniMatchPct').textContent = uniPct + '%';
+  document.getElementById('uniMatchTitle').textContent = `${uniPct}% התאמה עם מוסדות בישראל`;
+  document.getElementById('uniMatchDesc').textContent = 'על בסיס תחומי העניין והפרופיל שלך, מצאנו המלצות מותאמות.';
+}
+
+// ===== NAVIGATION =====
+function showSection(name) {
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-menu-item').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.topbar-nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-'+name).classList.add('active');
+  const navBtn = document.getElementById('nav-'+name);
+  if (navBtn) navBtn.classList.add('active');
+  const menuItems = document.querySelectorAll('.sidebar-menu-item');
+  const map = {home:0, rights:1, universities:2};
+  if (map[name] !== undefined) menuItems[map[name]].classList.add('active');
+}
+
+// ===== UNIVERSITIES DATA =====
+const universities = [
+  {
+    id:1, name:'האוניברסיטה העברית', short:'Hebrew U', location:'ירושלים', region:'center',
+    type:'university', icon:'🔬', color:'#e8f7fd', tags:['מחקר','מדעים','הומניסטיקה'],
+    students:'23,000', acceptance:'76-92', programs:'מדעים, הומניסטיקה, משפטים, רפואה',
+    fields:['tech','social','arts'],
+    tuition:'₪12,000–₪15,000 לשנה',
+    desc:'אחת האוניברסיטאות המובילות במזרח התיכון, עם מרכז מחקר בינלאומי.',
+    website:'https://www.huji.ac.il',
+    scholarship:'https://scholarship.huji.ac.il'
+  },
+  {
+    id:2, name:'הטכניון', short:'Technion', location:'חיפה', region:'north',
+    type:'university', icon:'⚙️', color:'#e8fdf4', tags:['הנדסה','טכנולוגיה','מדעים מדויקים'],
+    students:'13,000', acceptance:'87-97', programs:'הנדסה, מדעים, אדריכלות',
+    fields:['tech'],
+    tuition:'₪11,500–₪14,000 לשנה',
+    desc:'המוסד הטכנולוגי המוביל בישראל, ידוע בעולם כמעצמת הנדסה.',
+    website:'https://www.technion.ac.il',
+    scholarship:'https://www.technion.ac.il/he/student-affairs/scholarships/'
+  },
+  {
+    id:3, name:'אוניברסיטת תל אביב', short:'TAU', location:'תל אביב', region:'center',
+    type:'university', icon:'🏛️', color:'#fff8e8', tags:['מחקר','אמנות','עסקים'],
+    students:'30,000', acceptance:'75-90', programs:'עסקים, משפטים, אמנות, מדעים',
+    fields:['tech','social','arts','business'],
+    tuition:'₪11,000–₪14,500 לשנה',
+    desc:'האוניברסיטה הגדולה בישראל עם חוג רחב של תכניות לימוד.',
+    website:'https://www.tau.ac.il',
+    scholarship:'https://www.tau.ac.il/students/scholarships'
+  },
+  {
+    id:4, name:'אוניברסיטת חיפה', short:'Haifa U', location:'חיפה', region:'north',
+    type:'university', icon:'🌊', color:'#fdf0f8', tags:['חברה','מדע','פסיכולוגיה'],
+    students:'18,000', acceptance:'70-85', programs:'מדעי חברה, משפטים, פסיכולוגיה',
+    fields:['social'],
+    tuition:'₪10,500–₪13,000 לשנה',
+    desc:'אוניברסיטה גדולה ומגוונת בצפון, עם דגש על מדעי החברה.',
+    website:'https://www.haifa.ac.il',
+    scholarship:'https://www.haifa.ac.il/students/scholarships/'
+  },
+  {
+    id:5, name:'אוניברסיטת בן גוריון', short:'BGU', location:'באר שבע', region:'south',
+    type:'university', icon:'🏜️', color:'#e8f7fd', tags:['מחקר','הנדסה','רפואה'],
+    students:'20,000', acceptance:'72-88', programs:'הנדסה, מדעים, בריאות',
+    fields:['tech'],
+    tuition:'₪10,800–₪13,500 לשנה',
+    desc:'אוניברסיטת הנגב — מרכז מחקר מוביל עם דגש על פיתוח הדרום.',
+    website:'https://www.bgu.ac.il',
+    scholarship:'https://www.bgu.ac.il/students/scholarships'
+  },
+  {
+    id:6, name:'אוניברסיטת בר אילן', short:'BIU', location:'רמת גן', region:'center',
+    type:'university', icon:'✡️', color:'#fdf0f8', tags:['יהדות','משפטים','מדעים'],
+    students:'19,000', acceptance:'73-87', programs:'יהדות, משפטים, מדעים, ניהול',
+    fields:['social','tech'],
+    tuition:'₪11,000–₪13,800 לשנה',
+    desc:'אוניברסיטה המשלבת מסורת יהודית עם חינוך אקדמי מודרני.',
+    website:'https://www.biu.ac.il',
+    scholarship:'https://www.biu.ac.il/students/scholarships'
+  },
+  {
+    id:7, name:'מכון ויצמן למדע', short:'Weizmann', location:'רחובות', region:'center',
+    type:'university', icon:'🧬', color:'#e8fdf4', tags:['מחקר','מדע','ביולוגיה'],
+    students:'1,200', acceptance:'95-99', programs:'מדעים, ביולוגיה, כימיה, פיזיקה',
+    fields:['tech'],
+    tuition:'₪0 (מלגות מלאות)',
+    desc:'מוסד מחקר עילי בינלאומי, מקבל רק תלמידי מחקר מצוינים.',
+    website:'https://www.weizmann.ac.il',
+    scholarship:'https://www.weizmann.ac.il/students'
+  },
+  {
+    id:8, name:'מכללת הרצוג', short:'Herzog', location:'אפרת', region:'center',
+    type:'college', icon:'📖', color:'#fff8e8', tags:['יהדות','הוראה','ניהול'],
+    students:'3,500', acceptance:'65-78', programs:'הוראה, יהדות, ניהול',
+    fields:['social'],
+    tuition:'₪9,000–₪11,500 לשנה',
+    desc:'מכללה אקדמית דתית עם תכניות ייחודיות בתחום היהדות.',
+    website:'https://www.herzog.ac.il',
+    scholarship:'https://www.herzog.ac.il/students/scholarships'
+  },
+  {
+    id:9, name:'שנקר', short:'Shenkar', location:'רמת גן', region:'center',
+    type:'college', icon:'🎨', color:'#fdf0f8', tags:['עיצוב','אמנות','אופנה'],
+    students:'2,800', acceptance:'68-82', programs:'עיצוב תעשייתי, אופנה, אנימציה',
+    fields:['arts'],
+    tuition:'₪13,000–₪17,000 לשנה',
+    desc:'מכללת העיצוב המובילה בישראל, ידועה בחדשנות ויצירתיות.',
+    website:'https://www.shenkar.ac.il',
+    scholarship:'https://www.shenkar.ac.il/students/scholarships'
+  },
+  {
+    id:10, name:'ספיר', short:'Sapir', location:'שדרות', region:'south',
+    type:'college', icon:'🎭', color:'#e8f7fd', tags:['תקשורת','אמנות','חברה'],
+    students:'6,000', acceptance:'60-75', programs:'תקשורת, אמנות, מדעי חברה',
+    fields:['arts','social'],
+    tuition:'₪8,500–₪11,000 לשנה',
+    desc:'מכללה אזורית בדרום עם דגש על נגישות ושיוויון הזדמנויות.',
+    website:'https://www.sapir.ac.il',
+    scholarship:'https://www.sapir.ac.il/students/scholarships'
+  },
+  {
+    id:11, name:'IDC הרצליה', short:'IDC', location:'הרצליה', region:'center',
+    type:'college', icon:'🌍', color:'#e8fdf4', tags:['עסקים','ממשל','תקשורת'],
+    students:'7,500', acceptance:'70-85', programs:'עסקים, תקשורת, ממשל, משפטים',
+    fields:['business','social'],
+    tuition:'₪17,000–₪22,000 לשנה',
+    desc:'מוסד בינלאומי עם דגש על יזמות ועסקים גלובליים.',
+    website:'https://www.idc.ac.il',
+    scholarship:'https://www.idc.ac.il/en/students/scholarships/'
   }
+];
+
+let filteredUnis = [...universities];
+let activeTypeFilter = 'all';
+let searchQuery = '';
+
+function getMatchScore(uni) {
+  const users = getUsers();
+  const userData = users[currentUser?.username];
+  if (!userData || !userData.questionnaireCompleted) return null;
+  const a = userData.answers;
+  let score = 60;
+  if (uni.fields.includes(a.interest)) score += 25;
+  if (a.income === 'low' && uni.tuition.includes('0')) score += 15;
+  if (a.age === '18-21') score += 5;
+  if (a.status === 'student') score += 5;
+  return Math.min(score, 99);
 }
 
-function updateProgress() {
-  const pct = Math.round((currentQ / totalQ) * 100);
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-label').textContent = `שאלה ${currentQ} מתוך ${totalQ}`;
-}
-
-function saveAnswers() {
-  if (currentUser) {
-    usersDB[currentUser].answers = { ...answers };
-    localStorage.setItem('zoot_users', JSON.stringify(usersDB));
-  }
-}
-
-// ==================== DASHBOARD ====================
-function showDashboard() {
-  document.getElementById('welcome-state').style.display = 'none';
-  document.getElementById('dashboard-state').style.display = 'block';
-
-  // Profile chips
-  const chipLabels = {
-    age: { teen: '14-17', young: '18-21', adult: '22-25', adult25: '25+' },
-    status: { student: '🎓 סטודנט', employed: '💼 שכיר', selfemployed: '🏢 עצמאי', unemployed: '🔍 מחפש עבודה', army: '🪖 צבא' },
-    income: { none: 'ללא הכנסה', low: 'הכנסה נמוכה', medium: 'הכנסה בינונית', high: 'הכנסה גבוהה' },
-    concern: { housing: '🏠 דיור', money: '💰 כסף', work: '💼 עבודה', health: '❤️ בריאות', education: '📚 לימודים' }
-  };
-
-  const chipsEl = document.getElementById('profile-chips');
-  chipsEl.innerHTML = '';
-  ['age','status','income','concern'].forEach(k => {
-    if (answers[k] && chipLabels[k][answers[k]]) {
-      const chip = document.createElement('div');
-      chip.className = 'profile-chip';
-      chip.textContent = chipLabels[k][answers[k]];
-      chipsEl.appendChild(chip);
-    }
+function renderUnis() {
+  const grid = document.getElementById('uniGrid');
+  if (!grid) return;
+  let toShow = universities.filter(u => {
+    const matchesSearch = !searchQuery || u.name.includes(searchQuery) || u.location.includes(searchQuery) || u.tags.some(t => t.includes(searchQuery));
+    const matchesType = activeTypeFilter === 'all' ||
+      (activeTypeFilter === 'university' && u.type === 'university') ||
+      (activeTypeFilter === 'college' && u.type === 'college') ||
+      (activeTypeFilter === 'tech' && u.fields.includes('tech')) ||
+      (activeTypeFilter === 'arts' && u.fields.includes('arts')) ||
+      (activeTypeFilter === 'north' && u.region === 'north') ||
+      (activeTypeFilter === 'center' && u.region === 'center') ||
+      (activeTypeFilter === 'south' && u.region === 'south');
+    return matchesSearch && matchesType;
   });
-
-  // Filter rights
-  const relevant = allRights.filter(r => r.relevance(answers));
-  const others = allRights.filter(r => !r.relevance(answers));
-  const toShow = [...relevant, ...others].slice(0, 8);
-
-  const grid = document.getElementById('rights-grid');
-  grid.innerHTML = '';
-
-  toShow.forEach((right, idx) => {
-    const isRelevant = relevant.includes(right);
-    grid.innerHTML += `
-      <div class="right-card">
-        <div class="right-card-header">
-          <div class="right-icon" style="background:${right.iconBg}">${right.icon}</div>
-          <div>
-            <div class="right-card-title">${right.title} ${isRelevant ? '<span class="badge-new">מומלץ לך</span>' : ''}</div>
-            <div class="right-card-sub">${right.subtitle}</div>
-          </div>
-        </div>
-        <div class="right-card-body">
-          <p class="right-description">${right.description}</p>
-          <div class="right-tags">${right.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-        </div>
-        <div class="right-card-footer">
-          <button class="expand-btn" onclick="openModal('${right.id}')">פרטים מלאים ←</button>
-          <a class="gov-link" href="${right.links[0].url}" target="_blank">🔗 ${right.links[0].sub}</a>
-        </div>
+  if (!toShow.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--gray-400);font-size:1rem">לא נמצאו מוסדות התואמים לחיפוש 🔍</div>';
+    return;
+  }
+  // Sort by match score if available
+  toShow.sort((a, b) => {
+    const sa = getMatchScore(a), sb = getMatchScore(b);
+    if (sa && sb) return sb - sa;
+    return 0;
+  });
+  grid.innerHTML = toShow.map(u => {
+    const score = getMatchScore(u);
+    const badgeHtml = score ? `<div class="uni-match-badge">✨ ${score}% התאמה</div>` : '';
+    return `
+    <div class="uni-card" onclick="openUniModal(${u.id})">
+      <div class="uni-card-header">
+        <div class="uni-logo-circle" style="background:${u.color}">${u.icon}</div>
+        ${badgeHtml}
       </div>
-    `;
-  });
+      <h3>${u.name}</h3>
+      <div class="uni-location">📍 ${u.location}</div>
+      <div class="uni-tags">${u.tags.map(t=>`<span class="uni-tag">${t}</span>`).join('')}</div>
+      <div class="uni-stats">
+        <div class="uni-stat"><div class="val">${u.students}</div><div class="lbl">סטודנטים</div></div>
+        <div class="uni-stat"><div class="val">${u.acceptance}</div><div class="lbl">ציון קבלה</div></div>
+      </div>
+      <button class="btn-uni-more">עוד פרטים ←</button>
+    </div>`;
+  }).join('');
 }
 
-// ==================== MODAL ====================
-function openModal(id) {
-  const right = allRights.find(r => r.id === id);
-  if (!right) return;
+function filterByType(type, btn) {
+  activeTypeFilter = type;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderUnis();
+}
 
-  document.getElementById('modal-title').textContent = right.icon + ' ' + right.title;
+function filterUnis(q) {
+  searchQuery = q;
+  renderUnis();
+}
 
-  document.getElementById('modal-body').innerHTML = `
-    <div class="modal-section">
-      <h4>📌 מה זה?</h4>
-      <p>${right.detailInfo}</p>
+function openUniModal(id) {
+  const u = universities.find(x => x.id === id);
+  if (!u) return;
+  const score = getMatchScore(u);
+  document.getElementById('uniModalContent').innerHTML = `
+    <div class="modal-header">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+        <div style="width:56px;height:56px;border-radius:14px;background:${u.color};display:flex;align-items:center;justify-content:center;font-size:1.8rem">${u.icon}</div>
+        <div>
+          <h2 style="font-size:1.3rem;font-weight:900;color:var(--gray-900)">${u.name}</h2>
+          <p style="color:var(--gray-400);font-size:0.85rem">📍 ${u.location}</p>
+        </div>
+        ${score ? `<div style="background:linear-gradient(135deg,var(--accent-green),#27ae60);color:white;font-size:0.8rem;font-weight:700;padding:6px 14px;border-radius:99px;margin-right:auto">✨ ${score}% התאמה</div>` : ''}
+      </div>
     </div>
     <div class="modal-section">
-      <h4>✅ צעדי פעולה</h4>
-      <ol class="action-steps">
-        ${right.steps.map((s, i) => `
-          <li><span class="step-num">${i+1}</span><span>${s}</span></li>
-        `).join('')}
-      </ol>
+      <h4>על המוסד</h4>
+      <p>${u.desc}</p>
     </div>
     <div class="modal-section">
-      <h4>🔗 קישורים רשמיים</h4>
-      <div class="links-list">
-        ${right.links.map(l => `
-          <a class="link-item" href="${l.url}" target="_blank" rel="noopener noreferrer">
-            <span class="link-item-icon">${l.icon}</span>
-            <div class="link-item-text">
-              <strong>${l.text}</strong>
-              <span>${l.sub}</span>
-            </div>
-            <span class="link-arrow">←</span>
-          </a>
-        `).join('')}
+      <h4>פרטי לימוד</h4>
+      <ul>
+        <li>🎓 תכניות: ${u.programs}</li>
+        <li>👥 סטודנטים: ${u.students}</li>
+        <li>📊 ציון קבלה: ${u.acceptance}</li>
+        <li>💰 שכר לימוד: ${u.tuition}</li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <h4>קישורים שימושיים</h4>
+      <div class="modal-links">
+        <a href="${u.website}" target="_blank" class="modal-link">🌐 אתר רשמי — ${u.name}</a>
+        <a href="${u.scholarship}" target="_blank" class="modal-link">🎓 מלגות ומענקים</a>
       </div>
     </div>
   `;
-
-  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('uniModal').classList.add('open');
 }
 
-function closeModal(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModalBtn();
+function closeModal() {
+  document.getElementById('uniModal').classList.remove('open');
 }
 
-function closeModalBtn() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
+document.getElementById('uniModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
 
-// ==================== INIT ====================
-window.onload = () => {
-  const saved = localStorage.getItem('zoot_current');
-  if (saved && usersDB[saved]) {
-    loginUser(saved);
+// KEYBOARD
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ENTER on auth
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.getElementById('loginForm').classList.contains('active')) doLogin();
+    else if (document.getElementById('registerForm').classList.contains('active')) doRegister();
   }
-};
+});
 </script>
 </body>
 </html>
