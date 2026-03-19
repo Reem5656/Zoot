@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zoot — מדריך אוניברסיטאות</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #0ea5e9;
+      --primary-dark: #0369a1;
+      --primary-light: #e0f2fe;
+      --accent: #06b6d4;
+      --accent2: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --bg: #f0f9ff;
+      --bg2: #ffffff;
+      --text: #0f172a;
+      --text2: #475569;
+      --text3: #94a3b8;
+      --border: #bae6fd;
+      --shadow: 0 4px 24px rgba(14,165,233,0.10);
+      --radius: 18px;
+      --radius-sm: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #0ea5e9 100%);
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(14,165,233,0.3);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-svg { width: 40px; height: 40px; }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: white;
+      letter-spacing: -1px;
+    }
+
+    .logo-sub {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.7);
+      font-weight: 400;
+      margin-top: -2px;
+    }
+
+    .header-badge {
+      margin-right: auto;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(160deg, #0c4a6e 0%, #0369a1 60%, #0ea5e9 100%);
+      padding: 52px 24px 72px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero-emoji { font-size: 3rem; margin-bottom: 12px; display: block; }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900;
+      color: white;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: rgba(255,255,255,0.8);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin: 0 auto 28px;
+      line-height: 1.6;
+    }
+
+    /* ===== ELIGIBILITY CHECK BAR ===== */
+    .eligibility-bar {
+      background: white;
+      border-radius: 16px;
+      padding: 20px 28px;
+      max-width: 700px;
+      margin: 0 auto;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      display: flex;
+      gap: 16px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .eligibility-bar label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .eligibility-bar input,
+    .eligibility-bar select {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 14px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .eligibility-bar input:focus,
+    .eligibility-bar select:focus {
+      border-color: var(--primary);
+    }
+
+    .elig-field { flex: 1; min-width: 120px; }
+
+    .check-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 11px 24px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .check-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(14,165,233,0.4);
+    }
+
+    /* ===== FILTERS ===== */
+    .filters-wrap {
+      max-width: 1200px;
+      margin: 32px auto 0;
+      padding: 0 24px;
+    }
+
+    .filters-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      background: white;
+      border: 1.5px solid var(--border);
+      color: var(--text2);
+      border-radius: 50px;
+      padding: 7px 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .pill:hover, .pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(14,165,233,0.25);
+    }
+
+    /* ===== GRID ===== */
+    .grid-wrap {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 24px 60px;
+    }
+
+    .results-info {
+      font-size: 0.88rem;
+      color: var(--text3);
+      margin-bottom: 16px;
+    }
+
+    .results-info span {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .uni-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    /* ===== CARD ===== */
+    .uni-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+    }
+
+    .uni-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(14,165,233,0.15);
+      border-color: var(--primary);
+    }
+
+    .uni-card.match-high { border-color: var(--success); }
+    .uni-card.match-mid { border-color: var(--accent2); }
+    .uni-card.match-low { border-color: var(--text3); }
+
+    .match-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      border-radius: 50px;
+      padding: 4px 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .match-badge.high { background: #d1fae5; color: #065f46; }
+    .match-badge.mid { background: #fef3c7; color: #92400e; }
+    .match-badge.low { background: #f1f5f9; color: #64748b; }
+
+    .card-header {
+      padding: 22px 22px 16px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .uni-logo-circle {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      border: 2px solid var(--border);
+    }
+
+    .card-title-wrap { flex: 1; }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 3px;
+    }
+
+    .card-subtitle {
+      font-size: 0.8rem;
+      color: var(--text3);
+      font-weight: 500;
+    }
+
+    .card-type-badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-radius: 6px;
+      padding: 2px 9px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .card-body { padding: 0 22px 18px; }
+
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .pc-box {
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+    }
+
+    .pc-box.pros { background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .pc-box.cons { background: #fff7ed; border: 1px solid #fed7aa; }
+
+    .pc-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .pc-box.pros .pc-label { color: #15803d; }
+    .pc-box.cons .pc-label { color: #c2410c; }
+
+    .pc-item {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+      padding-right: 10px;
+      position: relative;
+      margin-bottom: 2px;
+    }
+
+    .pc-item::before { position: absolute; right: 0; }
+    .pc-box.pros .pc-item::before { content: '✓'; color: #16a34a; font-weight: 700; }
+    .pc-box.cons .pc-item::before { content: '•'; color: #ea580c; }
+
+    .req-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .req-tag {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      color: var(--text2);
+      font-weight: 600;
+    }
+
+    .req-tag.highlight {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary-dark);
+    }
+
+    .card-footer {
+      padding: 14px 22px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-link {
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-link:hover { text-decoration: underline; }
+
+    .card-arrow {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Heebo', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .card-arrow:hover {
+      background: var(--primary-dark);
+      transform: scale(1.04);
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(12,74,110,0.6);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: white;
+      border-radius: 24px;
+      max-width: 780px;
+      width: 100%;
+      margin: auto;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.25);
+      animation: modalIn 0.3s ease;
+    }
+
+    @keyframes modalIn {
+      from { transform: translateY(30px) scale(0.97); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #0c4a6e, #0369a1);
+      padding: 28px 32px 24px;
+      position: relative;
+      color: white;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .modal-close:hover { background: rgba(255,255,255,0.3); }
+
+    .modal-uni-name {
+      font-size: 1.7rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .modal-uni-meta {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .modal-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+      background: var(--bg);
+    }
+
+    .modal-tab {
+      padding: 14px 22px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text3);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+      font-family: 'Heebo', sans-serif;
+      background: none;
+      border-top: none;
+      border-right: none;
+      border-left: none;
+    }
+
+    .modal-tab:hover { color: var(--primary); }
+    .modal-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    .modal-body { padding: 28px 32px 32px; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .info-box {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+    }
+
+    .info-box-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .info-box-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .degree-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .degree-table th {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 10px 14px;
+      text-align: right;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    .degree-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text2);
+      vertical-align: top;
+    }
+
+    .degree-table tr:last-child td { border-bottom: none; }
+    .degree-table tr:hover td { background: var(--bg); }
+
+    .degree-name { font-weight: 700; color: var(--text); }
+
+    .elig-meter {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 2px solid var(--border);
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .elig-meter.good { border-color: var(--success); background: #f0fdf4; }
+    .elig-meter.ok { border-color: var(--accent2); background: #fffbeb; }
+    .elig-meter.not-checked { border-color: var(--border); }
+
+    .elig-icon { font-size: 2.5rem; margin-bottom: 8px; }
+    .elig-text { font-size: 1.05rem; font-weight: 800; color: var(--text); }
+    .elig-sub { font-size: 0.88rem; color: var(--text2); margin-top: 4px; }
+
+    .hidden { display: none !important; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 640px) {
+      .eligibility-bar { flex-direction: column; gap: 10px; }
+      .elig-field { min-width: auto; }
+      .info-grid { grid-template-columns: 1fr; }
+      .pros-cons { grid-template-columns: 1fr; }
+      .modal-body { padding: 20px; }
+      .modal-header { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo-wrap">
+      <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="white" stroke-width="4"/>
+        <line x1="50" y1="8" x2="50" y2="20" stroke="white" stroke-width="3"/>
+        <line x1="50" y1="80" x2="50" y2="92" stroke="white" stroke-width="3"/>
+        <line x1="8" y1="50" x2="20" y2="50" stroke="white" stroke-width="3"/>
+        <line x1="80" y1="50" x2="92" y2="50" stroke="white" stroke-width="3"/>
+        <polygon points="50,15 45,50 50,48 55,50" fill="white"/>
+        <polygon points="50,85 45,50 50,52 55,50" fill="rgba(255,255,255,0.5)"/>
+        <path d="M42,34 L44,28 L50,25 L56,28 L58,34 L55,38 L50,40 L45,38 Z" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+        <circle cx="50" cy="50" r="4" fill="white"/>
+      </svg>
+      <div>
+        <div class="logo-text">Zoot</div>
+        <div class="logo-sub">המצפן שלך במסלול</div>
+      </div>
+    </a>
+    <div class="header-badge">🎓 מדריך מוסדות אקדמיים</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="hero-emoji">🎓</span>
+  <h1>מצא את המוסד האקדמי שמתאים לך</h1>
+  <p>השווה אוניברסיטאות ומכללות, בדוק דרישות קבלה, וגלה איפה הסיכוי שלך לקבלה גבוה ביותר</p>
+
+  <!-- ELIGIBILITY CHECK -->
+  <div class="eligibility-bar">
+    <div class="elig-field">
+      <label>ממוצע בגרות</label>
+      <input type="number" id="elig-bagrut" placeholder="85" min="60" max="100"/>
+    </div>
+    <div class="elig-field">
+      <label>ציון פסיכומטרי</label>
+      <input type="number" id="elig-psycho" placeholder="700" min="200" max="800"/>
+    </div>
+    <div class="elig-field">
+      <label>תחום עניין</label>
+      <select id="elig-field">
+        <option value="">כל התחומים</option>
+        <option value="tech">הנדסה / מדעי המחשב</option>
+        <option value="med">רפואה / מדעי הבריאות</option>
+        <option value="biz">עסקים / כלכלה</option>
+        <option value="law">משפטים</option>
+        <option value="social">מדעי החברה</option>
+        <option value="edu">חינוך</option>
+        <option value="arts">אמנות / עיצוב</option>
+      </select>
+    </div>
+    <button class="check-btn" onclick="checkEligibility()">🔍 בדוק התאמה</button>
+  </div>
+</section>
+
+<!-- FILTERS -->
+<div class="filters-wrap">
+  <div class="filters-title">סנן לפי סוג מוסד</div>
+  <div class="filter-pills">
+    <span class="pill active" onclick="filterCards('all', this)">הכל</span>
+    <span class="pill" onclick="filterCards('university', this)">🏛️ אוניברסיטאות</span>
+    <span class="pill" onclick="filterCards('college', this)">🏫 מכללות</span>
+    <span class="pill" onclick="filterCards('tech', this)">⚙️ הנדסה/מדע</span>
+    <span class="pill" onclick="filterCards('med', this)">🏥 רפואה/בריאות</span>
+    <span class="pill" onclick="filterCards('biz', this)">💼 עסקים</span>
+    <span class="pill" onclick="filterCards('arts', this)">🎨 אמנות/עיצוב</span>
+  </div>
+</div>
+
+<!-- GRID -->
+<div class="grid-wrap">
+  <p class="results-info" id="results-info">מציג <span id="results-count">10</span> מוסדות</p>
+  <div class="uni-grid" id="uni-grid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal-content">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-uni-name" id="modal-name"></div>
+      <div class="modal-uni-meta" id="modal-meta"></div>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchTab('overview', this)">סקירה כללית</button>
+      <button class="modal-tab" onclick="switchTab('degrees', this)">תארים ודרישות</button>
+      <button class="modal-tab" onclick="switchTab('eligibility', this)">האם אני מתאים?</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-panel active" id="tab-overview"></div>
+      <div class="tab-panel" id="tab-degrees"></div>
+      <div class="tab-panel" id="tab-eligibility"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================================================
+// DATA: כל המוסדות
+// ===================================================
+const universities = [
+  {
+    id: 1,
+    name: "האוניברסיטה העברית בירושלים",
+    shortName: "האוניברסיטה העברית",
+    emoji: "🏛️",
+    color: "#1e40af",
+    type: "university",
+    tags: ["tech","med","biz","law","social","arts"],
+    location: "ירושלים",
+    founded: "1918",
+    students: "~23,000",
+    ranking: "מקום ~150 בעולם",
+    site: "https://www.huji.ac.il",
+    desc: "הוותיקה והיוקרתית ביותר בישראל. מרכז מחקר עולמי עם 9 זוכי פרס נובל בין בוגריה. מתאימה במיוחד למחקר ולאקדמיה.",
+    pros: ["דירוג עולמי גבוה","מחקר ברמה עולמית","קמפוס עשיר ותוסס","חיי סטודנטים","מגוון תארים עצום"],
+    cons: ["ירושלים — לא מרכז הארץ","תחרותיות גבוהה","לחץ אקדמי"],
+    speciality: "מחקר, רפואה, משפטים, מדעי הרוח",
+    minBagrut: 80,
+    minPsycho: 680,
+    degrees: [
+      { name: "רפואה", bagrut: 100, psycho: 740, notes: "מכינה + מבחן אמיר״ם, קשה מאוד" },
+      { name: "מדעי המחשב", bagrut: 90, psycho: 720, notes: "דרוש 5 יח' מתמטיקה" },
+      { name: "משפטים (LLB)", bagrut: 95, psycho: 730, notes: "אחד מהקשים בישראל" },
+      { name: "כלכלה", bagrut: 87, psycho: 700, notes: "5 יח' מתמטיקה מועדפות" },
+      { name: "פסיכולוגיה", bagrut: 88, psycho: 710, notes: "תחרות גבוהה מאוד" },
+      { name: "מדעי הטבע", bagrut: 82, psycho: 680, notes: "ביוכימיה, פיזיקה ועוד" },
+    ]
+  },
+  {
+    id: 2,
+    name: "אוניברסיטת תל אביב",
+    shortName: "TAU",
+    emoji: "🌊",
+    color: "#1d4ed8",
+    type: "university",
+    tags: ["tech","med","biz","law","social","arts"],
+    location: "תל אביב",
+    founded: "1956",
+    students: "~30,000",
+    ranking: "מקום ~200 בעולם",
+    site: "https://www.tau.ac.il",
+    desc: "האוניברסיטה הגדולה בישראל. מיקום מרכזי, קמפוס חי ופועם, עם חיבור חזק לתעשייה ולסטארטאפים.",
+    pros: ["מיקום מרכזי — תל אביב","קמפוס גדול ומגוון","חיי לילה ותרבות","קשר לתעשיית ההייטק","מגוון תארים"],
+    cons: ["גדולה מאוד — פחות אישי","עלות מחיה גבוהה","עומס בתחבורה"],
+    speciality: "עסקים, הנדסה, אמנות, רפואה",
+    minBagrut: 78,
+    minPsycho: 660,
+    degrees: [
+      { name: "הנדסת תוכנה", bagrut: 88, psycho: 710, notes: "5 יח' מתמטיקה חובה" },
+      { name: "מנהל עסקים (MBA/BBA)", bagrut: 84, psycho: 680, notes: "ראנקינג עולמי גבוה לSMU" },
+      { name: "רפואה", bagrut: 100, psycho: 740, notes: "מבחן אמיר״ם + ריאיון" },
+      { name: "משפטים", bagrut: 92, psycho: 720, notes: "פקולטה מובילה בישראל" },
+      { name: "סינמה ואמנות", bagrut: 80, psycho: 640, notes: "נדרש תיק עבודות + ריאיון" },
+      { name: "קוגניטיבי-מוחי", bagrut: 86, psycho: 700, notes: "ייחודי ומבוקש" },
+    ]
+  },
+  {
+    id: 3,
+    name: "הטכניון — מכון טכנולוגי לישראל",
+    shortName: "הטכניון",
+    emoji: "⚙️",
+    color: "#0e7490",
+    type: "university",
+    tags: ["tech"],
+    location: "חיפה",
+    founded: "1912",
+    students: "~13,000",
+    ranking: "מקום ~200 בעולם (הנדסה)",
+    site: "https://www.technion.ac.il",
+    desc: "הטכניון הוא מוסד מחקר הנדסי המוביל בישראל ואחד הטובים בעולם. מייצר את רוב אנשי ההייטק הישראלי.",
+    pros: ["#1 להנדסה בישראל","קמפוס ייחודי בחיפה","שכר בוגרים גבוה","קשרים להייטק ועמק הסיליקון","2 זוכי נובל כימיה"],
+    cons: ["רק הנדסה/מדע — מוגבל","חיפה — לא מרכז","דרישות גבוהות מאוד","עומס לימודים כבד"],
+    speciality: "הנדסה, מדעי המחשב, ביוטכנולוגיה",
+    minBagrut: 90,
+    minPsycho: 710,
+    degrees: [
+      { name: "מדעי המחשב", bagrut: 95, psycho: 740, notes: "הכי תחרותי בישראל" },
+      { name: "הנדסת חשמל ואלקטרוניקה", bagrut: 92, psycho: 720, notes: "5 יח' מתמטיקה + פיזיקה" },
+      { name: "הנדסה כימית", bagrut: 88, psycho: 700, notes: "כימיה 5 יח' יתרון" },
+      { name: "הנדסת מכונות", bagrut: 88, psycho: 700, notes: "פיזיקה 5 יח' חובה" },
+      { name: "ביוטכנולוגיה ומזון", bagrut: 85, psycho: 690, notes: "ביולוגיה + כימיה" },
+      { name: "אדריכלות", bagrut: 87, psycho: 690, notes: "בחינת כניסה ייחודית + תיק עבודות" },
+    ]
+  },
+  {
+    id: 4,
+    name: "אוניברסיטת בן גוריון בנגב",
+    shortName: "BGU",
+    emoji: "🌵",
+    color: "#059669",
+    type: "university",
+    tags: ["tech","med","social"],
+    location: "באר שבע",
+    founded: "1969",
+    students: "~20,000",
+    ranking: "מקום 400-500 בעולם",
+    site: "https://www.bgu.ac.il",
+    desc: "אוניברסיטה צומחת עם רוח חלוצית. מובילה בסייבר, הנדסה ורפואת שדה. מדגישה חדשנות ופתיחות.",
+    pros: ["מובילה בסייבר בישראל","עלות מחיה נמוכה","קהילה חמה ומגובשת","דרישות קבלה נמוכות יחסית","מרכז הנגב מתפתח"],
+    cons: ["באר שבע — פריפריה","פחות יוקרה מהותיקות","תחבורה מוגבלת"],
+    speciality: "סייבר, רפואה, הנדסה, מדעי הסביבה",
+    minBagrut: 75,
+    minPsycho: 630,
+    degrees: [
+      { name: "הנדסת תוכנה / סייבר", bagrut: 87, psycho: 700, notes: "ייחודי לסייבר — הכי חזק בישראל" },
+      { name: "רפואה", bagrut: 98, psycho: 730, notes: "מיקוד ברפואת שדה ופריפריה" },
+      { name: "בריאות הציבור", bagrut: 78, psycho: 640, notes: "תואר מבוקש ונדיר" },
+      { name: "מדעי הסביבה", bagrut: 76, psycho: 630, notes: "ייחודי וחדשני" },
+      { name: "כלכלה", bagrut: 80, psycho: 650, notes: "דרישות נגישות יחסית" },
+    ]
+  },
+  {
+    id: 5,
+    name: "אוניברסיטת חיפה",
+    shortName: "אוניברסיטת חיפה",
+    emoji: "⛵",
+    color: "#7c3aed",
+    type: "university",
+    tags: ["social","law","arts"],
+    location: "חיפה",
+    founded: "1963",
+    students: "~18,000",
+    ranking: "מקום 500-600 בעולם",
+    site: "https://www.haifa.ac.il",
+    desc: "ידועה בחקר השואה, ים ואגן הים התיכון. קמפוס ציורי על הכרמל עם מגוון תארים במדעי הרוח והחברה.",
+    pros: ["קמפוס יפהפה על הכרמל","מחקר שואה ויהדות","חיבור לים — מדעי הים","אקלים רב-תרבותי","מדעי הרוח חזקים"],
+    cons: ["פחות חזק בהנדסה","חיפה — לא מרכז","פחות ידוע בינלאומית"],
+    speciality: "מדעי הרוח, חינוך, ים, שואה",
+    minBagrut: 72,
+    minPsycho: 600,
+    degrees: [
+      { name: "מדעי הים", bagrut: 78, psycho: 630, notes: "ייחודי בישראל" },
+      { name: "חינוך", bagrut: 72, psycho: 600, notes: "דרישות נגישות" },
+      { name: "פסיכולוגיה", bagrut: 84, psycho: 670, notes: "מבחן כניסה נוסף" },
+      { name: "משפטים", bagrut: 86, psycho: 690, notes: "פקולטה מוכרת" },
+      { name: "עבודה סוציאלית", bagrut: 76, psycho: 620, notes: "ריאיון קבלה" },
+    ]
+  },
+  {
+    id: 6,
+    name: "אוניברסיטת בר-אילן",
+    shortName: "בר-אילן",
+    emoji: "✡️",
+    color: "#1e40af",
+    type: "university",
+    tags: ["law","social","med","tech"],
+    location: "רמת-גן",
+    founded: "1955",
+    students: "~17,500",
+    ranking: "מקום 600 בעולם",
+    site: "https://www.biu.ac.il",
+    desc: "אוניברסיטה ייחודית המשלבת ערכים יהודיים עם לימודים אקדמיים. פקולטה למשפטים ולרפואה מובילות.",
+    pros: ["ייחוד יהודי-ציוני","מיקום — רמת גן (מרכז)","פקולטה למשפטים מובילה","גישה קהילתית","רפואה בשיתוף סני\"ר"],
+    cons: ["אוריינטציה דתית — לא לכולם","פחות ידוע בינלאומית","גודל בינוני"],
+    speciality: "משפטים, חינוך, תנ\"ך ויהדות",
+    minBagrut: 75,
+    minPsycho: 630,
+    degrees: [
+      { name: "משפטים (LLB)", bagrut: 90, psycho: 710, notes: "פקולטה מובילה ומוכרת" },
+      { name: "רפואה (עם AZRIELI)", bagrut: 97, psycho: 730, notes: "שיתוף עם בי\"ח סני\"ר" },
+      { name: "פסיכולוגיה", bagrut: 83, psycho: 660, notes: "תחרות גבוהה" },
+      { name: "מדעי המחשב", bagrut: 82, psycho: 660, notes: "5 יח' מתמטיקה" },
+      { name: "תקשורת", bagrut: 77, psycho: 630, notes: "ריאיון + תיק עבודות" },
+    ]
+  },
+  {
+    id: 7,
+    name: "האוניברסיטה הפתוחה",
+    shortName: "האוניברסיטה הפתוחה",
+    emoji: "📖",
+    color: "#d97706",
+    type: "university",
+    tags: ["tech","social","biz"],
+    location: "ראשון לציון (+ דיגיטל)",
+    founded: "1974",
+    students: "~45,000",
+    ranking: "מוסד ייחודי — למידה מרחוק",
+    site: "https://www.openu.ac.il",
+    desc: "ללא בחינות קבלה — פתוחה לכולם! מאפשרת ללמוד בקצב אישי, מרחוק, תוך כדי עבודה. אידיאלית לאנשים עסוקים.",
+    pros: ["ללא פסיכומטרי/בגרות","למידה מרחוק — גמישות מלאה","מתאים לעובדים","עלות נמוכה יחסית","מוכרת ע\"י המל\"ג"],
+    cons: ["דורש משמעת עצמית גבוהה","פחות יוקרה תעסוקתית","אין חיי קמפוס","לא כל תחומים זמינים"],
+    speciality: "מדעים, חינוך, עסקים, מדעי הרוח",
+    minBagrut: 0,
+    minPsycho: 0,
+    degrees: [
+      { name: "מדעי המחשב", bagrut: 0, psycho: 0, notes: "ללא דרישות קבלה! תשלום לקורסים" },
+      { name: "מנהל עסקים", bagrut: 0, psycho: 0, notes: "גמיש ומקיף" },
+      { name: "חינוך ולימוד", bagrut: 0, psycho: 0, notes: "פופולרי מאוד" },
+      { name: "כלכלה וסטטיסטיקה", bagrut: 0, psycho: 0, notes: "ייחודי" },
+    ]
+  },
+  {
+    id: 8,
+    name: "מכללת רייכמן (IDC הרצליה)",
+    shortName: "רייכמן / IDC",
+    emoji: "💼",
+    color: "#be185d",
+    type: "college",
+    tags: ["biz","law","tech","arts"],
+    location: "הרצליה",
+    founded: "1994",
+    students: "~7,000",
+    ranking: "מובילה בישראל למנהל עסקים",
+    site: "https://www.runi.ac.il",
+    desc: "המכללה האקדמית הפרטית המובילה בישראל. ידועה בתכנית ה-MBA שלה, ביחס האישי ובקשר לתעשייה.",
+    pros: ["יחס אישי ואיכות גבוהה","קשרים לתעשיית ההייטק","לימודים באנגלית (Reichman International)","קמפוס מודרני","נטוורקינג חזק"],
+    cons: ["שכר לימוד גבוה מאוד","מוסד פרטי — פחות מחקרי","קטן יחסית"],
+    speciality: "עסקים, תקשורת, משפטים, ממשל",
+    minBagrut: 80,
+    minPsycho: 650,
+    degrees: [
+      { name: "מנהל עסקים (BBA)", bagrut: 82, psycho: 660, notes: "ריאיון קבלה חשוב" },
+      { name: "משפטים", bagrut: 88, psycho: 700, notes: "פקולטה חדשה ומובילה" },
+      { name: "ממשל ומדיניות", bagrut: 80, psycho: 650, notes: "ייחודי ומבוקש" },
+      { name: "תקשורת", bagrut: 78, psycho: 640, notes: "מוביל בישראל" },
+      { name: "מדעי המחשב", bagrut: 83, psycho: 670, notes: "5 יח' מתמטיקה" },
+    ]
+  },
+  {
+    id: 9,
+    name: "מכללת ספיר",
+    shortName: "ספיר",
+    emoji: "🌅",
+    color: "#0891b2",
+    type: "college",
+    tags: ["arts","social"],
+    location: "שדרות",
+    founded: "1998",
+    students: "~6,000",
+    ranking: "מובילה בקולנוע ותקשורת",
+    site: "https://www.sapir.ac.il",
+    desc: "מכללה ייחודית בדרום הארץ, ידועה בפקולטה לאמנויות ולקולנוע — נחשבת לאחת הטובות בישראל לתחומים אלו.",
+    pros: ["קולנוע ותקשורת ברמה גבוהה","עלות מחיה נמוכה","קהילה קרובה","פחות תחרות","אקדמיה חברתית"],
+    cons: ["שדרות — פריפריה","פחות ידוע לתחומים אחרים","קטן"],
+    speciality: "קולנוע, תקשורת, מוזיקה, אמנויות",
+    minBagrut: 68,
+    minPsycho: 550,
+    degrees: [
+      { name: "קולנוע וטלוויזיה", bagrut: 70, psycho: 560, notes: "תיק עבודות + ריאיון חשוב מאוד" },
+      { name: "תקשורת עיתונאות", bagrut: 68, psycho: 550, notes: "ריאיון ומבחן כישורים" },
+      { name: "מוסיקה", bagrut: 68, psycho: 550, notes: "מבחן נגינה חובה" },
+      { name: "עבודה סוציאלית", bagrut: 72, psycho: 580, notes: "מכינה ייעודית זמינה" },
+    ]
+  },
+  {
+    id: 10,
+    name: "אוניברסיטת אריאל",
+    shortName: "אריאל",
+    emoji: "🏔️",
+    color: "#16a34a",
+    type: "university",
+    tags: ["tech","med","social","biz"],
+    location: "אריאל",
+    founded: "2012",
+    students: "~15,000",
+    ranking: "אוניברסיטה צעירה וצומחת",
+    site: "https://www.ariel.ac.il",
+    desc: "האוניברסיטה הצעירה ביותר בישראל. גדלה במהירות עם דגש על הנדסה, טכנולוגיה ומחקר שימושי.",
+    pros: ["דרישות קבלה נגישות","קמפוס מודרני","צומחת מהר","הנדסה וטכנולוגיה חזקים","עלות מחיה סבירה"],
+    cons: ["מיקום שנוי במחלוקת","פחות יוקרה מהותיקות","הכרה בינלאומית מוגבלת"],
+    speciality: "הנדסה, מדעי הבריאות, מדעי החברה",
+    minBagrut: 72,
+    minPsycho: 600,
+    degrees: [
+      { name: "הנדסת חשמל", bagrut: 80, psycho: 640, notes: "5 יח' מתמטיקה" },
+      { name: "הנדסה אזרחית", bagrut: 78, psycho: 630, notes: "פיזיקה 5 יח' יתרון" },
+      { name: "ביולוגיה מולקולרית", bagrut: 78, psycho: 635, notes: "כימיה + ביולוגיה" },
+      { name: "עסקים", bagrut: 74, psycho: 610, notes: "נגיש יחסית" },
+    ]
+  },
+];
+
+// ===================================================
+// STATE
+// ===================================================
+let activeFilter = 'all';
+let userBagrut = null;
+let userPsycho = null;
+
+// ===================================================
+// RENDER CARDS
+// ===================================================
+function getMatchLevel(uni) {
+  if (userBagrut === null || userPsycho === null) return 'neutral';
+  if (userBagrut >= uni.minBagrut && userPsycho >= uni.minPsycho) return 'high';
+  if (userBagrut >= uni.minBagrut - 5 || userPsycho >= uni.minPsycho - 40) return 'mid';
+  return 'low';
+}
+
+function renderCards() {
+  const grid = document.getElementById('uni-grid');
+  let filtered = universities;
+
+  if (activeFilter !== 'all') {
+    if (activeFilter === 'university') filtered = filtered.filter(u => u.type === 'university');
+    else if (activeFilter === 'college') filtered = filtered.filter(u => u.type === 'college');
+    else filtered = filtered.filter(u => u.tags.includes(activeFilter));
+  }
+
+  document.getElementById('results-count').textContent = filtered.length;
+
+  grid.innerHTML = filtered.map(uni => {
+    const match = getMatchLevel(uni);
+    let matchBadge = '';
+    let cardClass = '';
+    if (match === 'high') {
+      matchBadge = '<span class="match-badge high">✓ מתאים לך!</span>';
+      cardClass = 'match-high';
+    } else if (match === 'mid') {
+      matchBadge = '<span class="match-badge mid">~ כמעט מתאים</span>';
+      cardClass = 'match-mid';
+    } else if (match === 'low') {
+      matchBadge = '<span class="match-badge low">✗ קשה לקבלה</span>';
+      cardClass = 'match-low';
+    }
+
+    const reqBagrut = uni.minBagrut === 0 ? 'ללא דרישה' : `${uni.minBagrut}+`;
+    const reqPsycho = uni.minPsycho === 0 ? 'ללא דרישה' : `${uni.minPsycho}+`;
+
+    return `
+    <div class="uni-card ${cardClass}" onclick="openModal(${uni.id})">
+      ${matchBadge}
+      <div class="card-header">
+        <div class="uni-logo-circle" style="background:${uni.color}20; border-color:${uni.color}40;">
+          <span style="font-size:1.6rem">${uni.emoji}</span>
+        </div>
+        <div class="card-title-wrap">
+          <div class="card-title">${uni.name}</div>
+          <div class="card-subtitle">📍 ${uni.location} · ${uni.students} סטודנטים</div>
+          <span class="card-type-badge">${uni.type === 'university' ? '🏛️ אוניברסיטה' : '🏫 מכללה'}</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">${uni.desc}</p>
+        <div class="pros-cons">
+          <div class="pc-box pros">
+            <div class="pc-label">✅ יתרונות</div>
+            ${uni.pros.slice(0,3).map(p => `<div class="pc-item">${p}</div>`).join('')}
+          </div>
+          <div class="pc-box cons">
+            <div class="pc-label">⚠️ חסרונות</div>
+            ${uni.cons.slice(0,3).map(c => `<div class="pc-item">${c}</div>`).join('')}
+          </div>
+        </div>
+        <div class="req-row">
+          <span class="req-tag ${userBagrut && userBagrut >= uni.minBagrut ? 'highlight' : ''}">📝 בגרות: ${reqBagrut}</span>
+          <span class="req-tag ${userPsycho && userPsycho >= uni.minPsycho ? 'highlight' : ''}">🧠 פסיכומטרי: ${reqPsycho}</span>
+          <span class="req-tag">🎯 ${uni.speciality.split(',')[0]}</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a class="card-link" href="${uni.site}" target="_blank" onclick="event.stopPropagation()">🌐 לאתר הרשמי ↗</a>
+        <button class="card-arrow">פרטים מלאים →</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===================================================
+// FILTER
+// ===================================================
+function filterCards(type, el) {
+  activeFilter = type;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderCards();
+}
+
+// ===================================================
+// ELIGIBILITY CHECK
+// ===================================================
+function checkEligibility() {
+  const b = parseFloat(document.getElementById('elig-bagrut').value);
+  const p = parseFloat(document.getElementById('elig-psycho').value);
+  if (!isNaN(b)) userBagrut = b;
+  if (!isNaN(p)) userPsycho = p;
+  renderCards();
+  document.getElementById('results-info').innerHTML = `
+    <span>✅ הציגה התאמה לפי בגרות <span>${userBagrut || '—'}</span> ופסיכומטרי <span>${userPsycho || '—'}</span></span>
+  `;
+}
+
+// ===================================================
+// MODAL
+// ===================================================
+function openModal(id) {
+  const uni = universities.find(u => u.id === id);
+  if (!uni) return;
+
+  document.getElementById('modal-name').textContent = uni.name;
+  document.getElementById('modal-meta').textContent = `📍 ${uni.location} · 🏛️ ${uni.type === 'university' ? 'אוניברסיטה' : 'מכללה'} · 🎓 ${uni.students} סטודנטים · הוקמה ${uni.founded}`;
+
+  // OVERVIEW TAB
+  document.getElementById('tab-overview').innerHTML = `
+    <div class="info-grid">
+      <div class="info-box">
+        <div class="info-box-label">🌍 דירוג</div>
+        <div class="info-box-value">${uni.ranking}</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">📍 מיקום</div>
+        <div class="info-box-value">${uni.location}</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">👨‍🎓 סטודנטים</div>
+        <div class="info-box-value">${uni.students}</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">🎯 מתמחה ב</div>
+        <div class="info-box-value">${uni.speciality}</div>
+      </div>
+    </div>
+    <div class="section-title">💡 מה מייחד את המוסד?</div>
+    <p style="font-size:0.93rem;color:#475569;line-height:1.7;margin-bottom:20px">${uni.desc}</p>
+    <div class="pros-cons" style="margin-bottom:20px">
+      <div class="pc-box pros">
+        <div class="pc-label">✅ יתרונות</div>
+        ${uni.pros.map(p => `<div class="pc-item">${p}</div>`).join('')}
+      </div>
+      <div class="pc-box cons">
+        <div class="pc-label">⚠️ חסרונות</div>
+        ${uni.cons.map(c => `<div class="pc-item">${c}</div>`).join('')}
+      </div>
+    </div>
+    <a href="${uni.site}" target="_blank" class="check-btn" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:0.9rem">🌐 כניסה לאתר הרשמי ↗</a>
+  `;
+
+  // DEGREES TAB
+  document.getElementById('tab-degrees').innerHTML = `
+    <div class="section-title">📋 תארים ודרישות קבלה</div>
+    <p style="font-size:0.83rem;color:#94a3b8;margin-bottom:16px">⚠️ הדרישות הן הערכה כללית — תמיד בדוק באתר הרשמי כי הן משתנות מדי שנה</p>
+    <div style="overflow-x:auto">
+    <table class="degree-table">
+      <thead>
+        <tr>
+          <th>תואר</th>
+          <th>בגרות מינ'</th>
+          <th>פסיכומטרי</th>
+          <th>הערות</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${uni.degrees.map(d => `
+          <tr>
+            <td><span class="degree-name">${d.name}</span></td>
+            <td><strong style="color:${userBagrut && userBagrut >= d.bagrut ? '#15803d' : '#dc2626'}">${d.bagrut === 0 ? '—' : d.bagrut}</strong></td>
+            <td><strong style="color:${userPsycho && userPsycho >= d.psycho ? '#15803d' : '#dc2626'}">${d.psycho === 0 ? '—' : d.psycho}</strong></td>
+            <td style="color:#64748b;font-size:0.82rem">${d.notes}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+    </div>
+  `;
+
+  // ELIGIBILITY TAB
+  const match = getMatchLevel(uni);
+  let eligContent = '';
+  if (userBagrut === null || userPsycho === null) {
+    eligContent = `
+      <div class="elig-meter not-checked">
+        <div class="elig-icon">🔍</div>
+        <div class="elig-text">לא בדקת עדיין</div>
+        <div class="elig-sub">הכנס ממוצע בגרות ופסיכומטרי בחלק העליון כדי לראות התאמה אישית</div>
+      </div>
+    `;
+  } else if (match === 'high') {
+    const matchingDegrees = uni.degrees.filter(d => userBagrut >= d.bagrut && userPsycho >= d.psycho);
+    eligContent = `
+      <div class="elig-meter good">
+        <div class="elig-icon">🎉</div>
+        <div class="elig-text">אתה מתאים ל-${matchingDegrees.length} תארים!</div>
+        <div class="elig-sub">ממוצע ${userBagrut} ופסיכומטרי ${userPsycho} עומדים בדרישות</div>
+      </div>
+      <div style="margin-top:20px">
+        <div class="section-title">✅ תארים שמתאימים לך</div>
+        ${matchingDegrees.map(d => `
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;margin-bottom:10px">
+            <strong style="color:#15803d">${d.name}</strong>
+            <span style="font-size:0.82rem;color:#64748b;margin-right:10px">${d.notes}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } else if (match === 'mid') {
+    eligContent = `
+      <div class="elig-meter ok">
+        <div class="elig-icon">⚠️</div>
+        <div class="elig-text">כמעט עומד בדרישות</div>
+        <div class="elig-sub">ממוצע ${userBagrut} ופסיכומטרי ${userPsycho} — קרוב לדרישות הבסיסיות</div>
+      </div>
+      <p style="margin-top:16px;font-size:0.9rem;color:#475569;line-height:1.6">💡 <strong>מה לעשות?</strong> שקול לשפר את הפסיכומטרי (אפשר לחזור עליו עד 3 פעמים), להגיש בקשה עם מסלול הכנה, או לבחור מסלול עם דרישות נמוכות יותר.</p>
+    `;
+  } else {
+    eligContent = `
+      <div class="elig-meter" style="border-color:#e2e8f0">
+        <div class="elig-icon">📚</div>
+        <div class="elig-text">הדרישות גבוהות יחסית</div>
+        <div class="elig-sub">הדרישות הבסיסיות: בגרות ${uni.minBagrut}+ ופסיכומטרי ${uni.minPsycho}+</div>
+      </div>
+      <p style="margin-top:16px;font-size:0.9rem;color:#475569;line-height:1.6">💡 <strong>לא בסוף!</strong> שקול מסלול מכינה, שיפור ציונים, או בחינה כמוסד שני להגשה. הרבה סטודנטים מגיעים למוסד החלום שלהם דרך תואר ראשון במוסד אחר.</p>
+    `;
+  }
+
+  document.getElementById('tab-eligibility').innerHTML = eligContent;
+
+  // Reset tabs
+  document.querySelectorAll('.modal-tab').forEach((t,i) => t.classList.toggle('active', i===0));
+  document.querySelectorAll('.tab-panel').forEach((p,i) => p.classList.toggle('active', i===0));
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ===================================================
+// INIT
+// ===================================================
+renderCards();
+</script>
+</body>
+</html>
