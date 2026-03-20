@@ -1,1643 +1,970 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Zoot — המצפן שלך במסלול</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --primary: #2EB8E6;
-    --primary-dark: #1a9fd0;
-    --primary-light: #e8f7fd;
-    --primary-mid: #b3e5f7;
-    --white: #ffffff;
-    --gray-100: #f7f9fc;
-    --gray-200: #eef2f7;
-    --gray-300: #dde4ef;
-    --gray-400: #b0bac9;
-    --gray-500: #7a8699;
-    --gray-700: #3d4a5c;
-    --gray-900: #1a2233;
-    --accent-green: #2ecc8e;
-    --accent-orange: #f5a623;
-    --accent-pink: #e84393;
-    --shadow-sm: 0 2px 8px rgba(46,184,230,0.08);
-    --shadow-md: 0 4px 20px rgba(46,184,230,0.13);
-    --shadow-lg: 0 8px 40px rgba(46,184,230,0.18);
-    --radius: 16px;
-    --radius-sm: 10px;
-    --radius-lg: 24px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Heebo', sans-serif;
-    background: var(--gray-100);
-    color: var(--gray-900);
-    min-height: 100vh;
-    direction: rtl;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>זוט - מדריך זכויות לעולים</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      min-height: 100vh;
+      color: #fff;
+    }
 
-  /* ===== SCREEN MANAGER ===== */
-  .screen { display: none; }
-  .screen.active { display: flex; }
+    /* ========== AUTH ========== */
+    #auth-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .auth-box {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+    .auth-box h1 { font-size: 2.5rem; color: #e94560; margin-bottom: 8px; }
+    .auth-box p { color: #aaa; margin-bottom: 30px; }
+    .auth-tabs { display: flex; margin-bottom: 25px; border-radius: 10px; overflow: hidden; }
+    .auth-tab {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      background: rgba(255,255,255,0.05);
+      color: #aaa;
+      transition: all 0.3s;
+    }
+    .auth-tab.active { background: #e94560; color: #fff; }
+    .form-group { margin-bottom: 15px; text-align: right; }
+    .form-group label { display: block; margin-bottom: 6px; color: #ccc; font-size: 0.9rem; }
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+    }
+    .form-group input:focus { outline: none; border-color: #e94560; }
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #e94560, #c23152);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: transform 0.2s;
+    }
+    .btn-primary:hover { transform: scale(1.02); }
 
-  /* ===== AUTH SCREEN ===== */
-  #authScreen {
-    min-height: 100vh;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #e8f7fd 0%, #ffffff 50%, #b3e5f7 100%);
-    position: relative;
-    overflow: hidden;
-  }
-  #authScreen::before {
-    content: '';
-    position: absolute;
-    width: 600px; height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(46,184,230,0.12) 0%, transparent 70%);
-    top: -150px; left: -150px;
-    pointer-events: none;
-  }
-  #authScreen::after {
-    content: '';
-    position: absolute;
-    width: 400px; height: 400px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(46,184,230,0.10) 0%, transparent 70%);
-    bottom: -100px; right: -100px;
-    pointer-events: none;
-  }
-  .auth-card {
-    background: var(--white);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    padding: 48px 40px;
-    width: 100%;
-    max-width: 420px;
-    position: relative;
-    z-index: 1;
-    animation: fadeInUp 0.6s ease;
-  }
-  .auth-logo {
-    text-align: center;
-    margin-bottom: 32px;
-  }
-  .auth-logo svg { width: 80px; height: 80px; }
-  .auth-logo h1 {
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--primary);
-    letter-spacing: -1px;
-    margin-top: 8px;
-  }
-  .auth-logo p {
-    font-size: 0.9rem;
-    color: var(--gray-500);
-    margin-top: 4px;
-  }
-  .auth-tabs {
-    display: flex;
-    background: var(--gray-100);
-    border-radius: var(--radius-sm);
-    padding: 4px;
-    margin-bottom: 28px;
-  }
-  .auth-tab {
-    flex: 1;
-    padding: 10px;
-    text-align: center;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.25s;
-    color: var(--gray-500);
-    border: none;
-    background: transparent;
-    font-family: 'Heebo', sans-serif;
-  }
-  .auth-tab.active {
-    background: var(--white);
-    color: var(--primary);
-    box-shadow: var(--shadow-sm);
-  }
-  .auth-form { display: none; }
-  .auth-form.active { display: block; }
-  .form-group { margin-bottom: 18px; }
-  .form-group label {
-    display: block;
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--gray-700);
-    margin-bottom: 7px;
-  }
-  .form-group input {
-    width: 100%;
-    padding: 13px 16px;
-    border: 2px solid var(--gray-300);
-    border-radius: var(--radius-sm);
-    font-size: 0.95rem;
-    font-family: 'Heebo', sans-serif;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    outline: none;
-    color: var(--gray-900);
-  }
-  .form-group input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(46,184,230,0.15);
-  }
-  .btn-primary {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: var(--white);
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 1rem;
-    font-weight: 700;
-    font-family: 'Heebo', sans-serif;
-    cursor: pointer;
-    transition: all 0.25s;
-    letter-spacing: 0.3px;
-  }
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(46,184,230,0.35);
-  }
-  .btn-primary:active { transform: translateY(0); }
-  .auth-error {
-    background: #fff0f3;
-    border: 1px solid #ffc0cb;
-    color: #c0392b;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-size: 0.88rem;
-    margin-bottom: 14px;
-    display: none;
-  }
+    /* ========== QUESTIONNAIRE ========== */
+    #questionnaire-screen {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .questionnaire-box {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 550px;
+    }
+    .questionnaire-box h2 { text-align: center; color: #e94560; margin-bottom: 8px; font-size: 1.8rem; }
+    .questionnaire-box > p { text-align: center; color: #aaa; margin-bottom: 25px; }
+    .progress-bar-container { background: rgba(255,255,255,0.1); border-radius: 10px; height: 8px; margin-bottom: 25px; }
+    .progress-bar { background: #e94560; height: 8px; border-radius: 10px; transition: width 0.4s; }
+    .question-block { display: none; }
+    .question-block.active { display: block; }
+    .question-block h3 { margin-bottom: 15px; font-size: 1.1rem; color: #fff; }
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .option-btn {
+      padding: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+    .option-btn:hover, .option-btn.selected { background: #e94560; border-color: #e94560; }
+    .nav-btns { display: flex; gap: 10px; margin-top: 20px; justify-content: space-between; }
+    .btn-secondary {
+      padding: 12px 25px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .btn-next {
+      padding: 12px 30px;
+      background: #e94560;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+    }
 
-  /* ===== MAIN APP ===== */
-  #appScreen {
-    min-height: 100vh;
-    flex-direction: column;
-  }
+    /* ========== MAIN DASHBOARD ========== */
+    #main-screen { display: none; }
+    .topbar {
+      background: rgba(0,0,0,0.3);
+      padding: 15px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .topbar h1 { color: #e94560; font-size: 1.5rem; }
+    .topbar span { color: #aaa; font-size: 0.9rem; }
+    .logout-btn {
+      padding: 8px 18px;
+      background: rgba(233,69,96,0.2);
+      border: 1px solid #e94560;
+      border-radius: 8px;
+      color: #e94560;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .content-area { padding: 30px 25px; }
 
-  /* TOPBAR */
-  .topbar {
-    background: var(--white);
-    border-bottom: 2px solid var(--gray-200);
-    padding: 0 32px;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: var(--shadow-sm);
-  }
-  .topbar-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .topbar-logo svg { width: 36px; height: 36px; }
-  .topbar-logo span {
-    font-size: 1.4rem;
-    font-weight: 900;
-    color: var(--primary);
-    letter-spacing: -0.5px;
-  }
-  .topbar-nav {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .topbar-nav button {
-    padding: 8px 16px;
-    border: 2px solid transparent;
-    border-radius: 8px;
-    font-family: 'Heebo', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: transparent;
-    color: var(--gray-500);
-  }
-  .topbar-nav button.active, .topbar-nav button:hover {
-    background: var(--primary-light);
-    color: var(--primary);
-    border-color: var(--primary-mid);
-  }
-  .topbar-user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .user-avatar {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 700;
-    font-size: 0.95rem;
-  }
-  .user-name {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--gray-700);
-  }
-  .btn-logout {
-    padding: 7px 14px;
-    border: 2px solid var(--gray-300);
-    border-radius: 8px;
-    background: transparent;
-    font-family: 'Heebo', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--gray-500);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-logout:hover { border-color: #e74c3c; color: #e74c3c; }
+    /* ========== SECTION TABS ========== */
+    .section-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .section-tab {
+      padding: 10px 22px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: #ccc;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .section-tab.active { background: #e94560; border-color: #e94560; color: #fff; font-weight: bold; }
 
-  /* APP BODY */
-  .app-body {
-    display: flex;
-    flex: 1;
-    min-height: calc(100vh - 64px);
-  }
+    /* ========== RIGHTS SECTION ========== */
+    #section-rights { display: none; }
+    .rights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+    .right-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 20px;
+    }
+    .right-card .icon { font-size: 2rem; margin-bottom: 10px; }
+    .right-card h3 { font-size: 1rem; margin-bottom: 8px; color: #fff; }
+    .right-card p { color: #aaa; font-size: 0.85rem; line-height: 1.5; }
 
-  /* SIDEBAR */
-  .sidebar {
-    width: 300px;
-    background: var(--white);
-    border-left: 2px solid var(--gray-200);
-    padding: 24px 20px;
-    position: sticky;
-    top: 64px;
-    height: calc(100vh - 64px);
-    overflow-y: auto;
-    flex-shrink: 0;
-  }
-  .sidebar-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--gray-700);
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--gray-200);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .sidebar-title span { font-size: 1.2rem; }
+    /* ========== UNIVERSITIES SECTION ========== */
+    #section-universities { display: none; }
+    .uni-controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .search-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 11px 15px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+    .search-input::placeholder { color: #888; }
+    .search-input:focus { outline: none; border-color: #e94560; }
+    .filter-select {
+      padding: 11px 15px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .filter-select option { background: #1a1a2e; color: #fff; }
 
-  /* QUESTIONNAIRE */
-  .q-progress-bar {
-    background: var(--gray-200);
-    border-radius: 99px;
-    height: 6px;
-    margin-bottom: 20px;
-    overflow: hidden;
-  }
-  .q-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
-    border-radius: 99px;
-    transition: width 0.4s ease;
-  }
-  .q-step { display: none; animation: fadeInUp 0.3s ease; }
-  .q-step.active { display: block; }
-  .q-num {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--primary);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 6px;
-  }
-  .q-text {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--gray-900);
-    margin-bottom: 14px;
-    line-height: 1.4;
-  }
-  .q-options { display: flex; flex-direction: column; gap: 8px; }
-  .q-option {
-    padding: 10px 14px;
-    border: 2px solid var(--gray-300);
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--gray-700);
-    transition: all 0.2s;
-    background: var(--white);
-    text-align: right;
-    font-family: 'Heebo', sans-serif;
-  }
-  .q-option:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
-  .q-option.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 700; }
-  .q-nav {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 16px;
-    gap: 8px;
-  }
-  .q-nav button {
-    flex: 1;
-    padding: 10px;
-    border-radius: 9px;
-    font-family: 'Heebo', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 2px solid var(--gray-300);
-    background: var(--white);
-    color: var(--gray-500);
-  }
-  .q-nav .q-next {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    border-color: transparent;
-    color: white;
-  }
-  .q-nav .q-next:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(46,184,230,0.3); }
-  .q-nav .q-prev:hover { border-color: var(--primary); color: var(--primary); }
-  .q-done {
-    background: linear-gradient(135deg, var(--accent-green) 0%, #27ae60 100%);
-    border: none;
-    color: white;
-    padding: 12px;
-    border-radius: 10px;
-    width: 100%;
-    font-family: 'Heebo', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 16px;
-    transition: all 0.2s;
-  }
-  .q-done:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(46,204,142,0.35); }
-  .q-completed {
-    text-align: center;
-    padding: 20px 10px;
-  }
-  .q-completed .check-icon {
-    width: 56px; height: 56px;
-    background: linear-gradient(135deg, var(--accent-green), #27ae60);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 14px;
-    font-size: 1.6rem;
-  }
-  .q-completed h3 { font-size: 1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
-  .q-completed p { font-size: 0.82rem; color: var(--gray-500); line-height: 1.5; }
-  .btn-redo {
-    margin-top: 14px;
-    padding: 9px 18px;
-    border: 2px solid var(--primary);
-    border-radius: 8px;
-    background: transparent;
-    color: var(--primary);
-    font-family: 'Heebo', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-redo:hover { background: var(--primary); color: white; }
+    .uni-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .uni-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 22px;
+      transition: transform 0.2s, border-color 0.2s;
+      cursor: pointer;
+    }
+    .uni-card:hover { transform: translateY(-3px); border-color: #e94560; }
+    .uni-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .uni-card-header h3 { font-size: 1.05rem; color: #fff; flex: 1; }
+    .uni-type-badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: bold;
+      white-space: nowrap;
+      margin-right: 8px;
+    }
+    .badge-public { background: rgba(46,213,115,0.2); color: #2ed573; border: 1px solid #2ed573; }
+    .badge-private { background: rgba(255,165,0,0.2); color: #ffa500; border: 1px solid #ffa500; }
+    .badge-college { background: rgba(100,149,237,0.2); color: #6495ed; border: 1px solid #6495ed; }
+    .uni-location { color: #aaa; font-size: 0.85rem; margin-bottom: 8px; }
+    .uni-description { color: #ccc; font-size: 0.85rem; line-height: 1.5; margin-bottom: 12px; }
+    .uni-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .uni-tag {
+      background: rgba(233,69,96,0.15);
+      color: #e94560;
+      border: 1px solid rgba(233,69,96,0.3);
+      border-radius: 15px;
+      padding: 3px 10px;
+      font-size: 0.78rem;
+    }
+    .uni-info-row { display: flex; justify-content: space-between; font-size: 0.82rem; color: #888; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px; }
+    .uni-info-row a { color: #e94560; text-decoration: none; }
+    .no-results { text-align: center; padding: 60px 20px; color: #888; }
+    .no-results .icon { font-size: 3rem; margin-bottom: 15px; }
+    .results-count { color: #aaa; font-size: 0.9rem; margin-bottom: 15px; }
 
-  /* SIDEBAR MENU */
-  .sidebar-menu { margin-top: 20px; }
-  .sidebar-menu-title {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--gray-400);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--gray-200);
-  }
-  .sidebar-menu-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--gray-700);
-    transition: all 0.2s;
-    margin-bottom: 4px;
-    border: 2px solid transparent;
-  }
-  .sidebar-menu-item:hover { background: var(--primary-light); color: var(--primary); }
-  .sidebar-menu-item.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary-mid); }
-  .sidebar-menu-item .menu-icon { font-size: 1.1rem; flex-shrink: 0; }
-  .menu-badge {
-    margin-right: auto;
-    background: var(--primary);
-    color: white;
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 99px;
-  }
-  .menu-badge.soon {
-    background: var(--gray-300);
-    color: var(--gray-500);
-  }
-
-  /* MAIN CONTENT */
-  .main-content {
-    flex: 1;
-    padding: 32px;
-    overflow-y: auto;
-  }
-
-  /* SECTION */
-  .content-section { display: none; }
-  .content-section.active { display: block; animation: fadeInUp 0.4s ease; }
-
-  /* HOME SECTION */
-  .welcome-banner {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    border-radius: var(--radius-lg);
-    padding: 36px 40px;
-    color: white;
-    margin-bottom: 28px;
-    position: relative;
-    overflow: hidden;
-  }
-  .welcome-banner::after {
-    content: '🧭';
-    position: absolute;
-    font-size: 8rem;
-    opacity: 0.12;
-    left: 20px;
-    top: -10px;
-    pointer-events: none;
-  }
-  .welcome-banner h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; }
-  .welcome-banner p { font-size: 1rem; opacity: 0.85; max-width: 500px; }
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-  .stat-card {
-    background: var(--white);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: var(--shadow-sm);
-    border: 2px solid var(--gray-200);
-    text-align: center;
-    transition: all 0.25s;
-  }
-  .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-  .stat-card .stat-icon { font-size: 2rem; margin-bottom: 8px; }
-  .stat-card .stat-num { font-size: 2rem; font-weight: 900; color: var(--primary); }
-  .stat-card .stat-label { font-size: 0.82rem; color: var(--gray-500); font-weight: 500; margin-top: 3px; }
-  .modules-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-  .module-card {
-    background: var(--white);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: var(--shadow-sm);
-    border: 2px solid var(--gray-200);
-    cursor: pointer;
-    transition: all 0.25s;
-    position: relative;
-    overflow: hidden;
-  }
-  .module-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--primary-mid); }
-  .module-card .mod-icon { font-size: 2.2rem; margin-bottom: 12px; }
-  .module-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
-  .module-card p { font-size: 0.85rem; color: var(--gray-500); line-height: 1.5; }
-  .module-card .mod-tag {
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    background: var(--primary-light);
-    color: var(--primary);
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 99px;
-    border: 1px solid var(--primary-mid);
-  }
-  .module-card .mod-tag.soon {
-    background: var(--gray-200);
-    color: var(--gray-500);
-    border-color: var(--gray-300);
-  }
-  .section-title {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--gray-900);
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--gray-200);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  /* RIGHTS SECTION */
-  .rights-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .right-card {
-    background: var(--white);
-    border-radius: var(--radius);
-    padding: 22px;
-    box-shadow: var(--shadow-sm);
-    border: 2px solid var(--gray-200);
-    transition: all 0.25s;
-  }
-  .right-card:hover { border-color: var(--primary-mid); box-shadow: var(--shadow-md); }
-  .right-card-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .right-icon {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    flex-shrink: 0;
-  }
-  .right-card h3 { font-size: 1rem; font-weight: 700; color: var(--gray-900); }
-  .right-card p { font-size: 0.85rem; color: var(--gray-500); line-height: 1.6; margin-bottom: 14px; }
-  .right-amount {
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--primary);
-    margin-bottom: 10px;
-  }
-  .btn-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    background: var(--primary-light);
-    border: 2px solid var(--primary-mid);
-    border-radius: 8px;
-    color: var(--primary);
-    font-size: 0.82rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition: all 0.2s;
-    font-family: 'Heebo', sans-serif;
-    cursor: pointer;
-  }
-  .btn-link:hover { background: var(--primary); color: white; border-color: var(--primary); }
-
-  /* UNIVERSITIES SECTION */
-  .uni-search-bar {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-    align-items: center;
-  }
-  .uni-search-input {
-    flex: 1;
-    padding: 13px 18px;
-    border: 2px solid var(--gray-300);
-    border-radius: var(--radius-sm);
-    font-size: 0.95rem;
-    font-family: 'Heebo', sans-serif;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    background: var(--white);
-    color: var(--gray-900);
-  }
-  .uni-search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(46,184,230,0.15); }
-  .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .chip {
-    padding: 7px 16px;
-    border: 2px solid var(--gray-300);
-    border-radius: 99px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: var(--white);
-    color: var(--gray-500);
-    font-family: 'Heebo', sans-serif;
-  }
-  .chip:hover, .chip.active { background: var(--primary); border-color: var(--primary); color: white; }
-  .uni-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-  .uni-card {
-    background: var(--white);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: var(--shadow-sm);
-    border: 2px solid var(--gray-200);
-    transition: all 0.25s;
-    cursor: pointer;
-  }
-  .uni-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary-mid); }
-  .uni-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-  .uni-logo-circle {
-    width: 50px; height: 50px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    flex-shrink: 0;
-  }
-  .uni-match-badge {
-    background: linear-gradient(135deg, var(--accent-green), #27ae60);
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 99px;
-  }
-  .uni-card h3 { font-size: 1rem; font-weight: 800; color: var(--gray-900); margin-bottom: 4px; }
-  .uni-card .uni-location { font-size: 0.8rem; color: var(--gray-400); margin-bottom: 12px; display: flex; align-items: center; gap: 4px; }
-  .uni-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-  .uni-tag {
-    background: var(--primary-light);
-    color: var(--primary);
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 99px;
-    border: 1px solid var(--primary-mid);
-  }
-  .uni-stats { display: flex; gap: 14px; margin-bottom: 14px; }
-  .uni-stat { text-align: center; }
-  .uni-stat .val { font-size: 0.95rem; font-weight: 800; color: var(--primary); }
-  .uni-stat .lbl { font-size: 0.7rem; color: var(--gray-400); }
-  .btn-uni-more {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid var(--primary);
-    border-radius: 9px;
-    background: transparent;
-    color: var(--primary);
-    font-family: 'Heebo', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-  }
-  .btn-uni-more:hover { background: var(--primary); color: white; }
-
-  /* UNI MODAL */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(26,34,51,0.55);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-    animation: fadeIn 0.2s ease;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal-box {
-    background: var(--white);
-    border-radius: var(--radius-lg);
-    padding: 36px;
-    width: 90%;
-    max-width: 560px;
-    max-height: 85vh;
-    overflow-y: auto;
-    animation: fadeInUp 0.3s ease;
-    position: relative;
-  }
-  .modal-close {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    border: 2px solid var(--gray-300);
-    background: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1rem;
-    color: var(--gray-500);
-    transition: all 0.2s;
-  }
-  .modal-close:hover { background: #fff0f0; border-color: #e74c3c; color: #e74c3c; }
-  .modal-header { margin-bottom: 20px; }
-  .modal-header h2 { font-size: 1.4rem; font-weight: 900; color: var(--gray-900); }
-  .modal-header p { color: var(--gray-500); font-size: 0.88rem; margin-top: 4px; }
-  .modal-section { margin-bottom: 18px; }
-  .modal-section h4 { font-size: 0.9rem; font-weight: 700; color: var(--gray-700); margin-bottom: 8px; border-bottom: 1px solid var(--gray-200); padding-bottom: 6px; }
-  .modal-section p { font-size: 0.88rem; color: var(--gray-500); line-height: 1.7; }
-  .modal-section ul { padding-right: 16px; }
-  .modal-section ul li { font-size: 0.88rem; color: var(--gray-500); line-height: 1.9; }
-  .modal-links { display: flex; flex-direction: column; gap: 8px; }
-  .modal-link {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    background: var(--primary-light);
-    border: 2px solid var(--primary-mid);
-    border-radius: 10px;
-    color: var(--primary);
-    font-size: 0.88rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-  .modal-link:hover { background: var(--primary); color: white; }
-
-  /* PERSONAL MATCH SECTION */
-  .match-result-card {
-    background: linear-gradient(135deg, var(--primary-light) 0%, #fff 100%);
-    border: 2px solid var(--primary-mid);
-    border-radius: var(--radius-lg);
-    padding: 28px 32px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
-  .match-circle {
-    width: 90px; height: 90px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    color: white;
-    font-size: 1.6rem;
-    font-weight: 900;
-    box-shadow: 0 8px 24px rgba(46,184,230,0.35);
-  }
-  .match-text h3 { font-size: 1.2rem; font-weight: 800; color: var(--gray-900); margin-bottom: 6px; }
-  .match-text p { font-size: 0.88rem; color: var(--gray-500); line-height: 1.6; }
-
-  /* ANIMATIONS */
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    .sidebar { width: 240px; }
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    .rights-grid { grid-template-columns: 1fr; }
-    .modules-grid { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 700px) {
-    .app-body { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; position: static; border-left: none; border-bottom: 2px solid var(--gray-200); }
-    .main-content { padding: 20px 16px; }
-    .topbar { padding: 0 16px; }
-    .topbar-nav { display: none; }
-    .stats-grid { grid-template-columns: 1fr 1fr; }
-    .welcome-banner { padding: 24px 20px; }
-    .welcome-banner h2 { font-size: 1.4rem; }
-  }
-</style>
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #1a1a2e;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 35px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .modal-box h2 { color: #e94560; font-size: 1.5rem; margin-bottom: 20px; }
+    .modal-section { margin-bottom: 18px; }
+    .modal-section h4 { color: #ccc; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+    .modal-section p, .modal-section a { color: #fff; font-size: 0.95rem; }
+    .modal-section a { color: #e94560; }
+    .modal-close {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: #e94560;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(233,69,96,0.2), rgba(194,49,82,0.1));
+      border: 1px solid rgba(233,69,96,0.3);
+      border-radius: 15px;
+      padding: 20px 25px;
+      margin-bottom: 25px;
+    }
+    .welcome-banner h2 { font-size: 1.4rem; margin-bottom: 5px; }
+    .welcome-banner p { color: #aaa; font-size: 0.9rem; }
+  </style>
 </head>
 <body>
 
-<!-- ==================== AUTH SCREEN ==================== -->
-<div id="authScreen" class="screen active">
-  <div class="auth-card">
-    <div class="auth-logo">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="46" fill="#e8f7fd" stroke="#2EB8E6" stroke-width="4"/>
-        <circle cx="50" cy="50" r="32" fill="none" stroke="#2EB8E6" stroke-width="2" stroke-dasharray="5,3" opacity="0.5"/>
-        <circle cx="50" cy="50" r="6" fill="#2EB8E6"/>
-        <line x1="50" y1="50" x2="50" y2="18" stroke="#2EB8E6" stroke-width="3" stroke-linecap="round"/>
-        <polygon points="50,10 46,22 54,22" fill="#1a9fd0"/>
-        <line x1="50" y1="50" x2="74" y2="63" stroke="#7a8699" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-        <text x="50" y="90" text-anchor="middle" font-family="Heebo,sans-serif" font-size="10" font-weight="900" fill="#2EB8E6">ZOOT</text>
-      </svg>
-      <h1>Zoot</h1>
-      <p>המצפן שלך במסלול</p>
-    </div>
+<!-- ====== AUTH SCREEN ====== -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <h1>🇮🇱 זוט</h1>
+    <p>מדריך זכויות לעולים חדשים לישראל</p>
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchTab('login')">התחברות</button>
       <button class="auth-tab" onclick="switchTab('register')">הרשמה</button>
     </div>
-    <!-- LOGIN -->
-    <div class="auth-form active" id="loginForm">
-      <div class="auth-error" id="loginError">שם משתמש או סיסמה שגויים</div>
+
+    <!-- Login -->
+    <div id="login-form">
       <div class="form-group">
         <label>שם משתמש</label>
-        <input type="text" id="loginUser" placeholder="הכנס שם משתמש"/>
+        <input type="text" id="login-user" placeholder="הכנס שם משתמש" />
       </div>
       <div class="form-group">
         <label>סיסמה</label>
-        <input type="password" id="loginPass" placeholder="הכנס סיסמה"/>
+        <input type="password" id="login-pass" placeholder="הכנס סיסמה" />
       </div>
       <button class="btn-primary" onclick="doLogin()">כניסה 🚀</button>
     </div>
-    <!-- REGISTER -->
-    <div class="auth-form" id="registerForm">
-      <div class="auth-error" id="regError"></div>
+
+    <!-- Register -->
+    <div id="register-form" style="display:none;">
       <div class="form-group">
         <label>שם מלא</label>
-        <input type="text" id="regName" placeholder="שם ומשפחה"/>
+        <input type="text" id="reg-name" placeholder="הכנס שם מלא" />
       </div>
       <div class="form-group">
         <label>שם משתמש</label>
-        <input type="text" id="regUser" placeholder="בחר שם משתמש"/>
+        <input type="text" id="reg-user" placeholder="בחר שם משתמש" />
       </div>
       <div class="form-group">
         <label>סיסמה</label>
-        <input type="password" id="regPass" placeholder="לפחות 6 תווים"/>
+        <input type="password" id="reg-pass" placeholder="בחר סיסמה" />
       </div>
-      <div class="form-group">
-        <label>אימות סיסמה</label>
-        <input type="password" id="regPass2" placeholder="חזור על הסיסמה"/>
-      </div>
-      <button class="btn-primary" onclick="doRegister()">יצירת חשבון ✨</button>
+      <button class="btn-primary" onclick="doRegister()">הרשמה ✨</button>
     </div>
   </div>
 </div>
 
-<!-- ==================== APP SCREEN ==================== -->
-<div id="appScreen" class="screen">
-  <!-- TOPBAR -->
+<!-- ====== QUESTIONNAIRE SCREEN ====== -->
+<div id="questionnaire-screen">
+  <div class="questionnaire-box">
+    <h2>📋 שאלון אישי</h2>
+    <p>נתאים לך את האתר לפי הצרכים שלך</p>
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progress-bar" style="width:14%"></div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="question-block active" data-q="1">
+      <h3>1. מאיזה ארץ עלית?</h3>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this)">🇷🇺 רוסיה</button>
+        <button class="option-btn" onclick="selectOption(this)">🇺🇦 אוקראינה</button>
+        <button class="option-btn" onclick="selectOption(this)">🇫🇷 צרפת</button>
+        <button class="option-btn" onclick="selectOption(this)">🇺🇸 ארה"ב</button>
+        <button class="option-btn" onclick="selectOption(this)">🇦🇷 ארגנטינה</button>
+        <button class="option-btn" onclick="selectOption(this)">🌍 אחר</button>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-block" data-q="2">
+      <h3>2. כמה זמן אתה בישראל?</h3>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this)">פחות מ-6 חודשים</button>
+        <button class="option-btn" onclick="selectOption(this)">6-12 חודשים</button>
+        <button class="option-btn" onclick="selectOption(this)">1-3 שנים</button>
+        <button class="option-btn" onclick="selectOption(this)">יותר מ-3 שנים</button>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-block" data-q="3">
+      <h3>3. מה מצבך המשפחתי?</h3>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this)">רווק/ה</button>
+        <button class="option-btn" onclick="selectOption(this)">נשוי/אה</button>
+        <button class="option-btn" onclick="selectOption(this)">גרוש/ה</button>
+        <button class="option-btn" onclick="selectOption(this)">אלמן/ה</button>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-block" data-q="4">
+      <h3>4. האם יש לך ילדים?</h3>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this)">אין ילדים</button>
+        <button class="option-btn" onclick="selectOption(this)">1-2 ילדים</button>
+        <button class="option-btn" onclick="selectOption(this)">3-4 ילדים</button>
+        <button class="option-btn" onclick="selectOption(this)">5+ ילדים</button>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-block" data-q="5">
+      <h3>5. מה רמת ההשכלה שלך?</h3>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this)">תיכונית</button>
+        <button class="option-btn" onclick="selectOption(this)">תעודה מקצועית</button>
+        <button class="option-btn" onclick="selectOption(this)">תואר ראשון</button>
+        <button class="option-btn" onclick="selectOption(this)">תואר שני ומעלה</button>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question-block" data-q="6">
+      <h3>6. מה מצבך התעסוקתי כרגע?</h3>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this)">מועסק/ת</button>
+        <button class="option-btn" onclick="selectOption(this)">מחפש/ת עבודה</button>
+        <button class="option-btn" onclick="selectOption(this)">עצמאי/ת</button>
+        <button class="option-btn" onclick="selectOption(this)">סטודנט/ית</button>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question-block" data-q="7">
+      <h3>7. מה הנושא שהכי חשוב לך?</h3>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this)">🎓 השכלה ולימודים</button>
+        <button class="option-btn" onclick="selectOption(this)">💼 עבודה</button>
+        <button class="option-btn" onclick="selectOption(this)">🏥 בריאות</button>
+        <button class="option-btn" onclick="selectOption(this)">🏠 דיור</button>
+        <button class="option-btn" onclick="selectOption(this)">💰 קצבאות</button>
+        <button class="option-btn" onclick="selectOption(this)">📚 שפה</button>
+      </div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn-secondary" onclick="prevQuestion()" id="btn-prev" style="visibility:hidden">→ הקודם</button>
+      <button class="btn-next" onclick="nextQuestion()" id="btn-next">הבא ←</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== MAIN SCREEN ====== -->
+<div id="main-screen">
   <div class="topbar">
-    <div class="topbar-logo">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="46" fill="#e8f7fd" stroke="#2EB8E6" stroke-width="4"/>
-        <circle cx="50" cy="50" r="6" fill="#2EB8E6"/>
-        <line x1="50" y1="50" x2="50" y2="18" stroke="#2EB8E6" stroke-width="3" stroke-linecap="round"/>
-        <polygon points="50,10 46,22 54,22" fill="#1a9fd0"/>
-        <line x1="50" y1="50" x2="74" y2="63" stroke="#7a8699" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-      </svg>
-      <span>Zoot</span>
-    </div>
-    <div class="topbar-nav">
-      <button onclick="showSection('home')" id="nav-home" class="active">🏠 בית</button>
-      <button onclick="showSection('rights')" id="nav-rights">📜 זכויות שלי</button>
-      <button onclick="showSection('universities')" id="nav-universities">🎓 אוניברסיטאות</button>
-    </div>
-    <div class="topbar-user">
-      <div class="user-avatar" id="userAvatarTop">R</div>
-      <div class="user-name" id="userNameTop">משתמש</div>
-      <button class="btn-logout" onclick="doLogout()">יציאה</button>
-    </div>
+    <h1>🇮🇱 זוט</h1>
+    <span id="user-greeting"></span>
+    <button class="logout-btn" onclick="doLogout()">יציאה</button>
   </div>
 
-  <div class="app-body">
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <div class="sidebar-title"><span>📋</span> השאלון שלי</div>
-      <!-- QUESTIONNAIRE -->
-      <div id="questionnaireArea">
-        <div class="q-progress-bar"><div class="q-progress-fill" id="qProgress" style="width:14%"></div></div>
+  <div class="content-area">
+    <div class="welcome-banner">
+      <h2 id="banner-name">שלום! 👋</h2>
+      <p>ברוך הבא לפורטל הזכויות שלך — כאן תמצא את כל המידע שאתה צריך</p>
+    </div>
 
-        <!-- Q1 -->
-        <div class="q-step active" id="qStep1">
-          <div class="q-num">שאלה 1 מתוך 7</div>
-          <div class="q-text">מה הגיל שלך?</div>
-          <div class="q-options">
-            <button class="q-option" onclick="selectOption(this,'age','14-17')">14–17</button>
-            <button class="q-option" onclick="selectOption(this,'age','18-21')">18–21</button>
-            <button class="q-option" onclick="selectOption(this,'age','22-25')">22–25</button>
-            <button class="q-option" onclick="selectOption(this,'age','26+')">26+</button>
-          </div>
-          <div class="q-nav"><button class="q-next" onclick="qNext(1)">הבא ←</button></div>
-        </div>
+    <div class="section-tabs">
+      <button class="section-tab active" onclick="showSection('rights')">📜 זכויות שלי</button>
+      <button class="section-tab" onclick="showSection('universities')">🎓 אוניברסיטאות</button>
+      <button class="section-tab" onclick="showSection('work')">💼 עבודה (בקרוב)</button>
+      <button class="section-tab" onclick="showSection('health')">🏥 בריאות (בקרוב)</button>
+    </div>
 
-        <!-- Q2 -->
-        <div class="q-step" id="qStep2">
-          <div class="q-num">שאלה 2 מתוך 7</div>
-          <div class="q-text">מה הסטטוס התעסוקתי שלך?</div>
-          <div class="q-options">
-            <button class="q-option" onclick="selectOption(this,'status','student')">סטודנט/תלמיד</button>
-            <button class="q-option" onclick="selectOption(this,'status','employed')">עובד</button>
-            <button class="q-option" onclick="selectOption(this,'status','unemployed')">מחפש עבודה</button>
-            <button class="q-option" onclick="selectOption(this,'status','military')">שירות צבאי</button>
-          </div>
-          <div class="q-nav">
-            <button class="q-prev" onclick="qPrev(2)">→ הקודם</button>
-            <button class="q-next" onclick="qNext(2)">הבא ←</button>
-          </div>
-        </div>
-
-        <!-- Q3 -->
-        <div class="q-step" id="qStep3">
-          <div class="q-num">שאלה 3 מתוך 7</div>
-          <div class="q-text">מה רמת ההכנסה החודשית שלך/משפחתך?</div>
-          <div class="q-options">
-            <button class="q-option" onclick="selectOption(this,'income','low')">נמוכה (עד 5,000 ₪)</button>
-            <button class="q-option" onclick="selectOption(this,'income','medium')">בינונית (5,000–12,000)</button>
-            <button class="q-option" onclick="selectOption(this,'income','high')">גבוהה (מעל 12,000)</button>
-            <button class="q-option" onclick="selectOption(this,'income','unknown')">לא יודע/ת</button>
-          </div>
-          <div class="q-nav">
-            <button class="q-prev" onclick="qPrev(3)">→ הקודם</button>
-            <button class="q-next" onclick="qNext(3)">הבא ←</button>
-          </div>
-        </div>
-
-        <!-- Q4 -->
-        <div class="q-step" id="qStep4">
-          <div class="q-num">שאלה 4 מתוך 7</div>
-          <div class="q-text">האם עברת לאחרונה מעבר חיים משמעותי?</div>
-          <div class="q-options">
-            <button class="q-option" onclick="selectOption(this,'transition','military_done')">שחרור מהצבא</button>
-            <button class="q-option" onclick="selectOption(this,'transition','moved')">עברתי דירה</button>
-            <button class="q-option" onclick="selectOption(this,'transition','graduated')">סיום לימודים</button>
-            <button class="q-option" onclick="selectOption(this,'transition','none')">לא ממש</button>
-          </div>
-          <div class="q-nav">
-            <button class="q-prev" onclick="qPrev(4)">→ הקודם</button>
-            <button class="q-next" onclick="qNext(4)">הבא ←</button>
-          </div>
-        </div>
-
-        <!-- Q5 -->
-        <div class="q-step" id="qStep5">
-          <div class="q-num">שאלה 5 מתוך 7</div>
-          <div class="q-text">מה תחום העניין שלך?</div>
-          <div class="q-options">
-            <button class="q-option" onclick="selectOption(this,'interest','tech')">טכנולוגיה ומדעים</button>
-            <button class="q-option" onclick="selectOption(this,'interest','arts')">אמנות ועיצוב</button>
-            <button class="q-option" onclick="selectOption(this,'interest','business')">עסקים וכלכלה</button>
-            <button class="q-option" onclick="selectOption(this,'interest','social')">מדעי חברה ומשפטים</button>
-          </div>
-          <div class="q-nav">
-            <button class="q-prev" onclick="qPrev(5)">→ הקודם</button>
-            <button class="q-next" onclick="qNext(5)">הבא ←</button>
-          </div>
-        </div>
-
-        <!-- Q6 -->
-        <div class="q-step" id="qStep6">
-          <div class="q-num">שאלה 6 מתוך 7</div>
-          <div class="q-text">האם יש לך מוגבלות או צרכים מיוחדים?</div>
-          <div class="q-options">
-            <button class="q-option" onclick="selectOption(this,'disability','yes')">כן</button>
-            <button class="q-option" onclick="selectOption(this,'disability','no')">לא</button>
-            <button class="q-option" onclick="selectOption(this,'disability','prefer')">מעדיף/ת לא לציין</button>
-          </div>
-          <div class="q-nav">
-            <button class="q-prev" onclick="qPrev(6)">→ הקודם</button>
-            <button class="q-next" onclick="qNext(6)">הבא ←</button>
-          </div>
-        </div>
-
-        <!-- Q7 -->
-        <div class="q-step" id="qStep7">
-          <div class="q-num">שאלה 7 מתוך 7</div>
-          <div class="q-text">מה המטרה העיקרית שלך כרגע?</div>
-          <div class="q-options">
-            <button class="q-option" onclick="selectOption(this,'goal','study')">ללמוד תואר</button>
-            <button class="q-option" onclick="selectOption(this,'goal','work')">למצוא עבודה</button>
-            <button class="q-option" onclick="selectOption(this,'goal','rights')">להבין זכויות</button>
-            <button class="q-option" onclick="selectOption(this,'goal','all')">כל האפשרויות</button>
-          </div>
-          <div class="q-nav">
-            <button class="q-prev" onclick="qPrev(7)">→ הקודם</button>
-          </div>
-          <button class="q-done" onclick="completeQuestionnaire()">✅ סיים את השאלון!</button>
-        </div>
-
-        <!-- COMPLETED -->
-        <div class="q-step" id="qCompleted">
-          <div class="q-completed">
-            <div class="check-icon">✅</div>
-            <h3>השאלון הושלם!</h3>
-            <p>המלצות מותאמות אישית מחכות לך בכל אחד מהמודולים.</p>
-            <button class="btn-redo" onclick="redoQuestionnaire()">🔄 ענה שוב</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- SIDEBAR MENU -->
-      <div class="sidebar-menu">
-        <div class="sidebar-menu-title">ניווט מהיר</div>
-        <div class="sidebar-menu-item active" onclick="showSection('home')">
-          <span class="menu-icon">🏠</span> דף הבית
-        </div>
-        <div class="sidebar-menu-item" onclick="showSection('rights')">
-          <span class="menu-icon">📜</span> זכויות שלי
-          <span class="menu-badge">4</span>
-        </div>
-        <div class="sidebar-menu-item" onclick="showSection('universities')">
-          <span class="menu-icon">🎓</span> אוניברסיטאות
-        </div>
-        <div class="sidebar-menu-item" style="cursor:default;opacity:0.6">
-          <span class="menu-icon">💼</span> תעסוקה
-          <span class="menu-badge soon">בקרוב</span>
-        </div>
-        <div class="sidebar-menu-item" style="cursor:default;opacity:0.6">
-          <span class="menu-icon">🏥</span> בריאות
-          <span class="menu-badge soon">בקרוב</span>
-        </div>
-        <div class="sidebar-menu-item" style="cursor:default;opacity:0.6">
-          <span class="menu-icon">🏠</span> דיור
-          <span class="menu-badge soon">בקרוב</span>
-        </div>
+    <!-- RIGHTS -->
+    <div id="section-rights">
+      <div class="rights-grid">
+        <div class="right-card"><div class="icon">📚</div><h3>קורסי עברית (אולפן)</h3><p>כעולה חדש, מגיעים לך קורסי עברית בחינם דרך משרד הקליטה, כולל תמיכה כספית במהלך הלימודים.</p></div>
+        <div class="right-card"><div class="icon">💰</div><h3>סל קליטה</h3><p>תשלומים ישירים מהמדינה לעולים חדשים לכיסוי הוצאות הקליטה הראשונית בישראל.</p></div>
+        <div class="right-card"><div class="icon">🏠</div><h3>סיוע בדיור</h3><p>מענקים והלוואות מוזלות לרכישת דירה ראשונה לעולים, דרך משרד הבינוי.</p></div>
+        <div class="right-card"><div class="icon">🎓</div><h3>מלגות לסטודנטים</h3><p>מלגות מיוחדות לעולים הלומדים לתואר ראשון, כולל הנחות שכר לימוד.</p></div>
+        <div class="right-card"><div class="icon">🏥</div><h3>ביטוח בריאות</h3><p>כל עולה זכאי לכיסוי ביטוח בריאות מיום העלייה דרך אחת מקופות החולים.</p></div>
+        <div class="right-card"><div class="icon">💼</div><h3>שירותי תעסוקה</h3><p>סיוע במציאת עבודה, הכשרות מקצועיות והסבות מקצוע לעולים חדשים.</p></div>
       </div>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
-      <!-- HOME -->
-      <div class="content-section active" id="section-home">
-        <div class="welcome-banner">
-          <h2>שלום, <span id="welcomeName">משתמש</span>! 👋</h2>
-          <p>ברוך הבא ל-Zoot — המצפן שלך במסלול החיים. ענה על השאלון כדי לקבל המלצות אישיות.</p>
-        </div>
-        <div class="stats-grid">
-          <div class="stat-card"><div class="stat-icon">📜</div><div class="stat-num">4</div><div class="stat-label">זכויות זמינות</div></div>
-          <div class="stat-card"><div class="stat-icon">🎓</div><div class="stat-num">11</div><div class="stat-label">מוסדות אקדמיים</div></div>
-          <div class="stat-card"><div class="stat-icon">🚀</div><div class="stat-num">3</div><div class="stat-label">מודולים פעילים</div></div>
-        </div>
-        <h2 class="section-title">🗺️ מודולי Zoot</h2>
-        <div class="modules-grid">
-          <div class="module-card" onclick="showSection('rights')">
-            <div class="mod-tag">פעיל</div>
-            <div class="mod-icon">📜</div>
-            <h3>הזכויות שלי</h3>
-            <p>גלה את כל הזכויות, הקצבאות והסיוע הממשלתי שמגיע לך.</p>
-          </div>
-          <div class="module-card" onclick="showSection('universities')">
-            <div class="mod-tag">פעיל</div>
-            <div class="mod-icon">🎓</div>
-            <h3>אוניברסיטאות ומכללות</h3>
-            <p>חקור מוסדות אקדמיים ומצא את המסלול המתאים לך ביותר.</p>
-          </div>
-          <div class="module-card" style="opacity:0.6;cursor:default">
-            <div class="mod-tag soon">בקרוב</div>
-            <div class="mod-icon">💼</div>
-            <h3>תעסוקה ועבודה</h3>
-            <p>הזדמנויות עבודה, התמחויות ותוכניות הכשרה מקצועית.</p>
-          </div>
-          <div class="module-card" style="opacity:0.6;cursor:default">
-            <div class="mod-tag soon">בקרוב</div>
-            <div class="mod-icon">🏥</div>
-            <h3>בריאות ורווחה</h3>
-            <p>מידע על ביטוח בריאות, שירותי בריאות נפש וסיוע רפואי.</p>
-          </div>
-        </div>
+    <!-- UNIVERSITIES -->
+    <div id="section-universities">
+      <div class="uni-controls">
+        <input class="search-input" type="text" id="uni-search" placeholder="🔍 חיפוש אוניברסיטה..." oninput="filterUnis()" />
+        <select class="filter-select" id="uni-type-filter" onchange="filterUnis()">
+          <option value="">כל הסוגים</option>
+          <option value="public">אוניברסיטה ציבורית</option>
+          <option value="private">אוניברסיטה פרטית</option>
+          <option value="college">מכללה</option>
+        </select>
+        <select class="filter-select" id="uni-city-filter" onchange="filterUnis()">
+          <option value="">כל הערים</option>
+          <option value="תל אביב">תל אביב</option>
+          <option value="ירושלים">ירושלים</option>
+          <option value="חיפה">חיפה</option>
+          <option value="באר שבע">באר שבע</option>
+          <option value="רמת גן">רמת גן</option>
+          <option value="אריאל">אריאל</option>
+          <option value="רחובות">רחובות</option>
+          <option value="נתניה">נתניה</option>
+        </select>
       </div>
+      <p class="results-count" id="results-count"></p>
+      <div class="uni-grid" id="uni-grid"></div>
+      <div class="no-results" id="no-results" style="display:none">
+        <div class="icon">🔍</div>
+        <p>לא נמצאו תוצאות. נסה לשנות את החיפוש.</p>
+      </div>
+    </div>
 
-      <!-- RIGHTS -->
-      <div class="content-section" id="section-rights">
-        <h2 class="section-title">📜 הזכויות שלי</h2>
-        <div class="match-result-card" id="rightsMatchCard">
-          <div class="match-circle" id="rightsMatchPct">?</div>
-          <div class="match-text">
-            <h3 id="rightsMatchTitle">ענה על השאלון לקבלת המלצות</h3>
-            <p id="rightsMatchDesc">לאחר השלמת השאלון נוכל להתאים לך את הזכויות הרלוונטיות ביותר.</p>
-          </div>
-        </div>
-        <div class="rights-grid">
-          <div class="right-card">
-            <div class="right-card-header">
-              <div class="right-icon" style="background:#e8f7fd">💰</div>
-              <h3>קצבת נכות כללית</h3>
-            </div>
-            <p>תמיכה כספית לאנשים עם מוגבלות המתקשים לעבוד. מגיעה מהביטוח הלאומי.</p>
-            <div class="right-amount">עד ₪3,285 לחודש</div>
-            <a href="https://www.btl.gov.il/benefits/Disability/Pages/default.aspx" target="_blank" class="btn-link">🔗 לאתר הביטוח הלאומי</a>
-          </div>
-          <div class="right-card">
-            <div class="right-card-header">
-              <div class="right-icon" style="background:#e8fdf4">📚</div>
-              <h3>מלגות לסטודנטים</h3>
-            </div>
-            <p>מגוון מלגות ממשלתיות ופרטיות לסטודנטים הזכאים על בסיס כלכלי, אקדמי ואישי.</p>
-            <div class="right-amount">עד ₪20,000 לשנה</div>
-            <a href="https://www.studentauthority.co.il/" target="_blank" class="btn-link">🔗 רשות הסטודנטים</a>
-          </div>
-          <div class="right-card">
-            <div class="right-card-header">
-              <div class="right-icon" style="background:#fff8e8">🏠</div>
-              <h3>סיוע בדיור לצעירים</h3>
-            </div>
-            <p>תוכניות סיוע בשכר דירה ורכישת דירה ראשונה לצעירים ולמשפחות צעירות.</p>
-            <div class="right-amount">עד ₪800 לחודש</div>
-            <a href="https://www.gov.il/he/departments/ministry_of_construction_and_housing" target="_blank" class="btn-link">🔗 משרד השיכון</a>
-          </div>
-          <div class="right-card">
-            <div class="right-card-header">
-              <div class="right-icon" style="background:#fdf0f8">💼</div>
-              <h3>דמי אבטלה</h3>
-            </div>
-            <p>תגמול לעובדים שאיבדו את עבודתם, בהתאם לוותק ולשכר הקודם.</p>
-            <div class="right-amount">עד 80% מהשכר</div>
-            <a href="https://www.btl.gov.il/benefits/Unemployment/Pages/default.aspx" target="_blank" class="btn-link">🔗 הביטוח הלאומי</a>
-          </div>
-        </div>
-      </div>
+    <!-- WORK (coming soon) -->
+    <div id="section-work" style="display:none; text-align:center; padding:60px 20px; color:#888;">
+      <div style="font-size:3rem; margin-bottom:15px;">💼</div>
+      <h3>מידע על עבודה ותעסוקה — בקרוב!</h3>
+    </div>
 
-      <!-- UNIVERSITIES -->
-      <div class="content-section" id="section-universities">
-        <h2 class="section-title">🎓 אוניברסיטאות ומכללות בישראל</h2>
-        <div class="match-result-card" id="uniMatchCard">
-          <div class="match-circle" id="uniMatchPct">?</div>
-          <div class="match-text">
-            <h3 id="uniMatchTitle">ענה על השאלון לקבלת התאמה אישית</h3>
-            <p id="uniMatchDesc">השאלון יעזור לנו להמליץ על מוסדות המתאימים ביותר לפרופיל שלך.</p>
-          </div>
-        </div>
-        <div class="uni-search-bar">
-          <input type="text" class="uni-search-input" placeholder="🔍  חפש מוסד..." oninput="filterUnis(this.value)" id="uniSearch"/>
-        </div>
-        <div class="filter-chips">
-          <button class="chip active" onclick="filterByType('all',this)">הכל</button>
-          <button class="chip" onclick="filterByType('university',this)">אוניברסיטאות</button>
-          <button class="chip" onclick="filterByType('college',this)">מכללות</button>
-          <button class="chip" onclick="filterByType('tech',this)">טכנולוגיה</button>
-          <button class="chip" onclick="filterByType('arts',this)">אמנות</button>
-          <button class="chip" onclick="filterByType('north',this)">צפון</button>
-          <button class="chip" onclick="filterByType('center',this)">מרכז</button>
-          <button class="chip" onclick="filterByType('south',this)">דרום</button>
-        </div>
-        <div class="uni-grid" id="uniGrid"></div>
-      </div>
+    <!-- HEALTH (coming soon) -->
+    <div id="section-health" style="display:none; text-align:center; padding:60px 20px; color:#888;">
+      <div style="font-size:3rem; margin-bottom:15px;">🏥</div>
+      <h3>מידע על בריאות — בקרוב!</h3>
     </div>
   </div>
 </div>
 
-<!-- UNI MODAL -->
-<div class="modal-overlay" id="uniModal">
-  <div class="modal-box" id="uniModalBox">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div id="uniModalContent"></div>
-  </div>
+<!-- MODAL -->
+<div class="modal-overlay" id="uni-modal" onclick="closeModalOutside(event)">
+  <div class="modal-box" id="modal-content"></div>
 </div>
 
 <script>
-// ===== DATA =====
-const USERS_KEY = 'zoot_users';
-const SESSION_KEY = 'zoot_session';
-
-function getUsers() {
-  return JSON.parse(localStorage.getItem(USERS_KEY) || '{}');
-}
-function saveUsers(u) {
-  localStorage.setItem(USERS_KEY, JSON.stringify(u));
-}
-function getSession() {
-  return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
-}
-function saveSession(s) {
-  localStorage.setItem(SESSION_KEY, JSON.stringify(s));
-}
-
-// ===== AUTH =====
-let currentUser = null;
-
-function switchTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach((t,i) => {
-    t.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register'));
-  });
-  document.getElementById('loginForm').classList.toggle('active', tab==='login');
-  document.getElementById('registerForm').classList.toggle('active', tab==='register');
-}
-
-function doLogin() {
-  const user = document.getElementById('loginUser').value.trim();
-  const pass = document.getElementById('loginPass').value;
-  const users = getUsers();
-  const err = document.getElementById('loginError');
-  if (!user || !pass) { err.textContent='יש למלא את כל השדות'; err.style.display='block'; return; }
-  if (!users[user] || users[user].password !== pass) {
-    err.style.display='block'; return;
-  }
-  err.style.display='none';
-  currentUser = { username: user, name: users[user].name };
-  saveSession(currentUser);
-  loadApp();
-}
-
-function doRegister() {
-  const name = document.getElementById('regName').value.trim();
-  const user = document.getElementById('regUser').value.trim();
-  const pass = document.getElementById('regPass').value;
-  const pass2 = document.getElementById('regPass2').value;
-  const err = document.getElementById('regError');
-  if (!name||!user||!pass||!pass2) { err.textContent='יש למלא את כל השדות'; err.style.display='block'; return; }
-  if (pass !== pass2) { err.textContent='הסיסמאות אינן תואמות'; err.style.display='block'; return; }
-  if (pass.length < 6) { err.textContent='הסיסמה חייבת להיות לפחות 6 תווים'; err.style.display='block'; return; }
-  const users = getUsers();
-  if (users[user]) { err.textContent='שם המשתמש כבר קיים'; err.style.display='block'; return; }
-  users[user] = { name, password: pass, answers: {}, questionnaireCompleted: false };
-  saveUsers(users);
-  err.style.display='none';
-  currentUser = { username: user, name };
-  saveSession(currentUser);
-  loadApp();
-}
-
-function doLogout() {
-  localStorage.removeItem(SESSION_KEY);
-  currentUser = null;
-  document.getElementById('authScreen').classList.add('active');
-  document.getElementById('appScreen').classList.remove('active');
-  document.getElementById('loginUser').value = '';
-  document.getElementById('loginPass').value = '';
-}
-
-function loadApp() {
-  document.getElementById('authScreen').classList.remove('active');
-  document.getElementById('appScreen').classList.add('active');
-  const n = currentUser.name || currentUser.username;
-  document.getElementById('welcomeName').textContent = n;
-  document.getElementById('userNameTop').textContent = n;
-  document.getElementById('userAvatarTop').textContent = n.charAt(0).toUpperCase();
-  renderUnis();
-  const users = getUsers();
-  const userData = users[currentUser.username];
-  if (userData && userData.questionnaireCompleted) {
-    showCompletedState();
-    updateMatchCards();
-  }
-  showSection('home');
-}
-
-// ===== CHECK SESSION =====
-(function() {
-  const s = getSession();
-  if (s) {
-    currentUser = s;
-    loadApp();
-  }
-})();
-
-// ===== QUESTIONNAIRE =====
-let qAnswers = {};
-let currentStep = 1;
-const totalSteps = 7;
-
-function selectOption(btn, key, val) {
-  const parent = btn.closest('.q-options');
-  parent.querySelectorAll('.q-option').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  qAnswers[key] = val;
-}
-
-function qNext(step) {
-  const keys = ['age','status','income','transition','interest','disability','goal'];
-  if (!qAnswers[keys[step-1]]) { alert('אנא בחר תשובה לפני המעבר הבא.'); return; }
-  document.getElementById('qStep'+step).classList.remove('active');
-  currentStep = step + 1;
-  document.getElementById('qStep'+currentStep).classList.add('active');
-  const pct = (currentStep/totalSteps)*100;
-  document.getElementById('qProgress').style.width = pct + '%';
-}
-
-function qPrev(step) {
-  document.getElementById('qStep'+step).classList.remove('active');
-  currentStep = step - 1;
-  document.getElementById('qStep'+currentStep).classList.add('active');
-  const pct = (currentStep/totalSteps)*100;
-  document.getElementById('qProgress').style.width = pct + '%';
-}
-
-function completeQuestionnaire() {
-  if (!qAnswers['goal']) { alert('אנא בחר תשובה לפני הסיום.'); return; }
-  const users = getUsers();
-  if (users[currentUser.username]) {
-    users[currentUser.username].answers = qAnswers;
-    users[currentUser.username].questionnaireCompleted = true;
-    saveUsers(users);
-  }
-  document.getElementById('qStep7').classList.remove('active');
-  showCompletedState();
-  document.getElementById('qProgress').style.width = '100%';
-  updateMatchCards();
-  renderUnis();
-}
-
-function showCompletedState() {
-  document.querySelectorAll('.q-step').forEach(s => s.classList.remove('active'));
-  document.getElementById('qCompleted').classList.add('active');
-}
-
-function redoQuestionnaire() {
-  qAnswers = {};
-  currentStep = 1;
-  document.getElementById('qCompleted').classList.remove('active');
-  document.getElementById('qStep1').classList.add('active');
-  document.getElementById('qProgress').style.width = '14%';
-  document.querySelectorAll('.q-option').forEach(o => o.classList.remove('selected'));
-}
-
-function updateMatchCards() {
-  const u = getUsers()[currentUser.username];
-  if (!u || !u.questionnaireCompleted) return;
-  const a = u.answers;
-  let score = 72;
-  if (a.income === 'low') score += 10;
-  if (a.age === '18-21') score += 8;
-  if (a.status === 'student') score += 5;
-  score = Math.min(score, 98);
-
-  document.getElementById('rightsMatchPct').textContent = score + '%';
-  document.getElementById('rightsMatchTitle').textContent = `${score}% מהזכויות רלוונטיות לך`;
-  document.getElementById('rightsMatchDesc').textContent = 'בהתבסס על הפרופיל שלך, מצאנו זכויות מותאמות אישית.';
-
-  const uniPct = a.interest === 'tech' ? 88 : a.interest === 'arts' ? 82 : 75;
-  document.getElementById('uniMatchPct').textContent = uniPct + '%';
-  document.getElementById('uniMatchTitle').textContent = `${uniPct}% התאמה עם מוסדות בישראל`;
-  document.getElementById('uniMatchDesc').textContent = 'על בסיס תחומי העניין והפרופיל שלך, מצאנו המלצות מותאמות.';
-}
-
-// ===== NAVIGATION =====
-function showSection(name) {
-  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.sidebar-menu-item').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.topbar-nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('section-'+name).classList.add('active');
-  const navBtn = document.getElementById('nav-'+name);
-  if (navBtn) navBtn.classList.add('active');
-  const menuItems = document.querySelectorAll('.sidebar-menu-item');
-  const map = {home:0, rights:1, universities:2};
-  if (map[name] !== undefined) menuItems[map[name]].classList.add('active');
-}
-
-// ===== UNIVERSITIES DATA =====
+// ============ DATA ============
 const universities = [
   {
-    id:1, name:'האוניברסיטה העברית', short:'Hebrew U', location:'ירושלים', region:'center',
-    type:'university', icon:'🔬', color:'#e8f7fd', tags:['מחקר','מדעים','הומניסטיקה'],
-    students:'23,000', acceptance:'76-92', programs:'מדעים, הומניסטיקה, משפטים, רפואה',
-    fields:['tech','social','arts'],
-    tuition:'₪12,000–₪15,000 לשנה',
-    desc:'אחת האוניברסיטאות המובילות במזרח התיכון, עם מרכז מחקר בינלאומי.',
-    website:'https://www.huji.ac.il',
-    scholarship:'https://scholarship.huji.ac.il'
+    id: 1,
+    name: "אוניברסיטת תל אביב",
+    type: "public",
+    city: "תל אביב",
+    description: "אחת מגדולות האוניברסיטאות בישראל, מציעה מגוון רחב של תחומי לימוד ומחקר ברמה בינלאומית.",
+    tags: ["מדעים", "רפואה", "משפטים", "מנהל עסקים", "הנדסה", "מדעי החברה"],
+    phone: "03-6408111",
+    email: "info@tau.ac.il",
+    website: "https://www.tau.ac.il",
+    address: "רמת אביב, תל אביב",
+    founded: "1956",
+    students: "~30,000",
+    details: {
+      departments: ["מדעים מדויקים", "רפואה", "משפטים", "מנהל עסקים", "הנדסה", "מדעי החברה", "אמנויות ויזואליות", "חינוך"],
+      tuition: "כ-10,000-15,000 ₪ לשנה",
+      language: "עברית (חלק מהתוכניות באנגלית)",
+      immigrantInfo: "מלגות מיוחדות לעולים חדשים, תוכניות קליטה ייחודיות"
+    }
   },
   {
-    id:2, name:'הטכניון', short:'Technion', location:'חיפה', region:'north',
-    type:'university', icon:'⚙️', color:'#e8fdf4', tags:['הנדסה','טכנולוגיה','מדעים מדויקים'],
-    students:'13,000', acceptance:'87-97', programs:'הנדסה, מדעים, אדריכלות',
-    fields:['tech'],
-    tuition:'₪11,500–₪14,000 לשנה',
-    desc:'המוסד הטכנולוגי המוביל בישראל, ידוע בעולם כמעצמת הנדסה.',
-    website:'https://www.technion.ac.il',
-    scholarship:'https://www.technion.ac.il/he/student-affairs/scholarships/'
+    id: 2,
+    name: "האוניברסיטה העברית בירושלים",
+    type: "public",
+    city: "ירושלים",
+    description: "האוניברסיטה הראשונה בישראל, נוסדה ב-1918. ידועה במחקר מדעי ורפואי ברמה עולמית.",
+    tags: ["מחקר", "רפואה", "משפטים", "מדעי הטבע", "הומניסטיקה"],
+    phone: "02-6586060",
+    email: "info@mail.huji.ac.il",
+    website: "https://www.huji.ac.il",
+    address: "הר הצופים, ירושלים",
+    founded: "1918",
+    students: "~23,000",
+    details: {
+      departments: ["מדעי הטבע", "רפואה", "משפטים", "מדעי החברה", "הומניסטיקה", "חקלאות"],
+      tuition: "כ-10,000-14,000 ₪ לשנה",
+      language: "עברית",
+      immigrantInfo: "תוכניות קליטה לסטודנטים עולים, מלגות מיוחדות"
+    }
   },
   {
-    id:3, name:'אוניברסיטת תל אביב', short:'TAU', location:'תל אביב', region:'center',
-    type:'university', icon:'🏛️', color:'#fff8e8', tags:['מחקר','אמנות','עסקים'],
-    students:'30,000', acceptance:'75-90', programs:'עסקים, משפטים, אמנות, מדעים',
-    fields:['tech','social','arts','business'],
-    tuition:'₪11,000–₪14,500 לשנה',
-    desc:'האוניברסיטה הגדולה בישראל עם חוג רחב של תכניות לימוד.',
-    website:'https://www.tau.ac.il',
-    scholarship:'https://www.tau.ac.il/students/scholarships'
+    id: 3,
+    name: "הטכניון — מכון טכנולוגי לישראל",
+    type: "public",
+    city: "חיפה",
+    description: "האוניברסיטה הטכנולוגית המובילה בישראל. ידועה בהנדסה, טכנולוגיה ומדעים מדויקים.",
+    tags: ["הנדסה", "מחשבים", "מדעים מדויקים", "ארכיטקטורה", "רפואה"],
+    phone: "04-8292111",
+    email: "info@technion.ac.il",
+    website: "https://www.technion.ac.il",
+    address: "שדרות הטכניון, חיפה",
+    founded: "1912",
+    students: "~15,000",
+    details: {
+      departments: ["הנדסת מחשבים", "הנדסת חשמל", "הנדסה כימית", "מדעי המחשב", "ארכיטקטורה", "רפואה"],
+      tuition: "כ-10,000-14,000 ₪ לשנה",
+      language: "עברית (תוכניות בינלאומיות באנגלית)",
+      immigrantInfo: "מלגות לעולים בתחומי ההנדסה, תמיכה בשילוב אקדמי"
+    }
   },
   {
-    id:4, name:'אוניברסיטת חיפה', short:'Haifa U', location:'חיפה', region:'north',
-    type:'university', icon:'🌊', color:'#fdf0f8', tags:['חברה','מדע','פסיכולוגיה'],
-    students:'18,000', acceptance:'70-85', programs:'מדעי חברה, משפטים, פסיכולוגיה',
-    fields:['social'],
-    tuition:'₪10,500–₪13,000 לשנה',
-    desc:'אוניברסיטה גדולה ומגוונת בצפון, עם דגש על מדעי החברה.',
-    website:'https://www.haifa.ac.il',
-    scholarship:'https://www.haifa.ac.il/students/scholarships/'
+    id: 4,
+    name: "אוניברסיטת חיפה",
+    type: "public",
+    city: "חיפה",
+    description: "מוסד מגוון ורב-תרבותי, ידוע בפסיכולוגיה, מדעי החברה ומחקר ימי.",
+    tags: ["פסיכולוגיה", "מדעי החברה", "חינוך", "משפטים", "מדעי הים"],
+    phone: "04-8240111",
+    email: "info@haifa.ac.il",
+    website: "https://www.haifa.ac.il",
+    address: "הר הכרמל, חיפה",
+    founded: "1963",
+    students: "~18,000",
+    details: {
+      departments: ["פסיכולוגיה", "מדעי החברה", "חינוך", "משפטים", "מדעי הים", "אמנויות"],
+      tuition: "כ-9,000-13,000 ₪ לשנה",
+      language: "עברית",
+      immigrantInfo: "סביבה רב-תרבותית, תמיכה מיוחדת לעולים חדשים"
+    }
   },
   {
-    id:5, name:'אוניברסיטת בן גוריון', short:'BGU', location:'באר שבע', region:'south',
-    type:'university', icon:'🏜️', color:'#e8f7fd', tags:['מחקר','הנדסה','רפואה'],
-    students:'20,000', acceptance:'72-88', programs:'הנדסה, מדעים, בריאות',
-    fields:['tech'],
-    tuition:'₪10,800–₪13,500 לשנה',
-    desc:'אוניברסיטת הנגב — מרכז מחקר מוביל עם דגש על פיתוח הדרום.',
-    website:'https://www.bgu.ac.il',
-    scholarship:'https://www.bgu.ac.il/students/scholarships'
+    id: 5,
+    name: "אוניברסיטת בן גוריון בנגב",
+    type: "public",
+    city: "באר שבע",
+    description: "מוסד מוביל בדרום ישראל, ידוע בחדשנות, ביוטכנולוגיה ומחקר הנגב.",
+    tags: ["הנדסה", "רפואה", "ביוטכנולוגיה", "מדעים", "מנהל עסקים"],
+    phone: "08-6472111",
+    email: "info@bgu.ac.il",
+    website: "https://www.bgu.ac.il",
+    address: "דרך בן צבי, באר שבע",
+    founded: "1969",
+    students: "~20,000",
+    details: {
+      departments: ["הנדסה", "רפואה", "מדעי הטבע", "מדעי החברה", "ניהול", "מדעי המחשב"],
+      tuition: "כ-9,500-13,500 ₪ לשנה",
+      language: "עברית",
+      immigrantInfo: "מרכז קליטה לסטודנטים עולים, תוכניות תמיכה"
+    }
   },
   {
-    id:6, name:'אוניברסיטת בר אילן', short:'BIU', location:'רמת גן', region:'center',
-    type:'university', icon:'✡️', color:'#fdf0f8', tags:['יהדות','משפטים','מדעים'],
-    students:'19,000', acceptance:'73-87', programs:'יהדות, משפטים, מדעים, ניהול',
-    fields:['social','tech'],
-    tuition:'₪11,000–₪13,800 לשנה',
-    desc:'אוניברסיטה המשלבת מסורת יהודית עם חינוך אקדמי מודרני.',
-    website:'https://www.biu.ac.il',
-    scholarship:'https://www.biu.ac.il/students/scholarships'
+    id: 6,
+    name: "אוניברסיטת בר אילן",
+    type: "public",
+    city: "רמת גן",
+    description: "אוניברסיטה ייחודית המשלבת לימודים אקדמיים עם ערכים יהודיים ותורניים.",
+    tags: ["משפטים", "מדעי המחשב", "פסיכולוגיה", "חינוך", "יהדות"],
+    phone: "03-5318111",
+    email: "info@biu.ac.il",
+    website: "https://www.biu.ac.il",
+    address: "רחוב מקס וה' ורד אנה וב' רוזנברג, רמת גן",
+    founded: "1955",
+    students: "~18,000",
+    details: {
+      departments: ["משפטים", "מדעי המחשב", "פסיכולוגיה", "חינוך", "מחשבת ישראל", "ניהול"],
+      tuition: "כ-10,000-14,000 ₪ לשנה",
+      language: "עברית",
+      immigrantInfo: "אווירה קהילתית, מסגרות תמיכה לעולים"
+    }
   },
   {
-    id:7, name:'מכון ויצמן למדע', short:'Weizmann', location:'רחובות', region:'center',
-    type:'university', icon:'🧬', color:'#e8fdf4', tags:['מחקר','מדע','ביולוגיה'],
-    students:'1,200', acceptance:'95-99', programs:'מדעים, ביולוגיה, כימיה, פיזיקה',
-    fields:['tech'],
-    tuition:'₪0 (מלגות מלאות)',
-    desc:'מוסד מחקר עילי בינלאומי, מקבל רק תלמידי מחקר מצוינים.',
-    website:'https://www.weizmann.ac.il',
-    scholarship:'https://www.weizmann.ac.il/students'
+    id: 7,
+    name: "האוניברסיטה הפתוחה",
+    type: "public",
+    city: "רעננה",
+    description: "לימודים גמישים מהבית, ללא מבחני קבלה. מושלם לעולים החדשים שרוצים ללמוד בקצב שלהם.",
+    tags: ["מרחוק", "גמיש", "ללא מבחן קבלה", "מדעים", "חברה"],
+    phone: "09-7781111",
+    email: "info@openu.ac.il",
+    website: "https://www.openu.ac.il",
+    address: "רחוב רבי עקיבא 108, רעננה",
+    founded: "1974",
+    students: "~45,000",
+    details: {
+      departments: ["מדעים מדויקים", "מדעי החברה", "הנדסה", "ניהול", "חינוך", "מדעי הרוח"],
+      tuition: "כ-2,000-5,000 ₪ לשנה (לפי קורסים)",
+      language: "עברית",
+      immigrantInfo: "ללא מבחן קבלה! אידיאלי לעולים. גמישות מרבית בלימודים"
+    }
   },
   {
-    id:8, name:'מכללת הרצוג', short:'Herzog', location:'אפרת', region:'center',
-    type:'college', icon:'📖', color:'#fff8e8', tags:['יהדות','הוראה','ניהול'],
-    students:'3,500', acceptance:'65-78', programs:'הוראה, יהדות, ניהול',
-    fields:['social'],
-    tuition:'₪9,000–₪11,500 לשנה',
-    desc:'מכללה אקדמית דתית עם תכניות ייחודיות בתחום היהדות.',
-    website:'https://www.herzog.ac.il',
-    scholarship:'https://www.herzog.ac.il/students/scholarships'
+    id: 8,
+    name: "מכון ויצמן למדע",
+    type: "public",
+    city: "רחובות",
+    description: "מוסד מחקר מדעי מהמובילים בעולם, מתמקד בתארים מתקדמים ומחקר פורץ דרך.",
+    tags: ["מחקר", "מדעים מדויקים", "ביולוגיה", "כימיה", "פיזיקה"],
+    phone: "08-9343111",
+    email: "info@weizmann.ac.il",
+    website: "https://www.weizmann.ac.il",
+    address: "רחוב הרצל 234, רחובות",
+    founded: "1934",
+    students: "~1,000 (בעיקר מחקר)",
+    details: {
+      departments: ["מדעי החיים", "כימיה", "מדעים מדויקים ופיזיקה", "מתמטיקה ומדעי המחשב"],
+      tuition: "מלגות מחקר מלאות בדרך כלל",
+      language: "אנגלית ועברית",
+      immigrantInfo: "מוסד מחקרי בינלאומי, עבודה באנגלית, מתאים לחוקרים עולים"
+    }
   },
   {
-    id:9, name:'שנקר', short:'Shenkar', location:'רמת גן', region:'center',
-    type:'college', icon:'🎨', color:'#fdf0f8', tags:['עיצוב','אמנות','אופנה'],
-    students:'2,800', acceptance:'68-82', programs:'עיצוב תעשייתי, אופנה, אנימציה',
-    fields:['arts'],
-    tuition:'₪13,000–₪17,000 לשנה',
-    desc:'מכללת העיצוב המובילה בישראל, ידועה בחדשנות ויצירתיות.',
-    website:'https://www.shenkar.ac.il',
-    scholarship:'https://www.shenkar.ac.il/students/scholarships'
+    id: 9,
+    name: "אוניברסיטת אריאל",
+    type: "public",
+    city: "אריאל",
+    description: "האוניברסיטה הצעירה בישראל, מתמחה בהנדסה, מדעים ובריאות.",
+    tags: ["הנדסה", "מדעים", "בריאות", "אדריכלות", "ניהול"],
+    phone: "03-9066666",
+    email: "info@ariel.ac.il",
+    website: "https://www.ariel.ac.il",
+    address: "רחוב קרית חמדה, אריאל",
+    founded: "1982",
+    students: "~15,000",
+    details: {
+      departments: ["הנדסה", "מדעי הבריאות", "אדריכלות", "ניהול ומשפטים", "מדעי החברה"],
+      tuition: "כ-9,000-13,000 ₪ לשנה",
+      language: "עברית",
+      immigrantInfo: "קהילה קולטת, תוכניות לקליטת עולים"
+    }
   },
   {
-    id:10, name:'ספיר', short:'Sapir', location:'שדרות', region:'south',
-    type:'college', icon:'🎭', color:'#e8f7fd', tags:['תקשורת','אמנות','חברה'],
-    students:'6,000', acceptance:'60-75', programs:'תקשורת, אמנות, מדעי חברה',
-    fields:['arts','social'],
-    tuition:'₪8,500–₪11,000 לשנה',
-    desc:'מכללה אזורית בדרום עם דגש על נגישות ושיוויון הזדמנויות.',
-    website:'https://www.sapir.ac.il',
-    scholarship:'https://www.sapir.ac.il/students/scholarships'
+    id: 10,
+    name: "מכללת רייכמן (IDC הרצליה)",
+    type: "private",
+    city: "הרצליה",
+    description: "מכללה פרטית יוקרתית המובילה בתחומי עסקים, משפטים, ממשל ופסיכולוגיה.",
+    tags: ["עסקים", "משפטים", "ממשל", "פסיכולוגיה", "תקשורת"],
+    phone: "09-9602222",
+    email: "info@runi.ac.il",
+    website: "https://www.runi.ac.il",
+    address: "רחוב קניון, הרצליה פיתוח",
+    founded: "1994",
+    students: "~7,000",
+    details: {
+      departments: ["ניהול עסקים", "משפטים", "ממשל", "פסיכולוגיה", "תקשורת", "מדעי המחשב"],
+      tuition: "כ-30,000-45,000 ₪ לשנה",
+      language: "עברית ואנגלית",
+      immigrantInfo: "תוכניות בינלאומיות באנגלית, סביבה קוסמופוליטית"
+    }
   },
   {
-    id:11, name:'IDC הרצליה', short:'IDC', location:'הרצליה', region:'center',
-    type:'college', icon:'🌍', color:'#e8fdf4', tags:['עסקים','ממשל','תקשורת'],
-    students:'7,500', acceptance:'70-85', programs:'עסקים, תקשורת, ממשל, משפטים',
-    fields:['business','social'],
-    tuition:'₪17,000–₪22,000 לשנה',
-    desc:'מוסד בינלאומי עם דגש על יזמות ועסקים גלובליים.',
-    website:'https://www.idc.ac.il',
-    scholarship:'https://www.idc.ac.il/en/students/scholarships/'
+    id: 11,
+    name: "מכללת נתניה",
+    type: "college",
+    city: "נתניה",
+    description: "מכללה אקדמית מוכרת עם דגש על מנהל עסקים, משפטים ומדעי החברה.",
+    tags: ["ניהול", "משפטים", "חינוך", "מדעי החברה"],
+    phone: "09-8607777",
+    email: "info@netanya.ac.il",
+    website: "https://www.netanya.ac.il",
+    address: "רחוב דיזנגוף 1, נתניה",
+    founded: "1994",
+    students: "~6,000",
+    details: {
+      departments: ["ניהול עסקים", "משפטים", "חינוך", "מדעי החברה"],
+      tuition: "כ-12,000-16,000 ₪ לשנה",
+      language: "עברית",
+      immigrantInfo: "קהילה קטנה ותומכת, נגישה לעולים"
+    }
+  },
+  {
+    id: 12,
+    name: "מכללת תל חי",
+    type: "college",
+    city: "תל חי (גליל עליון)",
+    description: "מכללה אקדמית בצפון הארץ, מתמחה במדעי הטבע, חינוך וסביבה.",
+    tags: ["מדעי הטבע", "חינוך", "סביבה", "ביולוגיה", "ניהול"],
+    phone: "04-6900888",
+    email: "info@telhai.ac.il",
+    website: "https://www.telhai.ac.il",
+    address: "קריית שמונה, גליל עליון",
+    founded: "1949",
+    students: "~5,000",
+    details: {
+      departments: ["מדעי הטבע", "חינוך", "מדעי הסביבה", "ביוטכנולוגיה", "ניהול"],
+      tuition: "כ-9,000-12,000 ₪ לשנה",
+      language: "עברית",
+      immigrantInfo: "קהילה קטנה ותומכת בצפון הארץ"
+    }
   }
 ];
 
-let filteredUnis = [...universities];
-let activeTypeFilter = 'all';
-let searchQuery = '';
+// ============ STATE ============
+let currentUser = null;
+let currentQuestion = 1;
+const totalQuestions = 7;
+const answers = {};
 
-function getMatchScore(uni) {
-  const users = getUsers();
-  const userData = users[currentUser?.username];
-  if (!userData || !userData.questionnaireCompleted) return null;
-  const a = userData.answers;
-  let score = 60;
-  if (uni.fields.includes(a.interest)) score += 25;
-  if (a.income === 'low' && uni.tuition.includes('0')) score += 15;
-  if (a.age === '18-21') score += 5;
-  if (a.status === 'student') score += 5;
-  return Math.min(score, 99);
+// ============ AUTH ============
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('login-form').style.display = 'none';
+  document.getElementById('register-form').style.display = 'none';
+  if (tab === 'login') {
+    document.querySelectorAll('.auth-tab')[0].classList.add('active');
+    document.getElementById('login-form').style.display = 'block';
+  } else {
+    document.querySelectorAll('.auth-tab')[1].classList.add('active');
+    document.getElementById('register-form').style.display = 'block';
+  }
 }
 
-function renderUnis() {
-  const grid = document.getElementById('uniGrid');
-  if (!grid) return;
-  let toShow = universities.filter(u => {
-    const matchesSearch = !searchQuery || u.name.includes(searchQuery) || u.location.includes(searchQuery) || u.tags.some(t => t.includes(searchQuery));
-    const matchesType = activeTypeFilter === 'all' ||
-      (activeTypeFilter === 'university' && u.type === 'university') ||
-      (activeTypeFilter === 'college' && u.type === 'college') ||
-      (activeTypeFilter === 'tech' && u.fields.includes('tech')) ||
-      (activeTypeFilter === 'arts' && u.fields.includes('arts')) ||
-      (activeTypeFilter === 'north' && u.region === 'north') ||
-      (activeTypeFilter === 'center' && u.region === 'center') ||
-      (activeTypeFilter === 'south' && u.region === 'south');
-    return matchesSearch && matchesType;
+function doLogin() {
+  const user = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value.trim();
+  if (!user || !pass) { alert('נא למלא את כל השדות'); return; }
+  const stored = JSON.parse(localStorage.getItem('zoot_users') || '{}');
+  if (stored[user] && stored[user].password === pass) {
+    currentUser = { username: user, name: stored[user].name };
+    const completed = localStorage.getItem('zoot_q_' + user);
+    if (completed) {
+      showMainScreen();
+    } else {
+      showQuestionnaire();
+    }
+  } else {
+    alert('שם משתמש או סיסמה שגויים');
+  }
+}
+
+function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const user = document.getElementById('reg-user').value.trim();
+  const pass = document.getElementById('reg-pass').value.trim();
+  if (!name || !user || !pass) { alert('נא למלא את כל השדות'); return; }
+  const stored = JSON.parse(localStorage.getItem('zoot_users') || '{}');
+  if (stored[user]) { alert('שם המשתמש כבר תפוס'); return; }
+  stored[user] = { name, password: pass };
+  localStorage.setItem('zoot_users', JSON.stringify(stored));
+  currentUser = { username: user, name };
+  showQuestionnaire();
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('main-screen').style.display = 'none';
+  document.getElementById('auth-screen').style.display = 'flex';
+}
+
+// ============ QUESTIONNAIRE ============
+function showQuestionnaire() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('questionnaire-screen').style.display = 'flex';
+}
+
+function selectOption(btn) {
+  btn.closest('.options-grid').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[currentQuestion] = btn.textContent;
+}
+
+function nextQuestion() {
+  if (currentQuestion < totalQuestions) {
+    document.querySelector(`.question-block[data-q="${currentQuestion}"]`).classList.remove('active');
+    currentQuestion++;
+    document.querySelector(`.question-block[data-q="${currentQuestion}"]`).classList.add('active');
+    document.getElementById('btn-prev').style.visibility = 'visible';
+    if (currentQuestion === totalQuestions) document.getElementById('btn-next').textContent = 'סיום ✓';
+    document.getElementById('progress-bar').style.width = ((currentQuestion / totalQuestions) * 100) + '%';
+  } else {
+    localStorage.setItem('zoot_q_' + currentUser.username, JSON.stringify(answers));
+    showMainScreen();
+  }
+}
+
+function prevQuestion() {
+  if (currentQuestion > 1) {
+    document.querySelector(`.question-block[data-q="${currentQuestion}"]`).classList.remove('active');
+    currentQuestion--;
+    document.querySelector(`.question-block[data-q="${currentQuestion}"]`).classList.add('active');
+    document.getElementById('btn-next').textContent = 'הבא ←';
+    if (currentQuestion === 1) document.getElementById('btn-prev').style.visibility = 'hidden';
+    document.getElementById('progress-bar').style.width = ((currentQuestion / totalQuestions) * 100) + '%';
+  }
+}
+
+// ============ MAIN ============
+function showMainScreen() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('questionnaire-screen').style.display = 'none';
+  document.getElementById('main-screen').style.display = 'block';
+  document.getElementById('user-greeting').textContent = '👤 ' + (currentUser.name || currentUser.username);
+  document.getElementById('banner-name').textContent = 'שלום, ' + (currentUser.name || currentUser.username) + '! 👋';
+  renderUnis(universities);
+  showSection('rights');
+}
+
+function showSection(name) {
+  const sections = ['rights', 'universities', 'work', 'health'];
+  sections.forEach(s => {
+    const el = document.getElementById('section-' + s);
+    if (el) el.style.display = 'none';
   });
-  if (!toShow.length) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--gray-400);font-size:1rem">לא נמצאו מוסדות התואמים לחיפוש 🔍</div>';
+  const target = document.getElementById('section-' + name);
+  if (target) target.style.display = 'block';
+  document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// ============ UNIVERSITIES ============
+function renderUnis(list) {
+  const grid = document.getElementById('uni-grid');
+  const noRes = document.getElementById('no-results');
+  const count = document.getElementById('results-count');
+  if (!list.length) {
+    grid.innerHTML = '';
+    noRes.style.display = 'block';
+    count.textContent = '';
     return;
   }
-  // Sort by match score if available
-  toShow.sort((a, b) => {
-    const sa = getMatchScore(a), sb = getMatchScore(b);
-    if (sa && sb) return sb - sa;
-    return 0;
-  });
-  grid.innerHTML = toShow.map(u => {
-    const score = getMatchScore(u);
-    const badgeHtml = score ? `<div class="uni-match-badge">✨ ${score}% התאמה</div>` : '';
-    return `
-    <div class="uni-card" onclick="openUniModal(${u.id})">
+  noRes.style.display = 'none';
+  count.textContent = `נמצאו ${list.length} מוסדות`;
+  grid.innerHTML = list.map(u => `
+    <div class="uni-card" onclick="openModal(${u.id})">
       <div class="uni-card-header">
-        <div class="uni-logo-circle" style="background:${u.color}">${u.icon}</div>
-        ${badgeHtml}
+        <h3>${u.name}</h3>
+        <span class="uni-type-badge ${u.type === 'public' ? 'badge-public' : u.type === 'private' ? 'badge-private' : 'badge-college'}">
+          ${u.type === 'public' ? 'ציבורית' : u.type === 'private' ? 'פרטית' : 'מכללה'}
+        </span>
       </div>
-      <h3>${u.name}</h3>
-      <div class="uni-location">📍 ${u.location}</div>
-      <div class="uni-tags">${u.tags.map(t=>`<span class="uni-tag">${t}</span>`).join('')}</div>
-      <div class="uni-stats">
-        <div class="uni-stat"><div class="val">${u.students}</div><div class="lbl">סטודנטים</div></div>
-        <div class="uni-stat"><div class="val">${u.acceptance}</div><div class="lbl">ציון קבלה</div></div>
+      <p class="uni-location">📍 ${u.city}</p>
+      <p class="uni-description">${u.description}</p>
+      <div class="uni-tags">${u.tags.map(t => `<span class="uni-tag">${t}</span>`).join('')}</div>
+      <div class="uni-info-row">
+        <span>🎓 ${u.students} סטודנטים</span>
+        <span>📅 נוסדה ${u.founded}</span>
+        <a href="${u.website}" target="_blank" onclick="event.stopPropagation()">🌐 אתר</a>
       </div>
-      <button class="btn-uni-more">עוד פרטים ←</button>
-    </div>`;
-  }).join('');
+    </div>
+  `).join('');
 }
 
-function filterByType(type, btn) {
-  activeTypeFilter = type;
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  renderUnis();
+function filterUnis() {
+  const search = document.getElementById('uni-search').value.toLowerCase();
+  const type = document.getElementById('uni-type-filter').value;
+  const city = document.getElementById('uni-city-filter').value;
+  const filtered = universities.filter(u => {
+    const matchSearch = !search ||
+      u.name.toLowerCase().includes(search) ||
+      u.description.toLowerCase().includes(search) ||
+      u.tags.some(t => t.toLowerCase().includes(search));
+    const matchType = !type || u.type === type;
+    const matchCity = !city || u.city.includes(city);
+    return matchSearch && matchType && matchCity;
+  });
+  renderUnis(filtered);
 }
 
-function filterUnis(q) {
-  searchQuery = q;
-  renderUnis();
-}
-
-function openUniModal(id) {
+function openModal(id) {
   const u = universities.find(x => x.id === id);
   if (!u) return;
-  const score = getMatchScore(u);
-  document.getElementById('uniModalContent').innerHTML = `
-    <div class="modal-header">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
-        <div style="width:56px;height:56px;border-radius:14px;background:${u.color};display:flex;align-items:center;justify-content:center;font-size:1.8rem">${u.icon}</div>
-        <div>
-          <h2 style="font-size:1.3rem;font-weight:900;color:var(--gray-900)">${u.name}</h2>
-          <p style="color:var(--gray-400);font-size:0.85rem">📍 ${u.location}</p>
-        </div>
-        ${score ? `<div style="background:linear-gradient(135deg,var(--accent-green),#27ae60);color:white;font-size:0.8rem;font-weight:700;padding:6px 14px;border-radius:99px;margin-right:auto">✨ ${score}% התאמה</div>` : ''}
-      </div>
-    </div>
-    <div class="modal-section">
-      <h4>על המוסד</h4>
-      <p>${u.desc}</p>
-    </div>
-    <div class="modal-section">
-      <h4>פרטי לימוד</h4>
-      <ul>
-        <li>🎓 תכניות: ${u.programs}</li>
-        <li>👥 סטודנטים: ${u.students}</li>
-        <li>📊 ציון קבלה: ${u.acceptance}</li>
-        <li>💰 שכר לימוד: ${u.tuition}</li>
-      </ul>
-    </div>
-    <div class="modal-section">
-      <h4>קישורים שימושיים</h4>
-      <div class="modal-links">
-        <a href="${u.website}" target="_blank" class="modal-link">🌐 אתר רשמי — ${u.name}</a>
-        <a href="${u.scholarship}" target="_blank" class="modal-link">🎓 מלגות ומענקים</a>
-      </div>
-    </div>
+  document.getElementById('modal-content').innerHTML = `
+    <h2>${u.name}</h2>
+    <div class="modal-section"><h4>📍 מיקום</h4><p>${u.address}</p></div>
+    <div class="modal-section"><h4>📝 תיאור</h4><p>${u.description}</p></div>
+    <div class="modal-section"><h4>🎓 מחלקות עיקריות</h4><p>${u.details.departments.join(' | ')}</p></div>
+    <div class="modal-section"><h4>💰 שכר לימוד משוער</h4><p>${u.details.tuition}</p></div>
+    <div class="modal-section"><h4>🌐 שפת הלימוד</h4><p>${u.details.language}</p></div>
+    <div class="modal-section"><h4>✈️ מידע לעולים</h4><p>${u.details.immigrantInfo}</p></div>
+    <div class="modal-section"><h4>📞 טלפון</h4><p>${u.phone}</p></div>
+    <div class="modal-section"><h4>📧 אימייל</h4><p><a href="mailto:${u.email}">${u.email}</a></p></div>
+    <div class="modal-section"><h4>🌍 אתר רשמי</h4><p><a href="${u.website}" target="_blank">${u.website}</a></p></div>
+    <button class="modal-close" onclick="closeModal()">סגור</button>
   `;
-  document.getElementById('uniModal').classList.add('open');
+  document.getElementById('uni-modal').classList.add('open');
 }
 
-function closeModal() {
-  document.getElementById('uniModal').classList.remove('open');
-}
-
-document.getElementById('uniModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-// KEYBOARD
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
-
-// ENTER on auth
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    if (document.getElementById('loginForm').classList.contains('active')) doLogin();
-    else if (document.getElementById('registerForm').classList.contains('active')) doRegister();
-  }
-});
+function closeModal() { document.getElementById('uni-modal').classList.remove('open'); }
+function closeModalOutside(e) { if (e.target.id === 'uni-modal') closeModal(); }
 </script>
 </body>
 </html>
