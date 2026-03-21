@@ -39,9 +39,11 @@
     direction: rtl;
   }
 
+  /* ===== SCREEN MANAGER ===== */
   .screen { display: none; }
   .screen.active { display: flex; }
 
+  /* ===== AUTH SCREEN ===== */
   #authScreen {
     min-height: 100vh;
     align-items: center;
@@ -79,139 +81,674 @@
     z-index: 1;
     animation: fadeInUp 0.6s ease;
   }
-  .auth-logo { text-align: center; margin-bottom: 32px; }
+  .auth-logo {
+    text-align: center;
+    margin-bottom: 32px;
+  }
   .auth-logo svg { width: 80px; height: 80px; }
-  .auth-logo h1 { font-size: 2rem; font-weight: 900; color: var(--primary); letter-spacing: -1px; margin-top: 8px; }
-  .auth-logo p { font-size: 0.9rem; color: var(--gray-500); margin-top: 4px; }
-  .auth-tabs { display: flex; background: var(--gray-100); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 28px; }
-  .auth-tab { flex: 1; padding: 10px; text-align: center; font-size: 0.95rem; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.25s; color: var(--gray-500); border: none; background: transparent; font-family: 'Heebo', sans-serif; }
-  .auth-tab.active { background: var(--white); color: var(--primary); box-shadow: var(--shadow-sm); }
+  .auth-logo h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: -1px;
+    margin-top: 8px;
+  }
+  .auth-logo p {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    margin-top: 4px;
+  }
+  .auth-tabs {
+    display: flex;
+    background: var(--gray-100);
+    border-radius: var(--radius-sm);
+    padding: 4px;
+    margin-bottom: 28px;
+  }
+  .auth-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.25s;
+    color: var(--gray-500);
+    border: none;
+    background: transparent;
+    font-family: 'Heebo', sans-serif;
+  }
+  .auth-tab.active {
+    background: var(--white);
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+  }
   .auth-form { display: none; }
   .auth-form.active { display: block; }
   .form-group { margin-bottom: 18px; }
-  .form-group label { display: block; font-size: 0.88rem; font-weight: 600; color: var(--gray-700); margin-bottom: 7px; }
-  .form-group input { width: 100%; padding: 13px 16px; border: 2px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.95rem; font-family: 'Heebo', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; outline: none; color: var(--gray-900); }
-  .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(46,184,230,0.15); }
-  .btn-primary { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: var(--white); border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 700; font-family: 'Heebo', sans-serif; cursor: pointer; transition: all 0.25s; letter-spacing: 0.3px; }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(46,184,230,0.35); }
-  .auth-error { background: #fff0f3; border: 1px solid #ffc0cb; color: #c0392b; padding: 10px 14px; border-radius: 8px; font-size: 0.88rem; margin-bottom: 14px; display: none; }
+  .form-group label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 7px;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-family: 'Heebo', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    color: var(--gray-900);
+  }
+  .form-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(46,184,230,0.15);
+  }
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Heebo', sans-serif;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(46,184,230,0.35);
+  }
+  .btn-primary:active { transform: translateY(0); }
+  .auth-error {
+    background: #fff0f3;
+    border: 1px solid #ffc0cb;
+    color: #c0392b;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    margin-bottom: 14px;
+    display: none;
+  }
 
-  #appScreen { min-height: 100vh; flex-direction: column; }
+  /* ===== MAIN APP ===== */
+  #appScreen {
+    min-height: 100vh;
+    flex-direction: column;
+  }
 
-  .topbar { background: var(--white); border-bottom: 2px solid var(--gray-200); padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
-  .topbar-logo { display: flex; align-items: center; gap: 10px; }
+  /* TOPBAR */
+  .topbar {
+    background: var(--white);
+    border-bottom: 2px solid var(--gray-200);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
   .topbar-logo svg { width: 36px; height: 36px; }
-  .topbar-logo span { font-size: 1.4rem; font-weight: 900; color: var(--primary); letter-spacing: -0.5px; }
-  .topbar-nav { display: flex; align-items: center; gap: 8px; }
-  .topbar-nav button { padding: 8px 16px; border: 2px solid transparent; border-radius: 8px; font-family: 'Heebo', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s; background: transparent; color: var(--gray-500); }
-  .topbar-nav button.active, .topbar-nav button:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary-mid); }
-  .topbar-user { display: flex; align-items: center; gap: 10px; }
-  .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.95rem; }
-  .user-name { font-size: 0.9rem; font-weight: 600; color: var(--gray-700); }
-  .btn-logout { padding: 7px 14px; border: 2px solid var(--gray-300); border-radius: 8px; background: transparent; font-family: 'Heebo', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--gray-500); cursor: pointer; transition: all 0.2s; }
+  .topbar-logo span {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+  }
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .topbar-nav button {
+    padding: 8px 16px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    color: var(--gray-500);
+  }
+  .topbar-nav button.active, .topbar-nav button:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-color: var(--primary-mid);
+  }
+  .topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .user-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .user-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-700);
+  }
+  .btn-logout {
+    padding: 7px 14px;
+    border: 2px solid var(--gray-300);
+    border-radius: 8px;
+    background: transparent;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
   .btn-logout:hover { border-color: #e74c3c; color: #e74c3c; }
 
-  .app-body { display: flex; flex: 1; min-height: calc(100vh - 64px); }
+  /* APP BODY */
+  .app-body {
+    display: flex;
+    flex: 1;
+    min-height: calc(100vh - 64px);
+  }
 
-  .sidebar { width: 300px; background: var(--white); border-left: 2px solid var(--gray-200); padding: 24px 20px; position: sticky; top: 64px; height: calc(100vh - 64px); overflow-y: auto; flex-shrink: 0; }
-  .sidebar-title { font-size: 1rem; font-weight: 700; color: var(--gray-700); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--gray-200); display: flex; align-items: center; gap: 8px; }
+  /* SIDEBAR */
+  .sidebar {
+    width: 300px;
+    background: var(--white);
+    border-left: 2px solid var(--gray-200);
+    padding: 24px 20px;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .sidebar-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-700);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
   .sidebar-title span { font-size: 1.2rem; }
 
-  .q-progress-bar { background: var(--gray-200); border-radius: 99px; height: 6px; margin-bottom: 20px; overflow: hidden; }
-  .q-progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%); border-radius: 99px; transition: width 0.4s ease; }
+  /* QUESTIONNAIRE */
+  .q-progress-bar {
+    background: var(--gray-200);
+    border-radius: 99px;
+    height: 6px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .q-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
   .q-step { display: none; animation: fadeInUp 0.3s ease; }
   .q-step.active { display: block; }
-  .q-num { font-size: 0.75rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-  .q-text { font-size: 1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 14px; line-height: 1.4; }
+  .q-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+  .q-text {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
   .q-options { display: flex; flex-direction: column; gap: 8px; }
-  .q-option { padding: 10px 14px; border: 2px solid var(--gray-300); border-radius: 10px; cursor: pointer; font-size: 0.88rem; font-weight: 500; color: var(--gray-700); transition: all 0.2s; background: var(--white); text-align: right; font-family: 'Heebo', sans-serif; }
+  .q-option {
+    padding: 10px 14px;
+    border: 2px solid var(--gray-300);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    transition: all 0.2s;
+    background: var(--white);
+    text-align: right;
+    font-family: 'Heebo', sans-serif;
+  }
   .q-option:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
   .q-option.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 700; }
-  .q-nav { display: flex; justify-content: space-between; margin-top: 16px; gap: 8px; }
-  .q-nav button { flex: 1; padding: 10px; border-radius: 9px; font-family: 'Heebo', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 2px solid var(--gray-300); background: var(--white); color: var(--gray-500); }
-  .q-nav .q-next { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); border-color: transparent; color: white; }
+  .q-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+    gap: 8px;
+  }
+  .q-nav button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 9px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid var(--gray-300);
+    background: var(--white);
+    color: var(--gray-500);
+  }
+  .q-nav .q-next {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-color: transparent;
+    color: white;
+  }
   .q-nav .q-next:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(46,184,230,0.3); }
   .q-nav .q-prev:hover { border-color: var(--primary); color: var(--primary); }
-  .q-done { background: linear-gradient(135deg, var(--accent-green) 0%, #27ae60 100%); border: none; color: white; padding: 12px; border-radius: 10px; width: 100%; font-family: 'Heebo', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 16px; transition: all 0.2s; }
+  .q-done {
+    background: linear-gradient(135deg, var(--accent-green) 0%, #27ae60 100%);
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    width: 100%;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: all 0.2s;
+  }
   .q-done:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(46,204,142,0.35); }
-  .q-completed { text-align: center; padding: 20px 10px; }
-  .q-completed .check-icon { width: 56px; height: 56px; background: linear-gradient(135deg, var(--accent-green), #27ae60); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 1.6rem; }
+  .q-completed {
+    text-align: center;
+    padding: 20px 10px;
+  }
+  .q-completed .check-icon {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, var(--accent-green), #27ae60);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    font-size: 1.6rem;
+  }
   .q-completed h3 { font-size: 1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
   .q-completed p { font-size: 0.82rem; color: var(--gray-500); line-height: 1.5; }
-  .btn-redo { margin-top: 14px; padding: 9px 18px; border: 2px solid var(--primary); border-radius: 8px; background: transparent; color: var(--primary); font-family: 'Heebo', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-redo {
+    margin-top: 14px;
+    padding: 9px 18px;
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--primary);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
   .btn-redo:hover { background: var(--primary); color: white; }
 
+  /* SIDEBAR MENU */
   .sidebar-menu { margin-top: 20px; }
-  .sidebar-menu-title { font-size: 0.78rem; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--gray-200); }
-  .sidebar-menu-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 0.88rem; font-weight: 600; color: var(--gray-700); transition: all 0.2s; margin-bottom: 4px; border: 2px solid transparent; }
+  .sidebar-menu-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .sidebar-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    transition: all 0.2s;
+    margin-bottom: 4px;
+    border: 2px solid transparent;
+  }
   .sidebar-menu-item:hover { background: var(--primary-light); color: var(--primary); }
   .sidebar-menu-item.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary-mid); }
   .sidebar-menu-item .menu-icon { font-size: 1.1rem; flex-shrink: 0; }
-  .menu-badge { margin-right: auto; background: var(--primary); color: white; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 99px; }
-  .menu-badge.soon { background: var(--gray-300); color: var(--gray-500); }
+  .menu-badge {
+    margin-right: auto;
+    background: var(--primary);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 99px;
+  }
+  .menu-badge.soon {
+    background: var(--gray-300);
+    color: var(--gray-500);
+  }
 
-  .main-content { flex: 1; padding: 32px; overflow-y: auto; }
+  /* MAIN CONTENT */
+  .main-content {
+    flex: 1;
+    padding: 32px;
+    overflow-y: auto;
+  }
+
+  /* SECTION */
   .content-section { display: none; }
   .content-section.active { display: block; animation: fadeInUp 0.4s ease; }
 
-  .welcome-banner { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); border-radius: var(--radius-lg); padding: 36px 40px; color: white; margin-bottom: 28px; position: relative; overflow: hidden; }
-  .welcome-banner::after { content: '🧭'; position: absolute; font-size: 8rem; opacity: 0.12; left: 20px; top: -10px; pointer-events: none; }
+  /* HOME SECTION */
+  .welcome-banner {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: var(--radius-lg);
+    padding: 36px 40px;
+    color: white;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .welcome-banner::after {
+    content: '🧭';
+    position: absolute;
+    font-size: 8rem;
+    opacity: 0.12;
+    left: 20px;
+    top: -10px;
+    pointer-events: none;
+  }
   .welcome-banner h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; }
   .welcome-banner p { font-size: 1rem; opacity: 0.85; max-width: 500px; }
-  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
-  .stat-card { background: var(--white); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); border: 2px solid var(--gray-200); text-align: center; transition: all 0.25s; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--gray-200);
+    text-align: center;
+    transition: all 0.25s;
+  }
   .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
   .stat-card .stat-icon { font-size: 2rem; margin-bottom: 8px; }
   .stat-card .stat-num { font-size: 2rem; font-weight: 900; color: var(--primary); }
   .stat-card .stat-label { font-size: 0.82rem; color: var(--gray-500); font-weight: 500; margin-top: 3px; }
-  .modules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .module-card { background: var(--white); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); border: 2px solid var(--gray-200); cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .module-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--gray-200);
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
   .module-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--primary-mid); }
   .module-card .mod-icon { font-size: 2.2rem; margin-bottom: 12px; }
   .module-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
   .module-card p { font-size: 0.85rem; color: var(--gray-500); line-height: 1.5; }
-  .module-card .mod-tag { position: absolute; top: 14px; left: 14px; background: var(--primary-light); color: var(--primary); font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 99px; border: 1px solid var(--primary-mid); }
-  .module-card .mod-tag.soon { background: var(--gray-200); color: var(--gray-500); border-color: var(--gray-300); }
-  .section-title { font-size: 1.4rem; font-weight: 800; color: var(--gray-900); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--gray-200); display: flex; align-items: center; gap: 10px; }
+  .module-card .mod-tag {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--primary-mid);
+  }
+  .module-card .mod-tag.soon {
+    background: var(--gray-200);
+    color: var(--gray-500);
+    border-color: var(--gray-300);
+  }
+  .section-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
+  /* RIGHTS SECTION */
   .rights-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .right-card { background: var(--white); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow-sm); border: 2px solid var(--gray-200); transition: all 0.25s; }
+  .right-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--gray-200);
+    transition: all 0.25s;
+  }
   .right-card:hover { border-color: var(--primary-mid); box-shadow: var(--shadow-md); }
-  .right-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-  .right-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+  .right-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .right-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
   .right-card h3 { font-size: 1rem; font-weight: 700; color: var(--gray-900); }
   .right-card p { font-size: 0.85rem; color: var(--gray-500); line-height: 1.6; margin-bottom: 14px; }
-  .right-amount { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
-  .btn-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--primary-light); border: 2px solid var(--primary-mid); border-radius: 8px; color: var(--primary); font-size: 0.82rem; font-weight: 700; text-decoration: none; transition: all 0.2s; font-family: 'Heebo', sans-serif; cursor: pointer; }
+  .right-amount {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+  .btn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--primary-light);
+    border: 2px solid var(--primary-mid);
+    border-radius: 8px;
+    color: var(--primary);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-family: 'Heebo', sans-serif;
+    cursor: pointer;
+  }
   .btn-link:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
-  .uni-search-bar { display: flex; gap: 12px; margin-bottom: 24px; align-items: center; }
-  .uni-search-input { flex: 1; padding: 13px 18px; border: 2px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.95rem; font-family: 'Heebo', sans-serif; outline: none; transition: border-color 0.2s, box-shadow 0.2s; background: var(--white); color: var(--gray-900); }
+  /* UNIVERSITIES SECTION */
+  .uni-search-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    align-items: center;
+  }
+  .uni-search-input {
+    flex: 1;
+    padding: 13px 18px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-family: 'Heebo', sans-serif;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: var(--white);
+    color: var(--gray-900);
+  }
   .uni-search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(46,184,230,0.15); }
   .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .chip { padding: 7px 16px; border: 2px solid var(--gray-300); border-radius: 99px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; background: var(--white); color: var(--gray-500); font-family: 'Heebo', sans-serif; }
+  .chip {
+    padding: 7px 16px;
+    border: 2px solid var(--gray-300);
+    border-radius: 99px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--white);
+    color: var(--gray-500);
+    font-family: 'Heebo', sans-serif;
+  }
   .chip:hover, .chip.active { background: var(--primary); border-color: var(--primary); color: white; }
   .uni-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-  .uni-card { background: var(--white); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); border: 2px solid var(--gray-200); transition: all 0.25s; cursor: pointer; }
+  .uni-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--gray-200);
+    transition: all 0.25s;
+    cursor: pointer;
+  }
   .uni-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary-mid); }
   .uni-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-  .uni-logo-circle { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
-  .uni-match-badge { background: linear-gradient(135deg, var(--accent-green), #27ae60); color: white; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 99px; }
+  .uni-logo-circle {
+    width: 50px; height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .uni-match-badge {
+    background: linear-gradient(135deg, var(--accent-green), #27ae60);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 99px;
+  }
   .uni-card h3 { font-size: 1rem; font-weight: 800; color: var(--gray-900); margin-bottom: 4px; }
   .uni-card .uni-location { font-size: 0.8rem; color: var(--gray-400); margin-bottom: 12px; display: flex; align-items: center; gap: 4px; }
   .uni-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-  .uni-tag { background: var(--primary-light); color: var(--primary); font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 99px; border: 1px solid var(--primary-mid); }
+  .uni-tag {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--primary-mid);
+  }
   .uni-stats { display: flex; gap: 14px; margin-bottom: 14px; }
   .uni-stat { text-align: center; }
   .uni-stat .val { font-size: 0.95rem; font-weight: 800; color: var(--primary); }
   .uni-stat .lbl { font-size: 0.7rem; color: var(--gray-400); }
-  .btn-uni-more { width: 100%; padding: 10px; border: 2px solid var(--primary); border-radius: 9px; background: transparent; color: var(--primary); font-family: 'Heebo', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; }
+  .btn-uni-more {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--primary);
+    border-radius: 9px;
+    background: transparent;
+    color: var(--primary);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
   .btn-uni-more:hover { background: var(--primary); color: white; }
 
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,34,51,0.55); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); animation: fadeIn 0.2s ease; }
+  /* UNI MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,34,51,0.55);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease;
+  }
   .modal-overlay.open { display: flex; }
-  .modal-box { background: var(--white); border-radius: var(--radius-lg); padding: 36px; width: 90%; max-width: 560px; max-height: 85vh; overflow-y: auto; animation: fadeInUp 0.3s ease; position: relative; }
-  .modal-close { position: absolute; top: 16px; left: 16px; width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--gray-300); background: var(--white); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; color: var(--gray-500); transition: all 0.2s; }
+  .modal-box {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    width: 90%;
+    max-width: 560px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: fadeInUp 0.3s ease;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--gray-300);
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--gray-500);
+    transition: all 0.2s;
+  }
   .modal-close:hover { background: #fff0f0; border-color: #e74c3c; color: #e74c3c; }
   .modal-header { margin-bottom: 20px; }
   .modal-header h2 { font-size: 1.4rem; font-weight: 900; color: var(--gray-900); }
@@ -222,17 +759,60 @@
   .modal-section ul { padding-right: 16px; }
   .modal-section ul li { font-size: 0.88rem; color: var(--gray-500); line-height: 1.9; }
   .modal-links { display: flex; flex-direction: column; gap: 8px; }
-  .modal-link { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--primary-light); border: 2px solid var(--primary-mid); border-radius: 10px; color: var(--primary); font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+  .modal-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--primary-light);
+    border: 2px solid var(--primary-mid);
+    border-radius: 10px;
+    color: var(--primary);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
   .modal-link:hover { background: var(--primary); color: white; }
 
-  .match-result-card { background: linear-gradient(135deg, var(--primary-light) 0%, #fff 100%); border: 2px solid var(--primary-mid); border-radius: var(--radius-lg); padding: 28px 32px; margin-bottom: 24px; display: flex; align-items: center; gap: 24px; }
-  .match-circle { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 1.6rem; font-weight: 900; box-shadow: 0 8px 24px rgba(46,184,230,0.35); }
+  /* PERSONAL MATCH SECTION */
+  .match-result-card {
+    background: linear-gradient(135deg, var(--primary-light) 0%, #fff 100%);
+    border: 2px solid var(--primary-mid);
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .match-circle {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 1.6rem;
+    font-weight: 900;
+    box-shadow: 0 8px 24px rgba(46,184,230,0.35);
+  }
   .match-text h3 { font-size: 1.2rem; font-weight: 800; color: var(--gray-900); margin-bottom: 6px; }
   .match-text p { font-size: 0.88rem; color: var(--gray-500); line-height: 1.6; }
 
-  @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  /* ANIMATIONS */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
 
+  /* RESPONSIVE */
   @media (max-width: 900px) {
     .sidebar { width: 240px; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -253,7 +833,7 @@
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
+<!-- ==================== AUTH SCREEN ==================== -->
 <div id="authScreen" class="screen active">
   <div class="auth-card">
     <div class="auth-logo">
@@ -273,25 +853,46 @@
       <button class="auth-tab active" onclick="switchTab('login')">התחברות</button>
       <button class="auth-tab" onclick="switchTab('register')">הרשמה</button>
     </div>
+    <!-- LOGIN -->
     <div class="auth-form active" id="loginForm">
       <div class="auth-error" id="loginError">שם משתמש או סיסמה שגויים</div>
-      <div class="form-group"><label>שם משתמש</label><input type="text" id="loginUser" placeholder="הכנס שם משתמש"/></div>
-      <div class="form-group"><label>סיסמה</label><input type="password" id="loginPass" placeholder="הכנס סיסמה"/></div>
+      <div class="form-group">
+        <label>שם משתמש</label>
+        <input type="text" id="loginUser" placeholder="הכנס שם משתמש"/>
+      </div>
+      <div class="form-group">
+        <label>סיסמה</label>
+        <input type="password" id="loginPass" placeholder="הכנס סיסמה"/>
+      </div>
       <button class="btn-primary" onclick="doLogin()">כניסה 🚀</button>
     </div>
+    <!-- REGISTER -->
     <div class="auth-form" id="registerForm">
       <div class="auth-error" id="regError"></div>
-      <div class="form-group"><label>שם מלא</label><input type="text" id="regName" placeholder="שם ומשפחה"/></div>
-      <div class="form-group"><label>שם משתמש</label><input type="text" id="regUser" placeholder="בחר שם משתמש"/></div>
-      <div class="form-group"><label>סיסמה</label><input type="password" id="regPass" placeholder="לפחות 6 תווים"/></div>
-      <div class="form-group"><label>אימות סיסמה</label><input type="password" id="regPass2" placeholder="חזור על הסיסמה"/></div>
+      <div class="form-group">
+        <label>שם מלא</label>
+        <input type="text" id="regName" placeholder="שם ומשפחה"/>
+      </div>
+      <div class="form-group">
+        <label>שם משתמש</label>
+        <input type="text" id="regUser" placeholder="בחר שם משתמש"/>
+      </div>
+      <div class="form-group">
+        <label>סיסמה</label>
+        <input type="password" id="regPass" placeholder="לפחות 6 תווים"/>
+      </div>
+      <div class="form-group">
+        <label>אימות סיסמה</label>
+        <input type="password" id="regPass2" placeholder="חזור על הסיסמה"/>
+      </div>
       <button class="btn-primary" onclick="doRegister()">יצירת חשבון ✨</button>
     </div>
   </div>
 </div>
 
-<!-- APP SCREEN -->
+<!-- ==================== APP SCREEN ==================== -->
 <div id="appScreen" class="screen">
+  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-logo">
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -319,9 +920,11 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="sidebar-title"><span>📋</span> השאלון שלי</div>
+      <!-- QUESTIONNAIRE -->
       <div id="questionnaireArea">
         <div class="q-progress-bar"><div class="q-progress-fill" id="qProgress" style="width:14%"></div></div>
 
+        <!-- Q1 -->
         <div class="q-step active" id="qStep1">
           <div class="q-num">שאלה 1 מתוך 7</div>
           <div class="q-text">מה הגיל שלך?</div>
@@ -334,6 +937,7 @@
           <div class="q-nav"><button class="q-next" onclick="qNext(1)">הבא ←</button></div>
         </div>
 
+        <!-- Q2 -->
         <div class="q-step" id="qStep2">
           <div class="q-num">שאלה 2 מתוך 7</div>
           <div class="q-text">מה הסטטוס התעסוקתי שלך?</div>
@@ -349,6 +953,7 @@
           </div>
         </div>
 
+        <!-- Q3 -->
         <div class="q-step" id="qStep3">
           <div class="q-num">שאלה 3 מתוך 7</div>
           <div class="q-text">מה רמת ההכנסה החודשית שלך/משפחתך?</div>
@@ -364,6 +969,7 @@
           </div>
         </div>
 
+        <!-- Q4 -->
         <div class="q-step" id="qStep4">
           <div class="q-num">שאלה 4 מתוך 7</div>
           <div class="q-text">האם עברת לאחרונה מעבר חיים משמעותי?</div>
@@ -379,6 +985,7 @@
           </div>
         </div>
 
+        <!-- Q5 -->
         <div class="q-step" id="qStep5">
           <div class="q-num">שאלה 5 מתוך 7</div>
           <div class="q-text">מה תחום העניין שלך?</div>
@@ -394,6 +1001,7 @@
           </div>
         </div>
 
+        <!-- Q6 -->
         <div class="q-step" id="qStep6">
           <div class="q-num">שאלה 6 מתוך 7</div>
           <div class="q-text">האם יש לך מוגבלות או צרכים מיוחדים?</div>
@@ -408,6 +1016,7 @@
           </div>
         </div>
 
+        <!-- Q7 -->
         <div class="q-step" id="qStep7">
           <div class="q-num">שאלה 7 מתוך 7</div>
           <div class="q-text">מה המטרה העיקרית שלך כרגע?</div>
@@ -423,6 +1032,7 @@
           <button class="q-done" onclick="completeQuestionnaire()">✅ סיים את השאלון!</button>
         </div>
 
+        <!-- COMPLETED -->
         <div class="q-step" id="qCompleted">
           <div class="q-completed">
             <div class="check-icon">✅</div>
@@ -433,20 +1043,36 @@
         </div>
       </div>
 
+      <!-- SIDEBAR MENU -->
       <div class="sidebar-menu">
         <div class="sidebar-menu-title">ניווט מהיר</div>
-        <div class="sidebar-menu-item active" onclick="showSection('home')"><span class="menu-icon">🏠</span> דף הבית</div>
-        <div class="sidebar-menu-item" onclick="showSection('rights')"><span class="menu-icon">📜</span> זכויות שלי<span class="menu-badge">4</span></div>
-        <div class="sidebar-menu-item" onclick="showSection('universities')"><span class="menu-icon">🎓</span> אוניברסיטאות</div>
-        <div class="sidebar-menu-item" style="cursor:default;opacity:0.6"><span class="menu-icon">💼</span> תעסוקה<span class="menu-badge soon">בקרוב</span></div>
-        <div class="sidebar-menu-item" style="cursor:default;opacity:0.6"><span class="menu-icon">🏥</span> בריאות<span class="menu-badge soon">בקרוב</span></div>
-        <div class="sidebar-menu-item" style="cursor:default;opacity:0.6"><span class="menu-icon">🏠</span> דיור<span class="menu-badge soon">בקרוב</span></div>
+        <div class="sidebar-menu-item active" onclick="showSection('home')">
+          <span class="menu-icon">🏠</span> דף הבית
+        </div>
+        <div class="sidebar-menu-item" onclick="showSection('rights')">
+          <span class="menu-icon">📜</span> זכויות שלי
+          <span class="menu-badge">4</span>
+        </div>
+        <div class="sidebar-menu-item" onclick="showSection('universities')">
+          <span class="menu-icon">🎓</span> אוניברסיטאות
+        </div>
+        <div class="sidebar-menu-item" style="cursor:default;opacity:0.6">
+          <span class="menu-icon">💼</span> תעסוקה
+          <span class="menu-badge soon">בקרוב</span>
+        </div>
+        <div class="sidebar-menu-item" style="cursor:default;opacity:0.6">
+          <span class="menu-icon">🏥</span> בריאות
+          <span class="menu-badge soon">בקרוב</span>
+        </div>
+        <div class="sidebar-menu-item" style="cursor:default;opacity:0.6">
+          <span class="menu-icon">🏠</span> דיור
+          <span class="menu-badge soon">בקרוב</span>
+        </div>
       </div>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
-
       <!-- HOME -->
       <div class="content-section active" id="section-home">
         <div class="welcome-banner">
@@ -490,7 +1116,7 @@
       <!-- RIGHTS -->
       <div class="content-section" id="section-rights">
         <h2 class="section-title">📜 הזכויות שלי</h2>
-        <div class="match-result-card">
+        <div class="match-result-card" id="rightsMatchCard">
           <div class="match-circle" id="rightsMatchPct">?</div>
           <div class="match-text">
             <h3 id="rightsMatchTitle">ענה על השאלון לקבלת המלצות</h3>
@@ -499,25 +1125,37 @@
         </div>
         <div class="rights-grid">
           <div class="right-card">
-            <div class="right-card-header"><div class="right-icon" style="background:#e8f7fd">💰</div><h3>קצבת נכות כללית</h3></div>
+            <div class="right-card-header">
+              <div class="right-icon" style="background:#e8f7fd">💰</div>
+              <h3>קצבת נכות כללית</h3>
+            </div>
             <p>תמיכה כספית לאנשים עם מוגבלות המתקשים לעבוד. מגיעה מהביטוח הלאומי.</p>
             <div class="right-amount">עד ₪3,285 לחודש</div>
             <a href="https://www.btl.gov.il/benefits/Disability/Pages/default.aspx" target="_blank" class="btn-link">🔗 לאתר הביטוח הלאומי</a>
           </div>
           <div class="right-card">
-            <div class="right-card-header"><div class="right-icon" style="background:#e8fdf4">📚</div><h3>מלגות לסטודנטים</h3></div>
+            <div class="right-card-header">
+              <div class="right-icon" style="background:#e8fdf4">📚</div>
+              <h3>מלגות לסטודנטים</h3>
+            </div>
             <p>מגוון מלגות ממשלתיות ופרטיות לסטודנטים הזכאים על בסיס כלכלי, אקדמי ואישי.</p>
             <div class="right-amount">עד ₪20,000 לשנה</div>
             <a href="https://www.studentauthority.co.il/" target="_blank" class="btn-link">🔗 רשות הסטודנטים</a>
           </div>
           <div class="right-card">
-            <div class="right-card-header"><div class="right-icon" style="background:#fff8e8">🏠</div><h3>סיוע בדיור לצעירים</h3></div>
+            <div class="right-card-header">
+              <div class="right-icon" style="background:#fff8e8">🏠</div>
+              <h3>סיוע בדיור לצעירים</h3>
+            </div>
             <p>תוכניות סיוע בשכר דירה ורכישת דירה ראשונה לצעירים ולמשפחות צעירות.</p>
             <div class="right-amount">עד ₪800 לחודש</div>
             <a href="https://www.gov.il/he/departments/ministry_of_construction_and_housing" target="_blank" class="btn-link">🔗 משרד השיכון</a>
           </div>
           <div class="right-card">
-            <div class="right-card-header"><div class="right-icon" style="background:#fdf0f8">💼</div><h3>דמי אבטלה</h3></div>
+            <div class="right-card-header">
+              <div class="right-icon" style="background:#fdf0f8">💼</div>
+              <h3>דמי אבטלה</h3>
+            </div>
             <p>תגמול לעובדים שאיבדו את עבודתם, בהתאם לוותק ולשכר הקודם.</p>
             <div class="right-amount">עד 80% מהשכר</div>
             <a href="https://www.btl.gov.il/benefits/Unemployment/Pages/default.aspx" target="_blank" class="btn-link">🔗 הביטוח הלאומי</a>
@@ -528,7 +1166,7 @@
       <!-- UNIVERSITIES -->
       <div class="content-section" id="section-universities">
         <h2 class="section-title">🎓 אוניברסיטאות ומכללות בישראל</h2>
-        <div class="match-result-card">
+        <div class="match-result-card" id="uniMatchCard">
           <div class="match-circle" id="uniMatchPct">?</div>
           <div class="match-text">
             <h3 id="uniMatchTitle">ענה על השאלון לקבלת התאמה אישית</h3>
@@ -550,7 +1188,6 @@
         </div>
         <div class="uni-grid" id="uniGrid"></div>
       </div>
-
     </div>
   </div>
 </div>
@@ -564,14 +1201,24 @@
 </div>
 
 <script>
+// ===== DATA =====
 const USERS_KEY = 'zoot_users';
 const SESSION_KEY = 'zoot_session';
 
-function getUsers() { return JSON.parse(localStorage.getItem(USERS_KEY) || '{}'); }
-function saveUsers(u) { localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
-function getSession() { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); }
-function saveSession(s) { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); }
+function getUsers() {
+  return JSON.parse(localStorage.getItem(USERS_KEY) || '{}');
+}
+function saveUsers(u) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(u));
+}
+function getSession() {
+  return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+}
+function saveSession(s) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+}
 
+// ===== AUTH =====
 let currentUser = null;
 
 function switchTab(tab) {
@@ -588,7 +1235,9 @@ function doLogin() {
   const users = getUsers();
   const err = document.getElementById('loginError');
   if (!user || !pass) { err.textContent='יש למלא את כל השדות'; err.style.display='block'; return; }
-  if (!users[user] || users[user].password !== pass) { err.style.display='block'; return; }
+  if (!users[user] || users[user].password !== pass) {
+    err.style.display='block'; return;
+  }
   err.style.display='none';
   currentUser = { username: user, name: users[user].name };
   saveSession(currentUser);
@@ -640,11 +1289,16 @@ function loadApp() {
   showSection('home');
 }
 
+// ===== CHECK SESSION =====
 (function() {
   const s = getSession();
-  if (s) { currentUser = s; loadApp(); }
+  if (s) {
+    currentUser = s;
+    loadApp();
+  }
 })();
 
+// ===== QUESTIONNAIRE =====
 let qAnswers = {};
 let currentStep = 1;
 const totalSteps = 7;
@@ -662,14 +1316,16 @@ function qNext(step) {
   document.getElementById('qStep'+step).classList.remove('active');
   currentStep = step + 1;
   document.getElementById('qStep'+currentStep).classList.add('active');
-  document.getElementById('qProgress').style.width = (currentStep/totalSteps*100) + '%';
+  const pct = (currentStep/totalSteps)*100;
+  document.getElementById('qProgress').style.width = pct + '%';
 }
 
 function qPrev(step) {
   document.getElementById('qStep'+step).classList.remove('active');
   currentStep = step - 1;
   document.getElementById('qStep'+currentStep).classList.add('active');
-  document.getElementById('qProgress').style.width = (currentStep/totalSteps*100) + '%';
+  const pct = (currentStep/totalSteps)*100;
+  document.getElementById('qProgress').style.width = pct + '%';
 }
 
 function completeQuestionnaire() {
@@ -710,15 +1366,18 @@ function updateMatchCards() {
   if (a.age === '18-21') score += 8;
   if (a.status === 'student') score += 5;
   score = Math.min(score, 98);
+
   document.getElementById('rightsMatchPct').textContent = score + '%';
-  document.getElementById('rightsMatchTitle').textContent = score + '% מהזכויות רלוונטיות לך';
+  document.getElementById('rightsMatchTitle').textContent = `${score}% מהזכויות רלוונטיות לך`;
   document.getElementById('rightsMatchDesc').textContent = 'בהתבסס על הפרופיל שלך, מצאנו זכויות מותאמות אישית.';
+
   const uniPct = a.interest === 'tech' ? 88 : a.interest === 'arts' ? 82 : 75;
   document.getElementById('uniMatchPct').textContent = uniPct + '%';
-  document.getElementById('uniMatchTitle').textContent = uniPct + '% התאמה עם מוסדות בישראל';
+  document.getElementById('uniMatchTitle').textContent = `${uniPct}% התאמה עם מוסדות בישראל`;
   document.getElementById('uniMatchDesc').textContent = 'על בסיס תחומי העניין והפרופיל שלך, מצאנו המלצות מותאמות.';
 }
 
+// ===== NAVIGATION =====
 function showSection(name) {
   document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.sidebar-menu-item').forEach(s => s.classList.remove('active'));
@@ -731,7 +1390,7 @@ function showSection(name) {
   if (map[name] !== undefined) menuItems[map[name]].classList.add('active');
 }
 
-// ===== נתוני אוניברסיטאות מעודכנים =====
+// ===== UNIVERSITIES DATA =====
 const universities = [
   {
     id:1, name:'האוניברסיטה העברית', short:'Hebrew U', location:'ירושלים', region:'center',
@@ -739,112 +1398,113 @@ const universities = [
     students:'23,000', acceptance:'76-92', programs:'מדעים, הומניסטיקה, משפטים, רפואה',
     fields:['tech','social','arts'],
     tuition:'₪12,000–₪15,000 לשנה',
-    desc:'אחת האוניברסיטאות המובילות במזרח התיכון, מדורגת בין 100 האוניברסיטאות הטובות בעולם. מפעילה 7 קמפוסים בירושלים.',
+    desc:'אחת האוניברסיטאות המובילות במזרח התיכון, עם מרכז מחקר בינלאומי.',
     website:'https://www.huji.ac.il',
     scholarship:'https://scholarship.huji.ac.il'
   },
   {
     id:2, name:'הטכניון', short:'Technion', location:'חיפה', region:'north',
     type:'university', icon:'⚙️', color:'#e8fdf4', tags:['הנדסה','טכנולוגיה','מדעים מדויקים'],
-    students:'13,000', acceptance:'87-97', programs:'הנדסה, מדעים, אדריכלות, רפואה',
+    students:'13,000', acceptance:'87-97', programs:'הנדסה, מדעים, אדריכלות',
     fields:['tech'],
     tuition:'₪11,500–₪14,000 לשנה',
-    desc:'המוסד הטכנולוגי המוביל בישראל, ידוע בעולם כמעצמת הנדסה וחדשנות. בוגריו ייסדו מאות חברות היי-טק.',
+    desc:'המוסד הטכנולוגי המוביל בישראל, ידוע בעולם כמעצמת הנדסה.',
     website:'https://www.technion.ac.il',
     scholarship:'https://www.technion.ac.il/he/student-affairs/scholarships/'
   },
   {
     id:3, name:'אוניברסיטת תל אביב', short:'TAU', location:'תל אביב', region:'center',
     type:'university', icon:'🏛️', color:'#fff8e8', tags:['מחקר','אמנות','עסקים'],
-    students:'30,000', acceptance:'75-90', programs:'עסקים, משפטים, אמנות, מדעים, רפואה',
+    students:'30,000', acceptance:'75-90', programs:'עסקים, משפטים, אמנות, מדעים',
     fields:['tech','social','arts','business'],
     tuition:'₪11,000–₪14,500 לשנה',
-    desc:'האוניברסיטה הגדולה בישראל עם מגוון רחב של תכניות לימוד. ממוקמת בלב תל אביב עם קמפוס תוסס.',
+    desc:'האוניברסיטה הגדולה בישראל עם חוג רחב של תכניות לימוד.',
     website:'https://www.tau.ac.il',
     scholarship:'https://www.tau.ac.il/students/scholarships'
   },
   {
     id:4, name:'אוניברסיטת חיפה', short:'Haifa U', location:'חיפה', region:'north',
     type:'university', icon:'🌊', color:'#fdf0f8', tags:['חברה','מדע','פסיכולוגיה'],
-    students:'18,000', acceptance:'70-85', programs:'מדעי חברה, משפטים, פסיכולוגיה, חינוך',
+    students:'18,000', acceptance:'70-85', programs:'מדעי חברה, משפטים, פסיכולוגיה',
     fields:['social'],
     tuition:'₪10,500–₪13,000 לשנה',
-    desc:'אוניברסיטה גדולה ומגוונת בצפון, עם דגש על מדעי החברה ורב-תרבותיות. ממוקמת על הכרמל עם נוף מרהיב.',
+    desc:'אוניברסיטה גדולה ומגוונת בצפון, עם דגש על מדעי החברה.',
     website:'https://www.haifa.ac.il',
     scholarship:'https://www.haifa.ac.il/students/scholarships/'
   },
   {
-    id:5, name:'אוניברסיטת בן גוריון בנגב', short:'BGU', location:'באר שבע', region:'south',
+    id:5, name:'אוניברסיטת בן גוריון', short:'BGU', location:'באר שבע', region:'south',
     type:'university', icon:'🏜️', color:'#e8f7fd', tags:['מחקר','הנדסה','רפואה'],
-    students:'20,000', acceptance:'72-88', programs:'הנדסה, מדעים, בריאות, ניהול',
+    students:'20,000', acceptance:'72-88', programs:'הנדסה, מדעים, בריאות',
     fields:['tech'],
     tuition:'₪10,800–₪13,500 לשנה',
-    desc:'אוניברסיטת הנגב — מרכז מחקר מוביל עם דגש על פיתוח הדרום, טכנולוגיות מים ואנרגיה סולארית.',
+    desc:'אוניברסיטת הנגב — מרכז מחקר מוביל עם דגש על פיתוח הדרום.',
     website:'https://www.bgu.ac.il',
     scholarship:'https://www.bgu.ac.il/students/scholarships'
   },
   {
     id:6, name:'אוניברסיטת בר אילן', short:'BIU', location:'רמת גן', region:'center',
     type:'university', icon:'✡️', color:'#fdf0f8', tags:['יהדות','משפטים','מדעים'],
-    students:'19,000', acceptance:'73-87', programs:'יהדות, משפטים, מדעים, ניהול, חינוך',
+    students:'19,000', acceptance:'73-87', programs:'יהדות, משפטים, מדעים, ניהול',
     fields:['social','tech'],
     tuition:'₪11,000–₪13,800 לשנה',
-    desc:'אוניברסיטה המשלבת לימודי יהדות עם חינוך אקדמי מודרני. בית ספר למשפטים מהמובילים בישראל.',
+    desc:'אוניברסיטה המשלבת מסורת יהודית עם חינוך אקדמי מודרני.',
     website:'https://www.biu.ac.il',
     scholarship:'https://www.biu.ac.il/students/scholarships'
   },
   {
     id:7, name:'מכון ויצמן למדע', short:'Weizmann', location:'רחובות', region:'center',
     type:'university', icon:'🧬', color:'#e8fdf4', tags:['מחקר','מדע','ביולוגיה'],
-    students:'1,200', acceptance:'95-99', programs:'מדעים, ביולוגיה, כימיה, פיזיקה, מדעי מחשב',
+    students:'1,200', acceptance:'95-99', programs:'מדעים, ביולוגיה, כימיה, פיזיקה',
     fields:['tech'],
-    tuition:'₪0 (מלגות מלאות לכל הסטודנטים)',
-    desc:'מוסד מחקר עילי בינלאומי המדורג בין המובילים בעולם. מקבל אך ורק תלמידי מחקר (תואר שני ושלישי) — אין תואר ראשון.',
+    tuition:'₪0 (מלגות מלאות)',
+    desc:'מוסד מחקר עילי בינלאומי, מקבל רק תלמידי מחקר מצוינים.',
     website:'https://www.weizmann.ac.il',
     scholarship:'https://www.weizmann.ac.il/students'
   },
   {
-    id:8, name:'מכללת הרצוג', short:'Herzog', location:'אלון שבות, גוש עציון', region:'center',
-    type:'college', icon:'📖', color:'#fff8e8', tags:['יהדות','הוראה','מדעי החברה'],
-    students:'3,500', acceptance:'65-78', programs:'הוראה, תנ"ך, מחשבת ישראל, ניהול חינוכי',
+    id:8, name:'מכללת הרצוג', short:'Herzog', location:'אפרת', region:'center',
+    type:'college', icon:'📖', color:'#fff8e8', tags:['יהדות','הוראה','ניהול'],
+    students:'3,500', acceptance:'65-78', programs:'הוראה, יהדות, ניהול',
     fields:['social'],
     tuition:'₪9,000–₪11,500 לשנה',
-    desc:'מכללה אקדמית דתית מובילה בגוש עציון, עם תכניות ייחודיות בתחום היהדות והחינוך הדתי-לאומי.',
+    desc:'מכללה אקדמית דתית עם תכניות ייחודיות בתחום היהדות.',
     website:'https://www.herzog.ac.il',
     scholarship:'https://www.herzog.ac.il/students/scholarships'
   },
   {
-    id:9, name:'שנקר — הנדסה. עיצוב. אמנות', short:'Shenkar', location:'רמת גן', region:'center',
-    type:'college', icon:'🎨', color:'#fdf0f8', tags:['עיצוב','אמנות','אופנה','הנדסה'],
-    students:'2,800', acceptance:'68-82', programs:'עיצוב תעשייתי, אופנה, אנימציה, הנדסת טקסטיל',
+    id:9, name:'שנקר', short:'Shenkar', location:'רמת גן', region:'center',
+    type:'college', icon:'🎨', color:'#fdf0f8', tags:['עיצוב','אמנות','אופנה'],
+    students:'2,800', acceptance:'68-82', programs:'עיצוב תעשייתי, אופנה, אנימציה',
     fields:['arts'],
     tuition:'₪13,000–₪17,000 לשנה',
-    desc:'מכללת העיצוב והאמנות המובילה בישראל, ידועה בחדשנות ויצירתיות. בוגריה מובילים בתעשיית האופנה והעיצוב.',
+    desc:'מכללת העיצוב המובילה בישראל, ידועה בחדשנות ויצירתיות.',
     website:'https://www.shenkar.ac.il',
     scholarship:'https://www.shenkar.ac.il/students/scholarships'
   },
   {
-    id:10, name:'מכללת ספיר', short:'Sapir', location:'שדרות', region:'south',
+    id:10, name:'ספיר', short:'Sapir', location:'שדרות', region:'south',
     type:'college', icon:'🎭', color:'#e8f7fd', tags:['תקשורת','אמנות','חברה'],
-    students:'6,000', acceptance:'60-75', programs:'תקשורת, קולנוע, מדעי חברה, סיעוד',
+    students:'6,000', acceptance:'60-75', programs:'תקשורת, אמנות, מדעי חברה',
     fields:['arts','social'],
     tuition:'₪8,500–₪11,000 לשנה',
-    desc:'מכללה אזורית מובילה בדרום עם דגש על נגישות ושיוויון הזדמנויות. ידועה במיוחד בתכנית הקולנוע והתקשורת.',
+    desc:'מכללה אזורית בדרום עם דגש על נגישות ושיוויון הזדמנויות.',
     website:'https://www.sapir.ac.il',
     scholarship:'https://www.sapir.ac.il/students/scholarships'
   },
   {
-    id:11, name:'אוניברסיטת רייכמן', short:'Reichman', location:'הרצליה', region:'center',
-    type:'college', icon:'🌍', color:'#e8fdf4', tags:['עסקים','ממשל','משפטים','תקשורת'],
-    students:'9,000', acceptance:'70-85', programs:'עסקים, תקשורת, ממשל, משפטים, פסיכולוגיה',
+    id:11, name:'IDC הרצליה', short:'IDC', location:'הרצליה', region:'center',
+    type:'college', icon:'🌍', color:'#e8fdf4', tags:['עסקים','ממשל','תקשורת'],
+    students:'7,500', acceptance:'70-85', programs:'עסקים, תקשורת, ממשל, משפטים',
     fields:['business','social'],
     tuition:'₪17,000–₪22,000 לשנה',
-    desc:'אוניברסיטה פרטית מובילה (לשעבר IDC הרצליה) עם דגש על יזמות, עסקים גלובליים ומשפטים. קמפוס בינלאומי עם תלמידים מכל העולם.',
-    website:'https://www.runi.ac.il',
-    scholarship:'https://www.runi.ac.il/students/scholarships/'
+    desc:'מוסד בינלאומי עם דגש על יזמות ועסקים גלובליים.',
+    website:'https://www.idc.ac.il',
+    scholarship:'https://www.idc.ac.il/en/students/scholarships/'
   }
 ];
 
+let filteredUnis = [...universities];
 let activeTypeFilter = 'all';
 let searchQuery = '';
 
@@ -865,10 +1525,7 @@ function renderUnis() {
   const grid = document.getElementById('uniGrid');
   if (!grid) return;
   let toShow = universities.filter(u => {
-    const matchesSearch = !searchQuery ||
-      u.name.includes(searchQuery) ||
-      u.location.includes(searchQuery) ||
-      u.tags.some(t => t.includes(searchQuery));
+    const matchesSearch = !searchQuery || u.name.includes(searchQuery) || u.location.includes(searchQuery) || u.tags.some(t => t.includes(searchQuery));
     const matchesType = activeTypeFilter === 'all' ||
       (activeTypeFilter === 'university' && u.type === 'university') ||
       (activeTypeFilter === 'college' && u.type === 'college') ||
@@ -883,6 +1540,7 @@ function renderUnis() {
     grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--gray-400);font-size:1rem">לא נמצאו מוסדות התואמים לחיפוש 🔍</div>';
     return;
   }
+  // Sort by match score if available
   toShow.sort((a, b) => {
     const sa = getMatchScore(a), sb = getMatchScore(b);
     if (sa && sb) return sb - sa;
@@ -968,8 +1626,13 @@ document.getElementById('uniModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
 
+// KEYBOARD
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
+});
+
+// ENTER on auth
+document.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     if (document.getElementById('loginForm').classList.contains('active')) doLogin();
     else if (document.getElementById('registerForm').classList.contains('active')) doRegister();
